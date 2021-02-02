@@ -152,6 +152,89 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-HTTP Message Format" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="HTTP的信息格式-HTTP-Message-Format"><a href="#HTTP的信息格式-HTTP-Message-Format" class="headerlink" title="HTTP的信息格式 (HTTP Message Format)"></a>HTTP的信息格式 (HTTP Message Format)</h1><p>http是有明确的区分request和response的</p>
+<p>它不像TCP那样允许两端同时做收发</p>
+<p>一般来说，只允许一端做收一端做发</p>
+<p>因此这里讲http的格式就分为两个大的部分：request message 和 response message</p>
+<h2 id="请求端-Requeset-Message"><a href="#请求端-Requeset-Message" class="headerlink" title="请求端  Requeset Message"></a>请求端  Requeset Message</h2><p>第一行有一个单独的名字，叫做request line</p>
+<p>后面几行叫做header lines</p>
+<h3 id="request-line"><a href="#request-line" class="headerlink" title="request line"></a>request line</h3><p>声明了<strong>方法method</strong>（常用的就是GET,其他的有POST\HEAD\PUT\DELETE）</p>
+<p>以URL形式写明的需要的对象路径 （一般是在服务器下的路径，比如： /somedir/pages.html）</p>
+<p>以及使用协议的版本 比如HTTP/1.1</p>
+<h3 id="header-lines"><a href="#header-lines" class="headerlink" title="header lines"></a>header lines</h3><p>声明了需要的服务器的域名 （比如）</p>
+<p>希望之后连接的状态（比如<br>connection: close就是表示用户喜欢服务器在传送想要的对象之后关闭连接）</p>
+<p>以及当前使用的浏览器版本（因为同样的元素，服务器可能会针对</p>
+<p>不同的浏览器传递不同版本的文件）</p>
+<p>在header lines 之后，有一块的空间是entity body.在request lines  的method 为 GET 的时候，也就是用户只是要求获取一个网页元素的时候，entity body是为空的。但当method 为 POST的时候，比如用户在填一个表格并上传的时候，或者在搜索引擎里输入文字的时候，HTTP就会把用户输入的内容保存到entity body里并且传递出去。这样的情况下，用户仍然是请求获取一个网页，但是这个获取的网页会依赖于用户输入的内容</p>
+<p>但是需要注意的是，并非每个结合用户请求的都会使用POST的方式，HTML<br>会将用户的请求文字直接加到请求的URL里面。比如对于某个网页，用户输入的请求文件有monkeys 和 banana，URL会封装为 <a target="_blank" rel="noopener" href="http://www.somesite.com/animalsearch?monkeys&amp;bananas%E3%80%82%E8%BF%99%E7%A7%8D%E6%96%B9%E6%B3%95%E5%B0%B1%E6%98%AF%E6%89%A9%E5%B1%95%E4%BA%86URL">www.somesite.com/animalsearch?monkeys&amp;bananas。这种方法就是扩展了URL</a><br>所以方法并不一定是固定死的，使用POST和使用GET的情况都有的</p>
+<p>其余的methods：</p>
+<p>HEAD 常用于开发者debug用，当服务器接收到HEAD的 message之后，会回传正常的对应的HTTP message 但不会把请求需要的对象文件传过来</p>
+<p>PUT 用于用户将自己的对象文件上传到服务器上的某一个指定路径。比如将自己的博文从本地发布到网站上就是会使用PUT</p>
+<p>DELETE 允许用户或者说程序，删除服务器上某个路径下的某个文件</p>
+<p>返回端 Response Message</p>
+<p>需要注意，这两种message都是遵循“header field name: value”的格式</p>
+<p>里面的空格是不能省的</p>
+<p>同样也是分了几个部分的  status line ;  header lines ; entity body</p>
+<p>status line：包含了三个部分：version说明了使用协议的版本，比如HTTP/1.1； status code 就是一个状态码 比如 200 ; phrase 就是与前面的status code 所一一对应的文字描述，这里200所对应的status message 就是 “OK”</p>
+<p>header lines： connection close 用来告诉用户它在发出这个信息之后就打算关闭连接了；date 表示了这个http message从服务器发出的时间，就是说这个信息离开服务器那一刻的时间；server 表示了服务器的型号，这个和之前request message里面的user-agent是类似的意思；last-modified指的是所要传输的这个对象文件，最后被修改的时间。注意这个时间点和对象本身被发送的时间点没有关系。而这个最后被修改的时间，其实与网络缓存关系很大，因为它决定了缓存端和原文件端的文件是不是一致，以及决定了缓存端是否需要刷新。content-length描述了将要传输的对象的大小，一般单位就是字节。content-type 描述了传输对象的类型，比如text/html表示了它是HTML的纯文本文件。需要注意的是，对象的类型，官方上就是由这里的content-type决定，而不是由文件的扩展名决定</p>
+<p>status code and associated phrase</p>
+<p>接下来就讲一些常见的status code 这里可以看到，status code是非常有利于我们判断状态以及排查错误的</p>
+<p>200 OK 表示服务端成功地接收到了用户的请求，用户需要获取的文件也成功地封装进了 response message进行传输</p>
+<p>301 Moved Permanently 表示用户所索求的对象被永久地移动了，这时候，新的URL会放在response message 的Location 段里传输。用户端的软件会自动获得服务端传来的这个新的地址。这个场景也很常见，比如我们访问某些已经被移除了的页面，会自动跳转到什么淘宝之类的页面去，应该就是这种情况</p>
+<p>400 Bad Request 表示服务器无法理解客户端传来的请求</p>
+<p>404 Not Found 表示请求获取的文件在服务器里不存在。这不仅仅是路径移动了，而是完全没有这个文件</p>
+<p>505 HTTP Version Not Supported 表示客户端里提出的HTTP协议版本在服务端不支持，有可能是协议太新也可能是协议太老了</p>
+<p>最后一个问题</p>
+<p>浏览器如何确定在一个request mesage 的 header lines 添加哪些具体的header lines? 浏览器会根据自身浏览器的类型、协议的版本、用户的偏好设置、以及浏览器是否有缓存、缓存是否过期等选择添加对应的一些header lines。同样的，服务器端也是这样的，根据各种情况，自动生成对应的一些header lines</p>
+<p>参考文献</p>
+<p>[1] James F. Kurose. COMPUTER NETWORK A Top-Down Approach[M] . Boston: Pearson Education, 2016: 131 - 136</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/02/02/HTTP%20Message%20Format/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-cookies and tokens" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
