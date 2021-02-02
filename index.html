@@ -157,16 +157,16 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="HTTP的信息格式-HTTP-Message-Format"><a href="#HTTP的信息格式-HTTP-Message-Format" class="headerlink" title="HTTP的信息格式 (HTTP Message Format)"></a>HTTP的信息格式 (HTTP Message Format)</h1><p>http是有明确的区分request和response的</p>
+        <h1 id="HTTP的信息格式-HTTP-Message-Format"><a href="#HTTP的信息格式-HTTP-Message-Format" class="headerlink" title="HTTP的信息格式 (HTTP Message Format)"></a>HTTP的信息格式 (HTTP Message Format)</h1><p><br/><br>http是有明确的区分request和response的</p>
 <p>它不像TCP那样允许两端同时做收发</p>
 <p>一般来说，只允许一端做收一端做发</p>
 <p>因此这里讲http的格式就分为两个大的部分：request message 和 response message</p>
-<h2 id="请求端-Requeset-Message"><a href="#请求端-Requeset-Message" class="headerlink" title="请求端  Requeset Message"></a>请求端  Requeset Message</h2><p>第一行有一个单独的名字，叫做request line</p>
-<p>后面几行叫做header lines</p>
-<h3 id="request-line"><a href="#request-line" class="headerlink" title="request line"></a>request line</h3><p>声明了<strong>方法method</strong>（常用的就是GET,其他的有POST\HEAD\PUT\DELETE）</p>
+<h2 id="请求端-Requeset-Message"><a href="#请求端-Requeset-Message" class="headerlink" title="请求端  Requeset Message"></a>请求端  Requeset Message</h2><p><br><img src="https://ftp.bmp.ovh/imgs/2021/02/48e1ad646b68c036.jpeg"></p>
+<p>第一行有一个单独的名字，叫做request line,后面几行叫做header lines</p>
+<h3 id="Request-Line"><a href="#Request-Line" class="headerlink" title="Request Line"></a>Request Line</h3><p>声明了<strong>方法method</strong>（常用的就是GET,其他的有POST\HEAD\PUT\DELETE）</p>
 <p>以URL形式写明的需要的对象路径 （一般是在服务器下的路径，比如： /somedir/pages.html）</p>
 <p>以及使用协议的版本 比如HTTP/1.1</p>
-<h3 id="header-lines"><a href="#header-lines" class="headerlink" title="header lines"></a>header lines</h3><p>声明了需要的服务器的域名 （比如）</p>
+<h3 id="Header-Lines"><a href="#Header-Lines" class="headerlink" title="Header Lines"></a>Header Lines</h3><p>声明了需要的服务器的域名 （比如）</p>
 <p>希望之后连接的状态（比如<br>connection: close就是表示用户喜欢服务器在传送想要的对象之后关闭连接）</p>
 <p>以及当前使用的浏览器版本（因为同样的元素，服务器可能会针对</p>
 <p>不同的浏览器传递不同版本的文件）</p>
