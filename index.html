@@ -170,7 +170,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2021-02-06 15:14:40 / Modified: 18:30:47" itemprop="dateCreated datePublished" datetime="2021-02-06T15:14:40+08:00">2021-02-06</time>
+              <time title="Created: 2021-02-06 15:14:40 / Modified: 18:32:57" itemprop="dateCreated datePublished" datetime="2021-02-06T15:14:40+08:00">2021-02-06</time>
             </span>
 
           
@@ -205,8 +205,7 @@
 <p><br>充分性就可以直接看出了,接下来说唯一性<br><br>设 $x_1,x_2$为满足条件的两个解，那么 $x_1\equiv x_2\pmod {m_1},x_1\equiv x_2\pmod<br>{m_2},…x_1\equiv x_2\pmod{m_r}$<br><br> $\because m_1,m_2,…,m_r两两互素$<br><br> $\therefore [m_1,m_2,…,m_r]=m_1m_2…m_r=M$<br><br> $\therefore x_1\equiv x_2\pmod M$</p>
 <h2 id="中国剩余定理的引理"><a href="#中国剩余定理的引理" class="headerlink" title="中国剩余定理的引理"></a>中国剩余定理的引理</h2><p>引理：如果p,q为素数且互素，那么：</p>
 <script type="math/tex; mode=display">x\equiv y\pmod p\wedge x\equiv y\pmod q \Rightarrow x\equiv y\pmod {pq}</script><p><br>证明依据剩余定理就可以证明了</p>
-<h2 id="RSA加密算法"><a href="#RSA加密算法" class="headerlink" title="RSA加密算法"></a>RSA加密算法</h2><p><br>首先选取两个比较大的素数p和q，官方建议是数量级在二进制1024位的大小<br><br>然后令 $n=pq, z=(p-1)(q-1)$ ，这里也肯定能知道 $z=\Phi(n)$<br><br>取一个数e，使得 $gcd(e,z)=1$<br><br>找到e的逆元d，使得 $ed\equiv1\pmod z$<br><br>假设接收者名为Bob，那么Bob的公钥 $K_B^+$ 为数对 $(n,e)$，Bob的私钥 $K_B^-$ 为数对 $(n,d)$<br><br>假设发送者名为Alice，将要发送的明文为m</p>
-<p><br>满足条件 $m &lt; n$<br><br>那么加密后的文件 $c=m^e\pmod n$<br><br>Bob接收到c，进行解密 $m=c^d\pmod n$</p>
+<h2 id="RSA加密算法"><a href="#RSA加密算法" class="headerlink" title="RSA加密算法"></a>RSA加密算法</h2><p><br>首先选取两个比较大的素数p和q，官方建议是数量级在二进制1024位的大小<br><br>然后令 $n=pq, z=(p-1)(q-1)$ ，这里也肯定能知道 $z=\Phi(n)$<br><br>取一个数e，使得 $gcd(e,z)=1$<br><br>找到e的逆元d，使得 $ed\equiv1\pmod z$<br><br>假设接收者名为Bob，那么Bob的公钥 $K_B^+$ 为数对 $(n,e)$，Bob的私钥 $K_B^-$ 为数对 $(n,d)$<br><br>假设发送者名为Alice，将要发送的明文为m，满足条件 $m &lt; n$<br><br>那么加密后的文件 $c=m^e\pmod n$<br><br>Bob接收到c，进行解密 $m=c^d\pmod n$</p>
 <h2 id="RSA证明"><a href="#RSA证明" class="headerlink" title="RSA证明"></a>RSA证明</h2><p><br>核心要证明的就是 $m^{ed}\equiv m\pmod n$ ,分两种情况来证明，$gcd(m,n)=1$ 和 $gcd(m,n)\neq 1$</p>
 <h3 id="gcd-m-n-1"><a href="#gcd-m-n-1" class="headerlink" title="$gcd(m,n)=1$"></a>$gcd(m,n)=1$</h3><p><br>证明：使用欧拉定理，注意到 $m^{\Phi(n)}\equiv1\pmod n$ ，那么对于任意正整数r，可以有</p>
 <script type="math/tex; mode=display">m^r\equiv m^{r\mod{\Phi(n)} }\equiv m^{r\mod z}\pmod n</script><p><br>当 $r=ed$ 时，$r\equiv 1\pmod z$，因此 $m^{ed}\equiv m\pmod n$</p>
