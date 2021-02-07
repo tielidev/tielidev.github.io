@@ -20,28 +20,34 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="铁犁的技术博客">
-<meta property="og:url" content="http://example.com/page/4/index.html">
+  <meta name="description" content="与指针结合这是很常见的用法，而且与指针结合有两种情况 指针指向的元素为const类型12345678const char* p &#x3D; new char(&amp;#x27;a&amp;#x27;);char const *q &#x3D; new char(&amp;#x27;b&amp;#x27;);&#x2F;*这两种方式的效果都是一样的，指针指向的那个值为常值，言下之意就是不能通过指针去改变对应内存位置的值。但是指针自己的值是可以改变的*&#x2F;*">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Const的使用方法">
+<meta property="og:url" content="http://example.com/2021/02/07/const_uses/index.html">
 <meta property="og:site_name" content="铁犁的技术博客">
+<meta property="og:description" content="与指针结合这是很常见的用法，而且与指针结合有两种情况 指针指向的元素为const类型12345678const char* p &#x3D; new char(&amp;#x27;a&amp;#x27;);char const *q &#x3D; new char(&amp;#x27;b&amp;#x27;);&#x2F;*这两种方式的效果都是一样的，指针指向的那个值为常值，言下之意就是不能通过指针去改变对应内存位置的值。但是指针自己的值是可以改变的*&#x2F;*">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s3.ax1x.com/2021/02/07/yNcbVS.jpg">
+<meta property="article:published_time" content="2021-02-07T14:05:11.226Z">
+<meta property="article:modified_time" content="2021-02-07T14:31:38.921Z">
 <meta property="article:author" content="Tie Li">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s3.ax1x.com/2021/02/07/yNcbVS.jpg">
 
-<link rel="canonical" href="http://example.com/page/4/">
+<link rel="canonical" href="http://example.com/2021/02/07/const_uses/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'en'
   };
 </script>
 
-  <title>铁犁的技术博客</title>
+  <title>Const的使用方法 | 铁犁的技术博客</title>
   
 
 
@@ -139,13 +145,14 @@
         <div class="content-wrap">
           
 
-          <div class="content index posts-expand">
+          <div class="content post posts-expand">
             
-      
+
+    
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/02/06/number_theory/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/02/07/const_uses/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -157,10 +164,9 @@
       <meta itemprop="name" content="铁犁的技术博客">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/02/06/number_theory/" class="post-title-link" itemprop="url">数论的基本知识</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          Const的使用方法
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -168,16 +174,10 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
+              
 
-              <time title="Created: 2021-02-06 15:14:40" itemprop="dateCreated datePublished" datetime="2021-02-06T15:14:40+08:00">2021-02-06</time>
+              <time title="Created: 2021-02-07 22:05:11 / Modified: 22:31:38" itemprop="dateCreated datePublished" datetime="2021-02-07T22:05:11+08:00">2021-02-07</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-02-07 16:24:56" itemprop="dateModified" datetime="2021-02-07T16:24:56+08:00">2021-02-07</time>
-              </span>
 
           
 
@@ -190,57 +190,35 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yY69Rx"><img src="https://s3.ax1x.com/2021/02/06/yY69Rx.jpg" alt="yY69Rx.jpg"></a></p>
-<p><br>这篇文章先介绍了两个数论的定理，欧拉定理以及中国剩余定理，然后也介绍了RSA加密算法以及对应的证明。下面的内容默认p，q都是素数</p>
-<h2 id="欧拉函数"><a href="#欧拉函数" class="headerlink" title="欧拉函数"></a>欧拉函数</h2><p><br> $\Phi(n)$ 的定义是小于n的而且与n互素的数的个数,比如 $\Phi(5)=4,\Phi(1)=1,\Phi(2)=1$</p>
-<p><br>基本的版本：</p>
-<script type="math/tex; mode=display">\Phi(p)=p-1</script><p><br>当n为两个素数乘积：</p>
-<script type="math/tex; mode=display">\Phi(pq)=pq-(p-1)-(q-1)-1=\Phi(p)\Phi(q)</script><p><br>当n为某个素数的k次方(我更习惯中间的写法)：</p>
-<script type="math/tex; mode=display">\Phi(q^{k})=q^k-q^{k-1}=q^{k}(1-\frac{1}{q})</script><p><br>当n为任意数的情况，$n=p_1^{k_1}p_2^{k_2}…p_r^{k_r}$ 可以根据上面两个公式推出，主要思想还是做减法:</p>
-<script type="math/tex; mode=display">\Phi(n)=\Phi(p_1^{k_1})\Phi(p_2^{k_2})...\Phi(p_r^{k_r})=n\prod\limits_{r=1}^r(1-\frac{1}{p_r})</script><h2 id="欧拉定理"><a href="#欧拉定理" class="headerlink" title="欧拉定理"></a>欧拉定理</h2><p><br>p、q为两个正整数，而且满足 $(p,q)=1$ 那么就有：</p>
-<script type="math/tex; mode=display">p^{\Phi(q)}\equiv 1\pmod q</script><h2 id="欧拉定理的证明"><a href="#欧拉定理的证明" class="headerlink" title="欧拉定理的证明"></a>欧拉定理的证明</h2><p><br>这里很有意思，是集合的思想大放异彩的地方。在证明之前也可以考虑一下集合本身有什么性质，那就是判断两个集合相等的时候，我们不关注里面元素排列的顺序，而是只要左边集合的元素右边都有，再加上两个集合元素个数相同，就能够说明两个集合是一样的。接下来就做一个定义：</p>
-<p><br>n为任意的正整数，将小于n且与n互素的数形成一个集合 $Z_n$ ，称这个集合 $Z_n$ 为n的完全剩余系。一个明显的推论就是 $|Z_n|=\Phi(n)$</p>
-<p><br>给的两个正整数a和n，满足 $gcd(a,n)=1$ ,证明过程分两步：</p>
-<p><br>(1)令<br><br></p>
-<script type="math/tex; mode=display">Z_n=\{x_1,x_2,...x_{\Phi(n)}\}, S= \{ {a*x_1{\pmod n}},{a*x_2{\pmod n} },...{a*x_{\Phi(n)}{\pmod n} }\}</script><p><br>可以知道 $Z_n=S$ （因为两个集合长度相同，而且S里面的元素两两不同而且都与n互素）</p>
-<p><br>(2)</p>
-<script type="math/tex; mode=display">a^{\Phi(n)}*{x_1}*{x_2}...*{x_{\Phi(n)}}</script><script type="math/tex; mode=display">\equiv (a*{x_1})(a*{x_2})...(a*{x_{\Phi(n)}})</script><script type="math/tex; mode=display">\equiv(a*{x_1}\mod n)(a*{x_2}\mod n)...(a*{x_{\Phi(n)}\mod n})</script><script type="math/tex; mode=display">\equiv{x_1}*{x_2}...{x_{\Phi(n)}}\pmod n</script><p>比较第一项和最后一项，可以知道 $a^{\Phi(n)}\equiv1\pmod n$</p>
-<h2 id="中国剩余定理"><a href="#中国剩余定理" class="headerlink" title="中国剩余定理"></a>中国剩余定理</h2><p><br>定理：设 $m_1,m_2,…m_r\in N$，且两两互素，那么同余方程 $\begin{cases}<br>x\equiv b_1\pmod {m_1}\\<br>x\equiv b_2\pmod {m_2}\\<br>…\\<br>x\equiv b_r\pmod {m_r} \end{cases}$ ，在模 $M=m_1m_2…m_r$ 下有唯一同余解</p>
-<p><br>证明：</p>
-<p><br>令 $M_i=M/m_i$ ，那么知道 $(M_i,m_i)=1$<br><br>现在以 $m_i$ 为模，可以找到 $M_i$ 的逆元 $s_i$ ，使得 $M_is_i\equiv1\mod m_i$<br><br>再令 $N_i=M_is_i$<br><br>那么 $x=N_1b_1+N_2b_2…+N_rb_r\pmod M$ 为其解</p>
-<p><br>充分性就可以直接看出了,接下来说唯一性<br><br>设 $x_1,x_2$为满足条件的两个解，那么 $x_1\equiv x_2\pmod {m_1},x_1\equiv x_2\pmod<br>{m_2},…x_1\equiv x_2\pmod{m_r}$<br><br> $\because m_1,m_2,…,m_r两两互素$<br><br> $\therefore [m_1,m_2,…,m_r]=m_1m_2…m_r=M$<br><br> $\therefore x_1\equiv x_2\pmod M$</p>
-<h2 id="中国剩余定理的引理"><a href="#中国剩余定理的引理" class="headerlink" title="中国剩余定理的引理"></a>中国剩余定理的引理</h2><p>引理：如果p,q为素数且互素，那么：</p>
-<script type="math/tex; mode=display">x\equiv y\pmod p\wedge x\equiv y\pmod q \Rightarrow x\equiv y\pmod {pq}</script><p><br>证明依据剩余定理就可以证明了</p>
-<h2 id="RSA加密算法"><a href="#RSA加密算法" class="headerlink" title="RSA加密算法"></a>RSA加密算法</h2><p><br>首先选取两个比较大的素数p和q，官方建议是数量级在二进制1024位的大小<br><br>然后令 $n=pq, z=(p-1)(q-1)$ ，这里也肯定能知道 $z=\Phi(n)$<br><br>取一个数e，使得 $gcd(e,z)=1$<br><br>找到e的逆元d，使得 $ed\equiv1\pmod z$<br><br>假设接收者名为Bob，那么Bob的公钥 $K_B^+$ 为数对 $(n,e)$，Bob的私钥 $K_B^-$ 为数对 $(n,d)$<br><br>假设发送者名为Alice，将要发送的明文为m，满足条件 $m &lt; n$<br><br>那么加密后的文件 $c=m^e\pmod n$<br><br>Bob接收到c，进行解密 $m=c^d\pmod n$</p>
-<h2 id="RSA证明"><a href="#RSA证明" class="headerlink" title="RSA证明"></a>RSA证明</h2><p><br>核心要证明的就是 $m^{ed}\equiv m\pmod n$ ,分两种情况来证明，$gcd(m,n)=1$ 和 $gcd(m,n)\neq 1$</p>
-<h3 id="gcd-m-n-1"><a href="#gcd-m-n-1" class="headerlink" title="$gcd(m,n)=1$"></a>$gcd(m,n)=1$</h3><p><br>证明：使用欧拉定理，注意到 $m^{\Phi(n)}\equiv1\pmod n$ ，那么对于任意正整数r，可以有</p>
-<script type="math/tex; mode=display">m^r\equiv m^{r\mod{\Phi(n)} }\equiv m^{r\mod z}\pmod n</script><p><br>当 $r=ed$ 时，$r\equiv 1\pmod z$，因此 $m^{ed}\equiv m\pmod n$</p>
-<h3 id="gcd-m-n-neq-1"><a href="#gcd-m-n-neq-1" class="headerlink" title="$gcd(m,n)\neq 1$"></a>$gcd(m,n)\neq 1$</h3><p><br>证明：不妨假设 $m=pk,gcd(k,n)=1$ 。需要注意到中国剩余定理的引理：<br><br>如果p,q为素数而且互素，那么:</p>
-<script type="math/tex; mode=display">x\equiv y\pmod p\wedge x\equiv y\pmod q \Rightarrow x\equiv y\pmod {pq}</script><p><br>因此如果我们能够证明 $m^{ed}\equiv m\pmod p$ 且 $m^{ed}\equiv m\pmod q$ ，<br><br>就能够得到 $m^{ed}\equiv m\pmod {pq}$</p>
-<p><br>1） $m^{ed}\equiv m\pmod p$ 是显然的</p>
-<p><br>2) 利用条件 $ed\equiv 1\pmod z$，那么存在自然数s，使得</p>
-<script type="math/tex; mode=display">ed=s*z+1 \Rightarrow ed-1=s(p-1)(q-1)</script><p><br> $\because gcd(m,q)=1 \therefore m^{q-1}\equiv 1\pmod q$<br><br> $\therefore m^{ed-1}=m^{s(p-1)(q-1)}=m^{(q-1)^{s(p-1)} }\equiv 1\pmod q$<br><br> $\therefore m^{ed}\equiv m\pmod q$</p>
-<p><br> 结合上述的引理，我们就有 $m^{ed}\equiv m\pmod {pq}$<br><br> RSA原理也证明完了</p>
-
-      
+        <p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yNcbVS"><img src="https://s3.ax1x.com/2021/02/07/yNcbVS.jpg" alt="yNcbVS.jpg"></a></p>
+<h2 id="与指针结合"><a href="#与指针结合" class="headerlink" title="与指针结合"></a>与指针结合</h2><p><br>这是很常见的用法，而且与指针结合有两种情况</p>
+<h3 id="指针指向的元素为const类型"><a href="#指针指向的元素为const类型" class="headerlink" title="指针指向的元素为const类型"></a>指针指向的元素为const类型</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="keyword">char</span>* p = <span class="keyword">new</span> <span class="keyword">char</span>(<span class="string">&#x27;a&#x27;</span>);</span><br><span class="line"><span class="keyword">char</span> <span class="keyword">const</span> *q = <span class="keyword">new</span> <span class="keyword">char</span>(<span class="string">&#x27;b&#x27;</span>);</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">这两种方式的效果都是一样的，指针指向的那个值为常值，言下之意就是不能通过指针去改变对应内存位置</span></span><br><span class="line"><span class="comment">的值。但是指针自己的值是可以改变的</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">*p = <span class="number">5</span>;<span class="comment">//这是不合法的，会报错</span></span><br><span class="line">p = q;<span class="comment">//这是合法的</span></span><br></pre></td></tr></table></figure>
+<h3 id="指针自己为const，只能指向固定的一块空间"><a href="#指针自己为const，只能指向固定的一块空间" class="headerlink" title="指针自己为const，只能指向固定的一块空间"></a>指针自己为const，只能指向固定的一块空间</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">char</span>* <span class="keyword">const</span> p = <span class="keyword">new</span> <span class="keyword">char</span>(<span class="string">&#x27;a&#x27;</span>);</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">这时候这个指针不能指向别的空间了，但是可以通过指针修改它指向空间的元素</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">*p = <span class="string">&#x27;b&#x27;</span>;<span class="comment">//合法的</span></span><br><span class="line">p = <span class="keyword">new</span> <span class="keyword">char</span>(<span class="string">&#x27;b&#x27;</span>);<span class="comment">//不合法的，会报错</span></span><br></pre></td></tr></table></figure>
     </div>
 
     
     
     
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/02/07/casts/" rel="prev" title="casts">
+      <i class="fa fa-chevron-left"></i> casts
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
       </footer>
+    
   </article>
   
   
   
-
-
-  
-  <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
-  </nav>
 
 
 
@@ -292,6 +270,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8E%E6%8C%87%E9%92%88%E7%BB%93%E5%90%88"><span class="nav-number">1.</span> <span class="nav-text">与指针结合</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%87%E9%92%88%E6%8C%87%E5%90%91%E7%9A%84%E5%85%83%E7%B4%A0%E4%B8%BAconst%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.1.</span> <span class="nav-text">指针指向的元素为const类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%87%E9%92%88%E8%87%AA%E5%B7%B1%E4%B8%BAconst%EF%BC%8C%E5%8F%AA%E8%83%BD%E6%8C%87%E5%90%91%E5%9B%BA%E5%AE%9A%E7%9A%84%E4%B8%80%E5%9D%97%E7%A9%BA%E9%97%B4"><span class="nav-number">1.2.</span> <span class="nav-text">指针自己为const，只能指向固定的一块空间</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
