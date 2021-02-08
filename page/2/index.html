@@ -145,7 +145,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/02/07/casts/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/02/07/const_uses/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -159,7 +159,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/02/07/casts/" class="post-title-link" itemprop="url">强制类型转换</a>
+            <a href="/2021/02/07/const_uses/" class="post-title-link" itemprop="url">Const的使用方法</a>
         </h2>
 
         <div class="post-meta">
@@ -168,16 +168,10 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
+              
 
-              <time title="Created: 2021-02-07 18:13:51" itemprop="dateCreated datePublished" datetime="2021-02-07T18:13:51+08:00">2021-02-07</time>
+              <time title="Created: 2021-02-07 22:05:11 / Modified: 22:31:38" itemprop="dateCreated datePublished" datetime="2021-02-07T22:05:11+08:00">2021-02-07</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-02-08 01:59:36" itemprop="dateModified" datetime="2021-02-08T01:59:36+08:00">2021-02-08</time>
-              </span>
 
           
 
@@ -190,24 +184,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yN7qaR"><img src="https://s3.ax1x.com/2021/02/08/yN7qaR.jpg" alt="yN7qaR.jpg"></a></p>
-<p><br></p>
-<h2 id="Explicit-Conversions前言"><a href="#Explicit-Conversions前言" class="headerlink" title="Explicit Conversions前言"></a>Explicit Conversions前言</h2><p><br>有时候我们主要主动地、显式地做类型转换，比如下面，我们想显式地把i和j转换成浮点数：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> i,j;</span><br><span class="line"><span class="keyword">double</span> slope = i/j;</span><br></pre></td></tr></table></figure><br>这样的情况就需要通过显式声明，来完成类型转换。c++提供了四种方式：static_cast, dynamic_cast, const_cast, reinterpret_cast。这也是接下来要讲的内容</p>
-<h2 id="Static-cast"><a href="#Static-cast" class="headerlink" title="Static_cast"></a>Static_cast</h2><p><br>这是用的最多的一种类型转换了。它的特点是，它在编译的过程中进行检查，对于不合法的类型转换，会在编译的时候报错。而老式的c风格的转换会编译通过，在执行的时候报错。static_cast也更方便代码阅读，相比c风格代码来说，能更明显地传达它的含义。它在运算式里面使用的很广泛</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> i,j;</span><br><span class="line"><span class="keyword">double</span> d;</span><br><span class="line">d = <span class="keyword">static_cast</span>&lt;<span class="keyword">double</span>&gt;(i)/j;<span class="comment">//这里应该是既发生了隐式转化又发生了显式转换</span></span><br><span class="line"><span class="comment">//d = 0.6666667</span></span><br><span class="line">d = <span class="keyword">static_cast</span>&lt;<span class="keyword">double</span>&gt;(i)/<span class="keyword">static_cast</span>(j);</span><br><span class="line"><span class="comment">//这也是合法的 d = 0.6666667</span></span><br><span class="line">d = <span class="keyword">static_cast</span>&lt;<span class="keyword">double</span>&gt;(i/j);</span><br><span class="line"><span class="comment">//d = 0 双精度浮点类型的0</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p><br>另一个小的用法是对于指针做类型转换，不管指的什么类型的指针，指针的长度始终是一定的,一般就是固定的机器字长，32位或者64位，但使用static_cast可以进行一些合法的类型转换</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> *p = &amp;d;</span><br><span class="line"><span class="keyword">double</span> *dp = <span class="keyword">static_cast</span>&lt;<span class="keyword">double</span>*&gt; (p);<span class="comment">//这是合法的</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">char</span> c = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">int</span>* q = <span class="keyword">static_cast</span>&lt;<span class="keyword">int</span>*&gt;(&amp;c);<span class="comment">//这是不合法的，因为char占1个字节，而int占4个字节</span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">会显示compile-time error,可以想象如果允许，那么q和&amp;c的值是一样的，*q和c能访问同一块</span></span><br><span class="line"><span class="comment">内存里的数据，但是解读方式不一样，那就矛盾了</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p><br>这里就可以回头去看看哪些类型转换是不合法的，会报错的。目前需要注意指针的转换，除了虚指针以外，其他的是不支持这么玩的，原因在于指针进行类型转换时，对象的那个地址并没有改变，如果进行了转换，同一块内存里的数据会产生两种解读的方式。然而除了这种没有定义的虚指针以外，其余类型转换的逻辑都是不会改变操作对象的类型，只是生成了一个<strong>临时</strong>的所指定的对象的类型，需要容器去接收才行,说白了static_cast&lt;&gt;()返回的是<strong><em>rvalue</em></strong>，不会有固定的内存空间的。可以看下面的例子：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> i = <span class="number">10</span>;</span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; &amp;<span class="keyword">static_cast</span>&lt;<span class="keyword">long</span>&gt;(i);</span><br><span class="line"><span class="comment">//会报错：cannot take the address of an rvalue of type &#x27;long&#x27;</span></span><br></pre></td></tr></table></figure>
-<h2 id="Const-cast"><a href="#Const-cast" class="headerlink" title="Const_cast"></a>Const_cast</h2><p><br>将const类型转化为非const类型，比如下面就是将const 指针转换为非const指针</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="keyword">char</span>* pc = <span class="keyword">new</span> <span class="keyword">char</span>(<span class="string">&#x27;a&#x27;</span>);</span><br><span class="line"><span class="keyword">char</span>* p = <span class="keyword">const_cast</span>&lt;<span class="keyword">char</span>*&gt;(pc);</span><br><span class="line">*p = <span class="string">&#x27;b&#x27;</span>;</span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; *p &lt;&lt; <span class="string">&quot; &quot;</span> &lt;&lt; <span class="string">&quot;*pc&quot;</span></span><br><span class="line"><span class="comment">//会输出：b b</span></span><br><span class="line"><span class="comment">//但是不能用*pc来修改对应内存的值，pc仍然只有读权限，没有写权限</span></span><br></pre></td></tr></table></figure>
-<p><strong>但是</strong>，我发现了一个问题，目前我还没有想到答案，目前我就先把这个问题贴出来，等以后再回来看。现在就先对const_cast理解到这里</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">int</span> m = <span class="number">255</span>;</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">int</span> *pc =&amp;m;</span><br><span class="line">    <span class="keyword">int</span> *p = <span class="keyword">const_cast</span>&lt;<span class="keyword">int</span> *&gt;(pc);</span><br><span class="line">    *p = <span class="number">250</span>;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; pc &lt;&lt; <span class="string">&quot; &quot;</span> &lt;&lt; &amp;m &lt;&lt; <span class="string">&quot; &quot;</span> &lt;&lt; *pc &lt;&lt; <span class="string">&quot; &quot;</span> &lt;&lt; m &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; p &lt;&lt; <span class="string">&quot; &quot;</span> &lt;&lt; *p;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><br>output:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0x7ffeec1129c8</span> <span class="number">0x7ffeec1129c8</span> <span class="number">250</span> <span class="number">255</span></span><br><span class="line"><span class="number">0x7ffeec1129c8</span> <span class="number">250</span></span><br><span class="line">Process finished with <span class="built_in">exit</span> code <span class="number">0</span></span><br></pre></td></tr></table></figure></p>
-<h2 id="Reinterpret-cast"><a href="#Reinterpret-cast" class="headerlink" title="Reinterpret_cast"></a>Reinterpret_cast</h2><p><br>可以说是权限比static_cast更大的类型转换，直接从任意类型向任意类型进行转换，也不会进行内容的检查。有的情况static_cast不能转换，但可以用reinterpret_cast。<strong>但是</strong>这种使用很可能在后续调用的时候报错，也就是run-time error。所以这种转化常用在底层，用于重新解释二进制操作。像int、char这种比较高级的类型就不要用它了</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> *ip;</span><br><span class="line"><span class="keyword">char</span> *pc = <span class="keyword">reinterpret_cast</span>&lt;<span class="keyword">char</span> *&gt;(pc);<span class="comment">//编译会通过</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="built_in">string</span> <span class="title">str</span><span class="params">(pc)</span></span>;<span class="comment">//编译会通过，但运行会报错</span></span><br></pre></td></tr></table></figure>
-<p><br>在现实写代码中，我们更想见到compile error，而不是run-time error，因为后者更难排查错误，往往出错也是因为语言设计的细节出错了，这种情况就很麻烦</p>
-
+          <p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yNcbVS"><img src="https://s3.ax1x.com/2021/02/07/yNcbVS.jpg" alt="yNcbVS.jpg"></a></p>
+<h2 id="与指针结合"><a href="#与指针结合" class="headerlink" title="与指针结合"></a>与指针结合</h2><p><br>这是很常见的用法，而且与指针结合有两种情况</p>
+<h3 id="指针指向的元素为const类型"><a href="#指针指向的元素为const类型" class="headerlink" title="指针指向的元素为const类型"></a>指针指向的元素为const类型</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="keyword">char</span>* p = <span class="keyword">new</span> <span class="keyword">char</span>(<span class="string">&#x27;a&#x27;</span>);</span><br><span class="line"><span class="keyword">char</span> <span class="keyword">const</span> *q = <span class="keyword">new</span> <span class="keyword">char</span>(<span class="string">&#x27;b&#x27;</span>);</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">这两种方式的效果都是一样的，指针指向的那个值为常值，言下之意就是不能通过指针去改变对应内存位置</span></span><br><span class="line"><span class="comment">的值。但是指针自己的值是可以改变的</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">*p = <span class="number">5</span>;<span class="comment">//这是不合法的，会报错</span></span><br><span class="line">p = q;<span class="comment">//这是合法的</span></span><br></pre></td></tr></table></figure>
+<h3 id="指针自己为const，只能指向固定的一块空间"><a href="#指针自己为const，只能指向固定的一块空间" class="headerlink" title="指针自己为const，只能指向固定的一块空间"></a>指针自己为const，只能指向固定的一块空间</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">char</span>* <span class="keyword">const</span> p = <span class="keyword">new</span> <span class="keyword">char</span>(<span class="string">&#x27;a&#x27;</span>);</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">这时候这个指针不能指向别的空间了，但是可以通过指针修改它指向空间的元素</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">*p = <span class="string">&#x27;b&#x27;</span>;<span class="comment">//合法的</span></span><br><span class="line">p = <span class="keyword">new</span> <span class="keyword">char</span>(<span class="string">&#x27;b&#x27;</span>);<span class="comment">//不合法的，会报错</span></span><br></pre></td></tr></table></figure>
       
     </div>
 
@@ -225,7 +205,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -291,7 +271,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-count">8</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
