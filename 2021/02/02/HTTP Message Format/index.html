@@ -20,16 +20,16 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="HTTP的信息格式 (HTTP Message Format)http是有明确的区分request和response的 它不像TCP那样允许两端同时做收发 一般来说，只允许一端做收一端做发 因此这里讲http的格式就分为两个大的部分：request message 和 response message 请求端  Requeset Message 第一行有一个单独的名字，叫做request line">
+  <meta name="description" content="http是有明确的区分request和response的 它不像TCP那样允许两端同时做收发 一般来说，只允许一端做收一端做发 因此这里讲http的格式就分为两个大的部分：request message 和 response message 请求端  Requeset Message 第一行有一个单独的名字，叫做request line,后面几行叫做header lines Request Lin">
 <meta property="og:type" content="article">
-<meta property="og:title" content="铁犁的技术博客">
+<meta property="og:title" content="HTTP的信息格式 (HTTP Message Format)">
 <meta property="og:url" content="http://example.com/2021/02/02/HTTP%20Message%20Format/index.html">
 <meta property="og:site_name" content="铁犁的技术博客">
-<meta property="og:description" content="HTTP的信息格式 (HTTP Message Format)http是有明确的区分request和response的 它不像TCP那样允许两端同时做收发 一般来说，只允许一端做收一端做发 因此这里讲http的格式就分为两个大的部分：request message 和 response message 请求端  Requeset Message 第一行有一个单独的名字，叫做request line">
+<meta property="og:description" content="http是有明确的区分request和response的 它不像TCP那样允许两端同时做收发 一般来说，只允许一端做收一端做发 因此这里讲http的格式就分为两个大的部分：request message 和 response message 请求端  Requeset Message 第一行有一个单独的名字，叫做request line,后面几行叫做header lines Request Lin">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://ftp.bmp.ovh/imgs/2021/02/48e1ad646b68c036.jpeg">
 <meta property="article:published_time" content="2021-02-02T13:08:59.960Z">
-<meta property="article:modified_time" content="2021-02-02T14:28:39.523Z">
+<meta property="article:modified_time" content="2021-02-08T21:22:37.744Z">
 <meta property="article:author" content="Tie Li">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://ftp.bmp.ovh/imgs/2021/02/48e1ad646b68c036.jpeg">
@@ -47,7 +47,7 @@
   };
 </script>
 
-  <title> | 铁犁的技术博客</title>
+  <title>HTTP的信息格式 (HTTP Message Format) | 铁犁的技术博客</title>
   
 
 
@@ -165,7 +165,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          
+          HTTP的信息格式 (HTTP Message Format)
         </h1>
 
         <div class="post-meta">
@@ -174,10 +174,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2021-02-02 21:08:59 / Modified: 22:28:39" itemprop="dateCreated datePublished" datetime="2021-02-02T21:08:59+08:00">2021-02-02</time>
+              <time title="Created: 2021-02-02 21:08:59" itemprop="dateCreated datePublished" datetime="2021-02-02T21:08:59+08:00">2021-02-02</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-02-09 05:22:37" itemprop="dateModified" datetime="2021-02-09T05:22:37+08:00">2021-02-09</time>
+              </span>
 
           
 
@@ -190,7 +196,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="HTTP的信息格式-HTTP-Message-Format"><a href="#HTTP的信息格式-HTTP-Message-Format" class="headerlink" title="HTTP的信息格式 (HTTP Message Format)"></a>HTTP的信息格式 (HTTP Message Format)</h1><p><br/><br>http是有明确的区分request和response的</p>
+        <p><br/><br>http是有明确的区分request和response的</p>
 <p>它不像TCP那样允许两端同时做收发</p>
 <p>一般来说，只允许一端做收一端做发</p>
 <p>因此这里讲http的格式就分为两个大的部分：request message 和 response message</p>
@@ -241,8 +247,8 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/02/02/cookies%20and%20tokens/" rel="prev" title="">
-      <i class="fa fa-chevron-left"></i> 
+    <a href="/2021/02/02/cookies%20and%20tokens/" rel="prev" title="session cookies 和 tokens">
+      <i class="fa fa-chevron-left"></i> session cookies 和 tokens
     </a></div>
       <div class="post-nav-item">
     <a href="/2021/02/06/number_theory/" rel="next" title="数论的基本知识">
@@ -306,7 +312,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#HTTP%E7%9A%84%E4%BF%A1%E6%81%AF%E6%A0%BC%E5%BC%8F-HTTP-Message-Format"><span class="nav-number">1.</span> <span class="nav-text">HTTP的信息格式 (HTTP Message Format)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%B7%E6%B1%82%E7%AB%AF-Requeset-Message"><span class="nav-number">1.1.</span> <span class="nav-text">请求端  Requeset Message</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Request-Line"><span class="nav-number">1.1.1.</span> <span class="nav-text">Request Line</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Header-Lines"><span class="nav-number">1.1.2.</span> <span class="nav-text">Header Lines</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%B7%E6%B1%82%E7%AB%AF-Requeset-Message"><span class="nav-number">1.</span> <span class="nav-text">请求端  Requeset Message</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Request-Line"><span class="nav-number">1.1.</span> <span class="nav-text">Request Line</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Header-Lines"><span class="nav-number">1.2.</span> <span class="nav-text">Header Lines</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -320,7 +326,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-count">9</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -407,6 +413,59 @@
   
 
   
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
 
   
 
