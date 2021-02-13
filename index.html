@@ -176,7 +176,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-02-13 16:34:00" itemprop="dateModified" datetime="2021-02-13T16:34:00+08:00">2021-02-13</time>
+                <time title="Modified: 2021-02-13 17:35:13" itemprop="dateModified" datetime="2021-02-13T17:35:13+08:00">2021-02-13</time>
               </span>
 
           
@@ -215,13 +215,17 @@
 <h3 id="Response-Message"><a href="#Response-Message" class="headerlink" title="Response Message"></a>Response Message</h3><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yrTBCQ"><img src="https://s3.ax1x.com/2021/02/13/yrTBCQ.png" alt="yrTBCQ.png"></a><br><br>同样也是可以看实际的数据报</p>
 <p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yrTnHK"><img src="https://s3.ax1x.com/2021/02/13/yrTnHK.png" alt="yrTnHK.png"></a></p>
 <h4 id="Status-line"><a href="#Status-line" class="headerlink" title="Status line"></a>Status line</h4><p><br><strong>Version</strong>就是服务器使用的HTTP版本，<strong>status code</strong>和<strong>phrase</strong>是服务器用来表示的状态和状态标识，这也是返回的报文包含的关键信息，下面也逐个进行介绍：</p>
-<p><br><strong>200 OK</strong>：正常返回<br><br><strong>400 Bad Request</strong>：服务器不能理解请求<br><br><strong>404 Not Found</strong>：索取的文件根本不存在<br><br><strong>301 Moved Permantely</strong>：索取的文件存在，但路径变更了<br><br><strong>505 HTTP Version Not Supported</strong>：HTTP版本不支持</p>
+<p><br><strong>200 OK</strong>：正常返回<br><br><strong>400 Bad Request</strong>：服务器不能理解请求<br><br><strong>404 Not Found</strong>：索取的文件根本不存在<br><br><strong>301 Moved Permantely</strong>：索取的文件存在，但路径变更了<br><br><strong>304 Not Modified</strong>：索取的文件在给定的时间节点之后没有被修改<br><br><strong>505 HTTP Version Not Supported</strong>：HTTP版本不支持</p>
 <h4 id="Header-lines-1"><a href="#Header-lines-1" class="headerlink" title="Header lines"></a>Header lines</h4><p><br>同样讲几个常见的fields：</p>
 <p><br><strong>Date</strong>：指这个报文发出的时间<br><br><strong>Last-Modified</strong>：指索取的对象最后修改的时间，这个时间可以指导缓存的更新<br><br><strong>Content-Length</strong>：对象的长度，一般字节作为单位<br><br><strong>Content-Type</strong>：这里指明传递的object的类型，比如text/html<br><br><strong>Connection</strong>：涉及到下面的TCP连接类型</p>
 <h4 id="Entity-body-1"><a href="#Entity-body-1" class="headerlink" title="Entity body"></a>Entity body</h4><p><br>这里一般都要放东西了，比如html文件、jpeg文件之类的</p>
 <p><br>需要注意的是，在整个HTTP过程里面，我们没有考虑端口号这个问题，端口是由下一级考虑的</p>
 <h2 id="Cookies"><a href="#Cookies" class="headerlink" title="Cookies"></a>Cookies</h2><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yrjQ1S"><img src="https://s3.ax1x.com/2021/02/13/yrjQ1S.png" alt="yrjQ1S.png"></a></p>
 <p><br>虽然HTTP是不管状态的，但服务端可以采用cookies的方式来追踪客户信息。简单类比，就是给客户分配一个会员账号，只要用户进来，提供会员账号，服务端就能有记录并提供定制化的服务。需要注意的一点是，<strong>Cookies是存在于HTTP报文段的</strong>，客户端和服务端都保留Cookies，作为往后识别的一个号码</p>
+<h2 id="Web-Caching"><a href="#Web-Caching" class="headerlink" title="Web Caching"></a>Web Caching</h2><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yrzsBQ"><img src="https://s3.ax1x.com/2021/02/13/yrzsBQ.png" alt="yrzsBQ.png"></a></p>
+<p><br>也叫做proxy server。需要注意的是它是实体意义上的服务器，一般是由ISP去建设的，比如大学或机构自己买服务器来做web cache。它与客户端之间的速度很快，基本就是局域网的网速。而且能够显著地减少外部网络的traffic intensity。命中率不需要很高，能有0.4就会显著减少响应的时间，也是能够明显节省带宽花费的方式。将15Mbps的外部链路升级到100Mbps，花费会远高于使用缓存的花费</p>
+<h2 id="The-Conditional-GET"><a href="#The-Conditional-GET" class="headerlink" title="The Conditional GET"></a>The Conditional GET</h2><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/ysSYKU"><img src="https://s3.ax1x.com/2021/02/13/ysSYKU.png" alt="ysSYKU.png"></a></p>
+<p><br>这是在cache基础上的补充功能，当cache想看看自己存的文件是不是有所改变的时候，就向服务端发一个GET报文，并且带上If-modified-since:的报头数据。如果没有改，服务端就仅仅返回一个确认信息，状态码为304，这种方法也是很直观的</p>
 
       
     </div>
