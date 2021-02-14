@@ -22,13 +22,13 @@
 
   <meta property="og:type" content="website">
 <meta property="og:title" content="铁犁的技术博客">
-<meta property="og:url" content="http://example.com/index.html">
+<meta property="og:url" content="http://example.com/page/14/index.html">
 <meta property="og:site_name" content="铁犁的技术博客">
 <meta property="og:locale" content="en_US">
 <meta property="article:author" content="Tie Li">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://example.com/">
+<link rel="canonical" href="http://example.com/page/14/">
 
 
 <script id="page-configurations">
@@ -145,7 +145,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/02/15/multiplex/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/02/02/hello-world/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -159,7 +159,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/02/15/multiplex/" class="post-title-link" itemprop="url">Multiplexing and Demultiplexing</a>
+            <a href="/2021/02/02/hello-world/" class="post-title-link" itemprop="url">Hello World</a>
         </h2>
 
         <div class="post-meta">
@@ -168,9 +168,8 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2021-02-15 00:13:13 / Modified: 02:43:55" itemprop="dateCreated datePublished" datetime="2021-02-15T00:13:13+08:00">2021-02-15</time>
+              <time title="Created: 2021-02-02 05:13:02" itemprop="dateCreated datePublished" datetime="2021-02-02T05:13:02+08:00">2021-02-02</time>
             </span>
 
           
@@ -184,21 +183,15 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yyT2Uf"><img src="https://s3.ax1x.com/2021/02/15/yyT2Uf.jpg" alt="yyT2Uf.jpg"></a></p>
-<p><br>这篇博文做的是<strong>传输层的准备工作</strong></p>
-<p><br>我们需要知道的是网络层，跑的就是IP协议，网络层负责实现从host到host的传输，做的事情就是寻址、路由之类，它负责连通两个host，但是连通之后怎么管的事，由上一层传输层来处理。我们可以想象网络层的作用就是在两个host之间连上了一根大的光缆(实际上是不同的，但这里可以用等效的思想)，这根光缆里面有许多根互相独立的光纤，各种比特在里面跑。相当于在两个host之间架设好了一根大的数据管道</p>
-<p><br>而传输层的任务就是用好这根数据管道，将光缆资源一根根分开，落实到每一个进程上，建立相互独立的进程之间的网络连接，这就叫做 <strong><em>transport-layer multiplexing and demultiplexing</em></strong> 。<br>其实从后面的内容可以知道，建立process to process的连接，依靠IP地址和端口号就可以实现了。另一方面，我们也可以看到后面TCP的流量控制其实是基于线程之间的，换句话说，如果当前两个host之间大部分是UDP，那么TCP的那部分流量控制起到的效果是比较小的。再有，通过与实体光纤的联想，TCP支持全双工而HTTP支持半双工也就可以理解了。因为TCP实现全双工的本质就是两组数据在两根独立的光纤上面跑的</p>
-<h2 id="Multiplexing-and-Demultiplexing"><a href="#Multiplexing-and-Demultiplexing" class="headerlink" title="Multiplexing and Demultiplexing"></a>Multiplexing and Demultiplexing</h2><p><br>一个直接的任务就是当多个传输层的segments传来之后，各个进程要想办法去<strong>认领</strong>属于自家进程的segment</p>
-<p><br>实现的方法就是数据并不是直接传给process，而是每个process可以接多个<strong><em>sockets</em></strong> 每个socket都有属于自己的独立的标识号。而传输层就检查segment的报文段，将对应的segment移交给对应的socket。这个过程叫做<strong><em>demultiplexing</em></strong></p>
-<p><br>而在host端，给不同的sockets的数据打包装成segment，提供报文段，再把来自多个进程的segments一起交给网络层的过程，叫做<strong><em>multiplexing</em></strong></p>
-<h3 id="Port-Number-Field"><a href="#Port-Number-Field" class="headerlink" title="Port Number Field"></a>Port Number Field</h3><p><br>实现多路复用的关键在于使用一种机制，将每个segment引导到对应的socket。使用的方法就是 <strong><em>port number:</em></strong></p>
-<p><a target="_blank" rel="noopener" href="https://www.helloimg.com/image/B9WPmg"><img src="https://www.helloimg.com/images/2021/02/15/B9WPmg.png" alt="B9WPmg.png"></a></p>
-<p><br>由两块组成，<strong><em>source port number field</em></strong> 和 <strong><em>destination port number field</em></strong>，各自占2个字节，一共就是4个字节。由它们来组合判断对应的socket。每个field的端口号范围为0到65535，而且0到1023的端口号是<em>well-known port numbers</em>，意思就是说它们被常见的应用层协议所预定了，比如HTTP预定端口号为80，FTP预定端口号为21。这里就看的很明显了，<strong>端口号是由应用层去指定的，可手动指定也可以自动分配</strong></p>
-<p><a target="_blank" rel="noopener" href="https://www.helloimg.com/image/B9WF5X"><img src="https://www.helloimg.com/images/2021/02/15/B9WF5X.png" alt="B9WF5X.png"></a></p>
-<p><br>而具体的实现过程为：每个socket被分配1个端口号，host接收到segment后，检查segment报文里面的destination port number，然后将其引导到有相同端口号的socket上。这里就容易产生问题，现代计算机都是多进程的，单独检查端口号的话，这个端口如何分配才能不打架，就有技巧了</p>
-<p><br>需要注意的是，在端口实现的过程中，没有设计到IP地址的问题，涉及到的只是两个端口号，以及对应端口号的两个sockets</p>
-<p><br>在UDP里面，如果两个segment有不同的source IP addresses但是有相同的destination IP和destination port number，那么它们会被引导到<strong>同一个</strong>socket上去</p>
-<p><br>虽然在确定把segment引导到哪个socket只需要destination port number，但是resource port number相当于是<strong><em>return address</em></strong>，当然实际的回传需要source IP和source port number一起来进行定位。IP地址负责送到host，port number 负责送到socket</p>
+          <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
 
       
     </div>
@@ -217,7 +210,7 @@
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/13/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><span class="page-number current">14</span>
   </nav>
 
 
@@ -370,59 +363,6 @@
   
 
   
-      
-
-<script>
-  if (typeof MathJax === 'undefined') {
-    window.MathJax = {
-      loader: {
-        source: {
-          '[tex]/amsCd': '[tex]/amscd',
-          '[tex]/AMScd': '[tex]/amscd'
-        }
-      },
-      tex: {
-        inlineMath: {'[+]': [['$', '$']]},
-        tags: 'ams'
-      },
-      options: {
-        renderActions: {
-          findScript: [10, doc => {
-            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
-              const display = !!node.type.match(/; *mode=display/);
-              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
-              const text = document.createTextNode('');
-              node.parentNode.replaceChild(text, node);
-              math.start = {node: text, delim: '', n: 0};
-              math.end = {node: text, delim: '', n: 0};
-              doc.math.push(math);
-            });
-          }, '', false],
-          insertedScript: [200, () => {
-            document.querySelectorAll('mjx-container').forEach(node => {
-              let target = node.parentNode;
-              if (target.nodeName.toLowerCase() === 'li') {
-                target.parentNode.classList.add('has-jax');
-              }
-            });
-          }, '', false]
-        }
-      }
-    };
-    (function () {
-      var script = document.createElement('script');
-      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
-      script.defer = true;
-      document.head.appendChild(script);
-    })();
-  } else {
-    MathJax.startup.document.state(0);
-    MathJax.texReset();
-    MathJax.typeset();
-  }
-</script>
-
-    
 
   
 
