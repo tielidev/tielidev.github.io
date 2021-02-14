@@ -31,7 +31,7 @@
 <meta property="og:image" content="https://www.helloimg.com/images/2021/02/15/B9WPmg.png">
 <meta property="og:image" content="https://www.helloimg.com/images/2021/02/15/B9WF5X.png">
 <meta property="article:published_time" content="2021-02-14T16:13:13.249Z">
-<meta property="article:modified_time" content="2021-02-14T18:43:55.873Z">
+<meta property="article:modified_time" content="2021-02-14T23:22:52.996Z">
 <meta property="article:author" content="Tie Li">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://s3.ax1x.com/2021/02/15/yyT2Uf.jpg">
@@ -178,7 +178,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2021-02-15 00:13:13 / Modified: 02:43:55" itemprop="dateCreated datePublished" datetime="2021-02-15T00:13:13+08:00">2021-02-15</time>
+              <time title="Created: 2021-02-15 00:13:13 / Modified: 07:22:52" itemprop="dateCreated datePublished" datetime="2021-02-15T00:13:13+08:00">2021-02-15</time>
             </span>
 
           
@@ -203,10 +203,14 @@
 <p><a target="_blank" rel="noopener" href="https://www.helloimg.com/image/B9WPmg"><img src="https://www.helloimg.com/images/2021/02/15/B9WPmg.png" alt="B9WPmg.png"></a></p>
 <p><br>由两块组成，<strong><em>source port number field</em></strong> 和 <strong><em>destination port number field</em></strong>，各自占2个字节，一共就是4个字节。由它们来组合判断对应的socket。每个field的端口号范围为0到65535，而且0到1023的端口号是<em>well-known port numbers</em>，意思就是说它们被常见的应用层协议所预定了，比如HTTP预定端口号为80，FTP预定端口号为21。这里就看的很明显了，<strong>端口号是由应用层去指定的，可手动指定也可以自动分配</strong></p>
 <p><a target="_blank" rel="noopener" href="https://www.helloimg.com/image/B9WF5X"><img src="https://www.helloimg.com/images/2021/02/15/B9WF5X.png" alt="B9WF5X.png"></a></p>
-<p><br>而具体的实现过程为：每个socket被分配1个端口号，host接收到segment后，检查segment报文里面的destination port number，然后将其引导到有相同端口号的socket上。这里就容易产生问题，现代计算机都是多进程的，单独检查端口号的话，这个端口如何分配才能不打架，就有技巧了</p>
-<p><br>需要注意的是，在端口实现的过程中，没有设计到IP地址的问题，涉及到的只是两个端口号，以及对应端口号的两个sockets</p>
+<p><br>UDP和TCP使用端口的方式有些不同，下面先讲UDP</p>
+<h3 id="UDP-and-Multiplexing"><a href="#UDP-and-Multiplexing" class="headerlink" title="UDP and Multiplexing"></a>UDP and Multiplexing</h3><p><br>而具体的实现过程为：每个socket被分配1个端口号，host接收到segment后，检查segment报文里面的destination port number，然后将其引导到有相同端口号的socket上</p>
+<p><br>需要注意的是，在UDP multiplexing的过程中，没有涉及到IP地址的问题，涉及到的只是两个端口号，以及对应端口号的两个sockets</p>
 <p><br>在UDP里面，如果两个segment有不同的source IP addresses但是有相同的destination IP和destination port number，那么它们会被引导到<strong>同一个</strong>socket上去</p>
 <p><br>虽然在确定把segment引导到哪个socket只需要destination port number，但是resource port number相当于是<strong><em>return address</em></strong>，当然实际的回传需要source IP和source port number一起来进行定位。IP地址负责送到host，port number 负责送到socket</p>
+<p><br>本质就是<strong>UDP只看destination port number，号对了就引导给socket</strong></p>
+<h3 id="TCP-and-Multiplexing"><a href="#TCP-and-Multiplexing" class="headerlink" title="TCP and Multiplexing"></a>TCP and Multiplexing</h3><p><br><strong>需要同时看四个值</strong>，一个socket需要由4个值确定：双方的IP地址，和双方的端口号</p>
+<p><br>看到这里，就<strong>可以把port和socket分开了</strong>，以及socket的identifier只是host内部区分socket的编号，与port没有直接关系</p>
 
     </div>
 
@@ -284,7 +288,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Multiplexing-and-Demultiplexing"><span class="nav-number">1.</span> <span class="nav-text">Multiplexing and Demultiplexing</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Port-Number-Field"><span class="nav-number">1.1.</span> <span class="nav-text">Port Number Field</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Multiplexing-and-Demultiplexing"><span class="nav-number">1.</span> <span class="nav-text">Multiplexing and Demultiplexing</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Port-Number-Field"><span class="nav-number">1.1.</span> <span class="nav-text">Port Number Field</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UDP-and-Multiplexing"><span class="nav-number">1.2.</span> <span class="nav-text">UDP and Multiplexing</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TCP-and-Multiplexing"><span class="nav-number">1.3.</span> <span class="nav-text">TCP and Multiplexing</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
