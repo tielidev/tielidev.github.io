@@ -145,7 +145,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/02/06/number_theory/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/02/07/static_class_members/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -159,7 +159,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/02/06/number_theory/" class="post-title-link" itemprop="url">数论的基本知识</a>
+            <a href="/2021/02/07/static_class_members/" class="post-title-link" itemprop="url">Static关键字的作用</a>
         </h2>
 
         <div class="post-meta">
@@ -168,16 +168,10 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
+              
 
-              <time title="Created: 2021-02-06 15:14:40" itemprop="dateCreated datePublished" datetime="2021-02-06T15:14:40+08:00">2021-02-06</time>
+              <time title="Created: 2021-02-07 16:56:03 / Modified: 17:56:46" itemprop="dateCreated datePublished" datetime="2021-02-07T16:56:03+08:00">2021-02-07</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-02-07 16:24:56" itemprop="dateModified" datetime="2021-02-07T16:24:56+08:00">2021-02-07</time>
-              </span>
 
           
 
@@ -190,37 +184,16 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yY69Rx"><img src="https://s3.ax1x.com/2021/02/06/yY69Rx.jpg" alt="yY69Rx.jpg"></a></p>
-<p><br>这篇文章先介绍了两个数论的定理，欧拉定理以及中国剩余定理，然后也介绍了RSA加密算法以及对应的证明。下面的内容默认p，q都是素数</p>
-<h2 id="欧拉函数"><a href="#欧拉函数" class="headerlink" title="欧拉函数"></a>欧拉函数</h2><p><br> $\Phi(n)$ 的定义是小于n的而且与n互素的数的个数,比如 $\Phi(5)=4,\Phi(1)=1,\Phi(2)=1$</p>
-<p><br>基本的版本：</p>
-<script type="math/tex; mode=display">\Phi(p)=p-1</script><p><br>当n为两个素数乘积：</p>
-<script type="math/tex; mode=display">\Phi(pq)=pq-(p-1)-(q-1)-1=\Phi(p)\Phi(q)</script><p><br>当n为某个素数的k次方(我更习惯中间的写法)：</p>
-<script type="math/tex; mode=display">\Phi(q^{k})=q^k-q^{k-1}=q^{k}(1-\frac{1}{q})</script><p><br>当n为任意数的情况，$n=p_1^{k_1}p_2^{k_2}…p_r^{k_r}$ 可以根据上面两个公式推出，主要思想还是做减法:</p>
-<script type="math/tex; mode=display">\Phi(n)=\Phi(p_1^{k_1})\Phi(p_2^{k_2})...\Phi(p_r^{k_r})=n\prod\limits_{r=1}^r(1-\frac{1}{p_r})</script><h2 id="欧拉定理"><a href="#欧拉定理" class="headerlink" title="欧拉定理"></a>欧拉定理</h2><p><br>p、q为两个正整数，而且满足 $(p,q)=1$ 那么就有：</p>
-<script type="math/tex; mode=display">p^{\Phi(q)}\equiv 1\pmod q</script><h2 id="欧拉定理的证明"><a href="#欧拉定理的证明" class="headerlink" title="欧拉定理的证明"></a>欧拉定理的证明</h2><p><br>这里很有意思，是集合的思想大放异彩的地方。在证明之前也可以考虑一下集合本身有什么性质，那就是判断两个集合相等的时候，我们不关注里面元素排列的顺序，而是只要左边集合的元素右边都有，再加上两个集合元素个数相同，就能够说明两个集合是一样的。接下来就做一个定义：</p>
-<p><br>n为任意的正整数，将小于n且与n互素的数形成一个集合 $Z_n$ ，称这个集合 $Z_n$ 为n的完全剩余系。一个明显的推论就是 $|Z_n|=\Phi(n)$</p>
-<p><br>给的两个正整数a和n，满足 $gcd(a,n)=1$ ,证明过程分两步：</p>
-<p><br>(1)令<br><br></p>
-<script type="math/tex; mode=display">Z_n=\{x_1,x_2,...x_{\Phi(n)}\}, S= \{ {a*x_1{\pmod n}},{a*x_2{\pmod n} },...{a*x_{\Phi(n)}{\pmod n} }\}</script><p><br>可以知道 $Z_n=S$ （因为两个集合长度相同，而且S里面的元素两两不同而且都与n互素）</p>
-<p><br>(2)</p>
-<script type="math/tex; mode=display">a^{\Phi(n)}*{x_1}*{x_2}...*{x_{\Phi(n)}}</script><script type="math/tex; mode=display">\equiv (a*{x_1})(a*{x_2})...(a*{x_{\Phi(n)}})</script><script type="math/tex; mode=display">\equiv(a*{x_1}\mod n)(a*{x_2}\mod n)...(a*{x_{\Phi(n)}\mod n})</script><script type="math/tex; mode=display">\equiv{x_1}*{x_2}...{x_{\Phi(n)}}\pmod n</script><p>比较第一项和最后一项，可以知道 $a^{\Phi(n)}\equiv1\pmod n$</p>
-<h2 id="中国剩余定理"><a href="#中国剩余定理" class="headerlink" title="中国剩余定理"></a>中国剩余定理</h2><p><br>定理：设 $m_1,m_2,…m_r\in N$，且两两互素，那么同余方程 $\begin{cases}<br>x\equiv b_1\pmod {m_1}\\<br>x\equiv b_2\pmod {m_2}\\<br>…\\<br>x\equiv b_r\pmod {m_r} \end{cases}$ ，在模 $M=m_1m_2…m_r$ 下有唯一同余解</p>
-<p><br>证明：</p>
-<p><br>令 $M_i=M/m_i$ ，那么知道 $(M_i,m_i)=1$<br><br>现在以 $m_i$ 为模，可以找到 $M_i$ 的逆元 $s_i$ ，使得 $M_is_i\equiv1\mod m_i$<br><br>再令 $N_i=M_is_i$<br><br>那么 $x=N_1b_1+N_2b_2…+N_rb_r\pmod M$ 为其解</p>
-<p><br>充分性就可以直接看出了,接下来说唯一性<br><br>设 $x_1,x_2$为满足条件的两个解，那么 $x_1\equiv x_2\pmod {m_1},x_1\equiv x_2\pmod<br>{m_2},…x_1\equiv x_2\pmod{m_r}$<br><br> $\because m_1,m_2,…,m_r两两互素$<br><br> $\therefore [m_1,m_2,…,m_r]=m_1m_2…m_r=M$<br><br> $\therefore x_1\equiv x_2\pmod M$</p>
-<h2 id="中国剩余定理的引理"><a href="#中国剩余定理的引理" class="headerlink" title="中国剩余定理的引理"></a>中国剩余定理的引理</h2><p>引理：如果p,q为素数且互素，那么：</p>
-<script type="math/tex; mode=display">x\equiv y\pmod p\wedge x\equiv y\pmod q \Rightarrow x\equiv y\pmod {pq}</script><p><br>证明依据剩余定理就可以证明了</p>
-<h2 id="RSA加密算法"><a href="#RSA加密算法" class="headerlink" title="RSA加密算法"></a>RSA加密算法</h2><p><br>首先选取两个比较大的素数p和q，官方建议是数量级在二进制1024位的大小<br><br>然后令 $n=pq, z=(p-1)(q-1)$ ，这里也肯定能知道 $z=\Phi(n)$<br><br>取一个数e，使得 $gcd(e,z)=1$<br><br>找到e的逆元d，使得 $ed\equiv1\pmod z$<br><br>假设接收者名为Bob，那么Bob的公钥 $K_B^+$ 为数对 $(n,e)$，Bob的私钥 $K_B^-$ 为数对 $(n,d)$<br><br>假设发送者名为Alice，将要发送的明文为m，满足条件 $m &lt; n$<br><br>那么加密后的文件 $c=m^e\pmod n$<br><br>Bob接收到c，进行解密 $m=c^d\pmod n$</p>
-<h2 id="RSA证明"><a href="#RSA证明" class="headerlink" title="RSA证明"></a>RSA证明</h2><p><br>核心要证明的就是 $m^{ed}\equiv m\pmod n$ ,分两种情况来证明，$gcd(m,n)=1$ 和 $gcd(m,n)\neq 1$</p>
-<h3 id="gcd-m-n-1"><a href="#gcd-m-n-1" class="headerlink" title="$gcd(m,n)=1$"></a>$gcd(m,n)=1$</h3><p><br>证明：使用欧拉定理，注意到 $m^{\Phi(n)}\equiv1\pmod n$ ，那么对于任意正整数r，可以有</p>
-<script type="math/tex; mode=display">m^r\equiv m^{r\mod{\Phi(n)} }\equiv m^{r\mod z}\pmod n</script><p><br>当 $r=ed$ 时，$r\equiv 1\pmod z$，因此 $m^{ed}\equiv m\pmod n$</p>
-<h3 id="gcd-m-n-neq-1"><a href="#gcd-m-n-neq-1" class="headerlink" title="$gcd(m,n)\neq 1$"></a>$gcd(m,n)\neq 1$</h3><p><br>证明：不妨假设 $m=pk,gcd(k,n)=1$ 。需要注意到中国剩余定理的引理：<br><br>如果p,q为素数而且互素，那么:</p>
-<script type="math/tex; mode=display">x\equiv y\pmod p\wedge x\equiv y\pmod q \Rightarrow x\equiv y\pmod {pq}</script><p><br>因此如果我们能够证明 $m^{ed}\equiv m\pmod p$ 且 $m^{ed}\equiv m\pmod q$ ，<br><br>就能够得到 $m^{ed}\equiv m\pmod {pq}$</p>
-<p><br>1） $m^{ed}\equiv m\pmod p$ 是显然的</p>
-<p><br>2) 利用条件 $ed\equiv 1\pmod z$，那么存在自然数s，使得</p>
-<script type="math/tex; mode=display">ed=s*z+1 \Rightarrow ed-1=s(p-1)(q-1)</script><p><br> $\because gcd(m,q)=1 \therefore m^{q-1}\equiv 1\pmod q$<br><br> $\therefore m^{ed-1}=m^{s(p-1)(q-1)}=m^{(q-1)^{s(p-1)} }\equiv 1\pmod q$<br><br> $\therefore m^{ed}\equiv m\pmod q$</p>
-<p><br> 结合上述的引理，我们就有 $m^{ed}\equiv m\pmod {pq}$<br><br> RSA原理也证明完了</p>
+          <p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yNeLfx"><img src="https://s3.ax1x.com/2021/02/07/yNeLfx.jpg" alt="yNeLfx.jpg"></a></p>
+<h2 id="Declaring-static-Members"><a href="#Declaring-static-Members" class="headerlink" title="Declaring static Members"></a>Declaring static Members</h2><p><br>在定义某些类时，我们希望某个成员是与整个类绑定在一起的，而不是每个对象都单独有一个。<br>这时候就是可以使用static。 比如说定义一个bank account的class，在里面想放一个银行贷款最低利率的成员，<br>那这时候这个prime interest就适合使用static修饰，因为它是属于bank account，而且只要prime interest<br>的值改变了，每个bank account 的对象都能看到这个值的改变。 个人感觉有点像在某个局部里面的全局成员</p>
+<p><br>static 修饰的成员相当于被类下面的对象所共享的，不管创建多少个objects，也只会有一个<br><br>代码示例<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Account</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">calculate</span><span class="params">()</span> </span>&#123; amount += amount * initRate; &#125;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">double</span> <span class="title">rate</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> interestRate; &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">string</span> owner;</span><br><span class="line">    <span class="keyword">double</span> amount;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">double</span> interestRate;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">double</span> <span class="title">initRate</span><span class="params">()</span></span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><br><br>因为static的成员不会与任何object绑定，所以无法使用this指针去指出来<br><br>static member function也不能声明成const，这个就暂时不能理解了</p>
+<h2 id="Using-a-Class-static-Member"><a href="#Using-a-Class-static-Member" class="headerlink" title="Using a Class static Member"></a>Using a Class static Member</h2><p><br>可以通过class 的 scope来直接获取，也可以用指针之类的获取<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">double</span> r;</span><br><span class="line">r = Account::rate();<span class="comment">//通过class 的 scop 来获取</span></span><br><span class="line"></span><br><span class="line">Account ac1;</span><br><span class="line">Account *ac2 = &amp;ac1;<span class="comment">//分别从栈上和堆上初始化</span></span><br><span class="line"></span><br><span class="line">r = ac1.rate();</span><br><span class="line">r = ac2-&gt;rate();</span><br></pre></td></tr></table></figure><br><br>成员函数可以直接访问静态成员，不用说明scope<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Account</span>&#123;</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">calculate</span><span class="params">()</span> </span>&#123;amount += amount * interestRate; &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">double</span> interestRate;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h2 id="Defining-static-Members"><a href="#Defining-static-Members" class="headerlink" title="Defining static Members"></a>Defining static Members</h2><p><br>static 的成员只有在声明的时候才使用一次static 的修饰符，其余定义或者使用的时候不会再使用static<br>修饰。我们只能在class body外面对static成员进行定义和初始化</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Account::rate</span><span class="params">(<span class="keyword">double</span> newRate)</span></span>&#123;</span><br><span class="line">    interestRate = newRate;<span class="comment">//这里newRate直接用了</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br>另一个就是在定义的时候，也是能够访问private内容的，和正常的声明一样的<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">double</span> Account::interestRate = initRate();</span><br></pre></td></tr></table></figure><br><br>需要注意的是，对static的声明最好放在与class成员函数声明的同一个cpp文件下面，这也比较好理解</p>
+<h2 id="In-Class-Initialization-of-static-Data-Members"><a href="#In-Class-Initialization-of-static-Data-Members" class="headerlink" title="In-Class Initialization of static Data Members"></a>In-Class Initialization of static Data Members</h2><p><br>这里讲的是如果是想做常量，那么可以在class里面直接做define，但是这里理解的不是很清楚</p>
+<h2 id="static-Members-Can-Be-Used-in-Ways-Ordinary-Members-Can-t"><a href="#static-Members-Can-Be-Used-in-Ways-Ordinary-Members-Can-t" class="headerlink" title="static Members Can Be Used in Ways Ordinary Members Can`t"></a>static Members Can Be Used in Ways Ordinary Members Can`t</h2><p><br>这里讲了一些static的小用法，我觉得就随便看看理解吧，目前我也不想用，但以后见到也能知道背后的思路<br><br>static 可以不用提供很明确的类型<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Bar</span>&#123;</span></span><br><span class="line">  <span class="keyword">public</span>:</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">static</span> Bar mem1; <span class="comment">//ok:这里类型并没有说完整，但是可以的</span></span><br><span class="line">    Bar *mem2;<span class="comment">//ok:用指针定义这样也是允许的</span></span><br><span class="line">    Bar mem3;<span class="comment">//error:这样定义需要完整的类型</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><br><br>static可以用来当默认参数，这个见的挺多的<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Screen</span>&#123;</span></span><br><span class="line">  <span class="keyword">public</span>:</span><br><span class="line">    <span class="function">Screen&amp; <span class="title">clear</span><span class="params">(<span class="keyword">char</span> = bkground)</span></span>;</span><br><span class="line">  <span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">char</span> bkground;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><br>感觉起来static核心的设计就是只属于class的全局变量，是给所有class 的 objects 共享的，<br><br>但不属于任何对象，因此不是由任何的constructor初始化的</p>
 
       
     </div>
@@ -239,7 +212,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/10/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/12/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/10/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/12/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -305,7 +278,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-count">13</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
