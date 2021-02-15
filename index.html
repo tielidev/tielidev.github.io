@@ -170,7 +170,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2021-02-15 16:20:49 / Modified: 18:17:11" itemprop="dateCreated datePublished" datetime="2021-02-15T16:20:49+08:00">2021-02-15</time>
+              <time title="Created: 2021-02-15 21:21:17 / Modified: 21:23:53" itemprop="dateCreated datePublished" datetime="2021-02-15T21:21:17+08:00">2021-02-15</time>
             </span>
 
           
@@ -204,6 +204,11 @@
 <p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y6t2iF"><img src="https://s3.ax1x.com/2021/02/15/y6t2iF.png" alt="y6t2iF.png"></a></p>
 <p><br>这里举一个例子，sender发送data0，receiver收到后回传ack0并等待data1，sender收到污染的ack于是重传data0，receiver此时在等data1却收到了data0，于是回传ack0仍然继续等待data1，当sender收到了没有被污染的ack0后，才进入新状态，准备发送data1</p>
 <h3 id="Rdt-over-a-Lossy-Channel-with-Bit-Errors-rdt3-0"><a href="#Rdt-over-a-Lossy-Channel-with-Bit-Errors-rdt3-0" class="headerlink" title="Rdt over a Lossy Channel with Bit Errors: rdt3.0"></a>Rdt over a Lossy Channel with Bit Errors: rdt3.0</h3><p><br>前面是考虑了数据的正确性，是假设处于不丢包的管道上的。接下来把丢包这种情况考虑进去。考虑数据完整性、考虑丢包，基本就是比较全面的RDT了</p>
+<p><br>首先要面对的问题是如何判断发生了丢包。这里将判断的任务交给sender，采用计时的方式，如果发出的packet丢失了，或者receiver的ACK丢失了，sender都不会收到ACK，这样sender就可以判断发生了丢包，然后重传</p>
+<p><br>而具体选择多少时间才算超时，由于设计的初衷是尽量发现了丢包就立刻重传，所以选择让sender自己选择一个时间窗口，只要超过了窗口期没有收到ACK，就开始重传。即使有可能packet只是阻塞了，但仍然选择重传</p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y6gb2q"><img src="https://s3.ax1x.com/2021/02/15/y6gb2q.png" alt="y6gb2q.png"></a></p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y6gxZF"><img src="https://s3.ax1x.com/2021/02/15/y6gxZF.png" alt="y6gxZF.png"></a></p>
+<p><br>需要注意的是，这里的protocol依然是stop-and-wait类型的，直到开始上流水线之后，才会改变。到这里，基本的元素都有了：<strong><em>checksum、sequence number、timer、ACK</em></strong></p>
 
       
     </div>
