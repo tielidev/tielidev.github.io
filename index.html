@@ -145,7 +145,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/02/15/multiplex/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/02/15/reliable_data_transfer/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -159,7 +159,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/02/15/multiplex/" class="post-title-link" itemprop="url">Multiplexing and Demultiplexing</a>
+            <a href="/2021/02/15/reliable_data_transfer/" class="post-title-link" itemprop="url">Reliable Data Transfer</a>
         </h2>
 
         <div class="post-meta">
@@ -170,7 +170,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2021-02-15 00:13:13 / Modified: 07:22:52" itemprop="dateCreated datePublished" datetime="2021-02-15T00:13:13+08:00">2021-02-15</time>
+              <time title="Created: 2021-02-15 16:20:49 / Modified: 18:17:11" itemprop="dateCreated datePublished" datetime="2021-02-15T16:20:49+08:00">2021-02-15</time>
             </span>
 
           
@@ -184,25 +184,26 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yyT2Uf"><img src="https://s3.ax1x.com/2021/02/15/yyT2Uf.jpg" alt="yyT2Uf.jpg"></a></p>
-<p><br>这篇博文做的是<strong>传输层的准备工作</strong></p>
-<p><br>我们需要知道的是网络层，跑的就是IP协议，网络层负责实现从host到host的传输，做的事情就是寻址、路由之类，它负责连通两个host，但是连通之后怎么管的事，由上一层传输层来处理。我们可以想象网络层的作用就是在两个host之间连上了一根大的光缆(实际上是不同的，但这里可以用等效的思想)，这根光缆里面有许多根互相独立的光纤，各种比特在里面跑。相当于在两个host之间架设好了一根大的数据管道</p>
-<p><br>而传输层的任务就是用好这根数据管道，将光缆资源一根根分开，落实到每一个进程上，建立相互独立的进程之间的网络连接，这就叫做 <strong><em>transport-layer multiplexing and demultiplexing</em></strong> 。<br>其实从后面的内容可以知道，建立process to process的连接，依靠IP地址和端口号就可以实现了。另一方面，我们也可以看到后面TCP的流量控制其实是基于线程之间的，换句话说，如果当前两个host之间大部分是UDP，那么TCP的那部分流量控制起到的效果是比较小的。再有，通过与实体光纤的联想，TCP支持全双工而HTTP支持半双工也就可以理解了。因为TCP实现全双工的本质就是两组数据在两根独立的光纤上面跑的</p>
-<h2 id="Multiplexing-and-Demultiplexing"><a href="#Multiplexing-and-Demultiplexing" class="headerlink" title="Multiplexing and Demultiplexing"></a>Multiplexing and Demultiplexing</h2><p><br>一个直接的任务就是当多个传输层的segments传来之后，各个进程要想办法去<strong>认领</strong>属于自家进程的segment</p>
-<p><br>实现的方法就是数据并不是直接传给process，而是每个process可以接多个<strong><em>sockets</em></strong> 每个socket都有属于自己的独立的标识号。而传输层就检查segment的报文段，将对应的segment移交给对应的socket。这个过程叫做<strong><em>demultiplexing</em></strong></p>
-<p><br>而在host端，给不同的sockets的数据打包装成segment，提供报文段，再把来自多个进程的segments一起交给网络层的过程，叫做<strong><em>multiplexing</em></strong></p>
-<h3 id="Port-Number-Field"><a href="#Port-Number-Field" class="headerlink" title="Port Number Field"></a>Port Number Field</h3><p><br>实现多路复用的关键在于使用一种机制，将每个segment引导到对应的socket。使用的方法就是 <strong><em>port number:</em></strong></p>
-<p><a target="_blank" rel="noopener" href="https://www.helloimg.com/image/B9WPmg"><img src="https://www.helloimg.com/images/2021/02/15/B9WPmg.png" alt="B9WPmg.png"></a></p>
-<p><br>由两块组成，<strong><em>source port number field</em></strong> 和 <strong><em>destination port number field</em></strong>，各自占2个字节，一共就是4个字节。由它们来组合判断对应的socket。每个field的端口号范围为0到65535，而且0到1023的端口号是<em>well-known port numbers</em>，意思就是说它们被常见的应用层协议所预定了，比如HTTP预定端口号为80，FTP预定端口号为21。这里就看的很明显了，<strong>端口号是由应用层去指定的，可手动指定也可以自动分配</strong></p>
-<p><a target="_blank" rel="noopener" href="https://www.helloimg.com/image/B9WF5X"><img src="https://www.helloimg.com/images/2021/02/15/B9WF5X.png" alt="B9WF5X.png"></a></p>
-<p><br>UDP和TCP使用端口的方式有些不同，下面先讲UDP</p>
-<h3 id="UDP-and-Multiplexing"><a href="#UDP-and-Multiplexing" class="headerlink" title="UDP and Multiplexing"></a>UDP and Multiplexing</h3><p><br>而具体的实现过程为：每个socket被分配1个端口号，host接收到segment后，检查segment报文里面的destination port number，然后将其引导到有相同端口号的socket上</p>
-<p><br>需要注意的是，在UDP multiplexing的过程中，没有涉及到IP地址的问题，涉及到的只是两个端口号，以及对应端口号的两个sockets</p>
-<p><br>在UDP里面，如果两个segment有不同的source IP addresses但是有相同的destination IP和destination port number，那么它们会被引导到<strong>同一个</strong>socket上去</p>
-<p><br>虽然在确定把segment引导到哪个socket只需要destination port number，但是resource port number相当于是<strong><em>return address</em></strong>，当然实际的回传需要source IP和source port number一起来进行定位。IP地址负责送到host，port number 负责送到socket</p>
-<p><br>本质就是<strong>UDP只看destination port number，号对了就引导给socket</strong></p>
-<h3 id="TCP-and-Multiplexing"><a href="#TCP-and-Multiplexing" class="headerlink" title="TCP and Multiplexing"></a>TCP and Multiplexing</h3><p><br><strong>需要同时看四个值</strong>，一个socket需要由4个值确定：双方的IP地址，和双方的端口号</p>
-<p><br>看到这里，就<strong>可以把port和socket分开了</strong>，以及socket的identifier只是host内部区分socket的编号，与port没有直接关系</p>
+          <p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y61d2t"><img src="https://s3.ax1x.com/2021/02/15/y61d2t.jpg" alt="y61d2t.jpg"></a></p>
+<h2 id="Building-a-Reliable-Data-Transfer-Protocol"><a href="#Building-a-Reliable-Data-Transfer-Protocol" class="headerlink" title="Building a Reliable Data Transfer Protocol"></a>Building a Reliable Data Transfer Protocol</h2><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y61YUH"><img src="https://s3.ax1x.com/2021/02/15/y61YUH.png" alt="y61YUH.png"></a></p>
+<p><br>上面的这个图讲了实际的可靠传输的结构，应用层依赖传输层提供的服务。需要说明的是<strong><em>rdt_send</em></strong>是上层（应用层）传来的指令，<strong><em>udt_send</em></strong> 是传输层对网络层下达的指令，换句话说就是调用网络层的接口，<strong><em>rdt_rcv</em></strong> 是传输层从网络层中获取数据，并且形成可靠数据，<strong><em>deliver_data</em></strong> 是传输层向网络层传输数据</p>
+<p><br>接下来我就照着书上的结构，依次去建立一个可靠传输的协议。这里的可靠传输协议是比较通用的设计思路，不局限于传输层。而这种思路甚至在我们以后设计应用层的程序时，也可以拿来作为借鉴</p>
+<h3 id="Rdt-over-a-Perfectly-Reliable-Channel-rdt1-0"><a href="#Rdt-over-a-Perfectly-Reliable-Channel-rdt1-0" class="headerlink" title="Rdt over a Perfectly Reliable Channel: rdt1.0"></a>Rdt over a Perfectly Reliable Channel: rdt1.0</h3><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y63bm8"><img src="https://s3.ax1x.com/2021/02/15/y63bm8.png" alt="y63bm8.png"></a></p>
+<p><br>这是最理想的状态，底层提供的是可靠传输，当前层只需要管收发就好了</p>
+<h3 id="Rdt-over-a-Channel-with-Bit-Errors-rdt2-0"><a href="#Rdt-over-a-Channel-with-Bit-Errors-rdt2-0" class="headerlink" title="Rdt over a Channel with Bit Errors: rdt2.0"></a>Rdt over a Channel with Bit Errors: rdt2.0</h3><p><br>这个情况下<strong>假设数据可能传输错误，但是仍然是有序的</strong>。数据传输错误在物理层面上有可能出现，数据包在传送、传输、缓冲区的过程都有可能被改变。在这里也可以看到，checksum和ACK是绑在一起出现的，有了ACK后，checksum才有意义</p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y6GDr6"><img src="https://s3.ax1x.com/2021/02/15/y6GDr6.png" alt="y6GDr6.png"></a></p>
+<p><br>原始的版本既有ACK也有NAK，这种重传机制叫做<strong><em>ARQ(Automatic Repeat reQuest)protocol</em></strong></p>
+<p><br>但是上面的方法有一个隐患，校验码只是在判断data部分有没有错，那如果ACK或者NAK被干扰了，如何去识别和修复？上面提出的方法里面没有对ACK/NAK做校验</p>
+<p><br>这里采取的方法是，当发送端发现收到的ACK/NAK被污染时，就重传刚才发送的数据包。这种方法给接收端带来了问题，接收端收到一个packet的时候，如何判断这个packet是新的数据包还是因为ACK/NAK污染导致发送端重传的数据包？</p>
+<p><br>在当前这个stop-and-wait protocol中，增加一位的sequence number就能够解决问题了，接收端通过这个sequence number来分辨收到的是重传还是新的packet。并且receiver回传ACK/NAK的时候也带了校验码，因此这时候sender可以判断收到的ACK/NAK有没有被污染。下面就是rdt2.1版本：</p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y6YH3j"><img src="https://s3.ax1x.com/2021/02/15/y6YH3j.png" alt="y6YH3j.png"></a></p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y6YzUU"><img src="https://s3.ax1x.com/2021/02/15/y6YzUU.png" alt="y6YzUU.png"></a></p>
+<p><br>需要留意的是，<strong>这种改良版本的目的是应对ACK/NAK被污染的情况</strong></p>
+<p><br>注意到ACK和NAK是二元关系，我们还可以进化，不要NAK，对于receiver，要么传ACK，要么不传。这里的底层环境还是处于没有丢包的前提下，下面就是只有ACK的进化版本，rdt2.2:</p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y6td2j"><img src="https://s3.ax1x.com/2021/02/15/y6td2j.png" alt="y6td2j.png"></a></p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y6t2iF"><img src="https://s3.ax1x.com/2021/02/15/y6t2iF.png" alt="y6t2iF.png"></a></p>
+<p><br>这里举一个例子，sender发送data0，receiver收到后回传ack0并等待data1，sender收到污染的ack于是重传data0，receiver此时在等data1却收到了data0，于是回传ack0仍然继续等待data1，当sender收到了没有被污染的ack0后，才进入新状态，准备发送data1</p>
+<h3 id="Rdt-over-a-Lossy-Channel-with-Bit-Errors-rdt3-0"><a href="#Rdt-over-a-Lossy-Channel-with-Bit-Errors-rdt3-0" class="headerlink" title="Rdt over a Lossy Channel with Bit Errors: rdt3.0"></a>Rdt over a Lossy Channel with Bit Errors: rdt3.0</h3><p><br>前面是考虑了数据的正确性，是假设处于不丢包的管道上的。接下来把丢包这种情况考虑进去。考虑数据完整性、考虑丢包，基本就是比较全面的RDT了</p>
 
       
     </div>
@@ -221,7 +222,7 @@
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -287,7 +288,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-count">15</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

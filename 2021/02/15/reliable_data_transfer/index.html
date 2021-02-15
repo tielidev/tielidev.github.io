@@ -20,21 +20,28 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="题目描述https:&#x2F;&#x2F;leetcode-cn.com&#x2F;problems&#x2F;building-boxes&#x2F; 思路做这个题的方法还是应该先在脑子里模拟过程，然后再去实现。并且这里出现了通过两头夹的方式寻找floor，对于边界情况要好好把握。以及常用的数学通项公式。连续自然数和： \sum_{i&#x3D;1}^ni &#x3D; \frac{n(n+1)}{2}连续平方数和： \sum_{i&#x3D;1}^ni^2 &#x3D; \fr">
+  <meta name="description" content="Building a Reliable Data Transfer Protocol 上面的这个图讲了实际的可靠传输的结构，应用层依赖传输层提供的服务。需要说明的是rdt_send是上层（应用层）传来的指令，udt_send 是传输层对网络层下达的指令，换句话说就是调用网络层的接口，rdt_rcv 是传输层从网络层中获取数据，并且形成可靠数据，deliver_data 是传输层向网络层传输数据">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Leetcode 1739.放置盒子">
-<meta property="og:url" content="http://example.com/2021/02/09/leetcode%201739/index.html">
+<meta property="og:title" content="Reliable Data Transfer">
+<meta property="og:url" content="http://example.com/2021/02/15/reliable_data_transfer/index.html">
 <meta property="og:site_name" content="铁犁的技术博客">
-<meta property="og:description" content="题目描述https:&#x2F;&#x2F;leetcode-cn.com&#x2F;problems&#x2F;building-boxes&#x2F; 思路做这个题的方法还是应该先在脑子里模拟过程，然后再去实现。并且这里出现了通过两头夹的方式寻找floor，对于边界情况要好好把握。以及常用的数学通项公式。连续自然数和： \sum_{i&#x3D;1}^ni &#x3D; \frac{n(n+1)}{2}连续平方数和： \sum_{i&#x3D;1}^ni^2 &#x3D; \fr">
+<meta property="og:description" content="Building a Reliable Data Transfer Protocol 上面的这个图讲了实际的可靠传输的结构，应用层依赖传输层提供的服务。需要说明的是rdt_send是上层（应用层）传来的指令，udt_send 是传输层对网络层下达的指令，换句话说就是调用网络层的接口，rdt_rcv 是传输层从网络层中获取数据，并且形成可靠数据，deliver_data 是传输层向网络层传输数据">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://s3.ax1x.com/2021/02/09/ydkxl8.jpg">
-<meta property="article:published_time" content="2021-02-09T09:05:39.476Z">
-<meta property="article:modified_time" content="2021-02-09T09:16:30.161Z">
+<meta property="og:image" content="https://s3.ax1x.com/2021/02/15/y61d2t.jpg">
+<meta property="og:image" content="https://s3.ax1x.com/2021/02/15/y61YUH.png">
+<meta property="og:image" content="https://s3.ax1x.com/2021/02/15/y63bm8.png">
+<meta property="og:image" content="https://s3.ax1x.com/2021/02/15/y6GDr6.png">
+<meta property="og:image" content="https://s3.ax1x.com/2021/02/15/y6YH3j.png">
+<meta property="og:image" content="https://s3.ax1x.com/2021/02/15/y6YzUU.png">
+<meta property="og:image" content="https://s3.ax1x.com/2021/02/15/y6td2j.png">
+<meta property="og:image" content="https://s3.ax1x.com/2021/02/15/y6t2iF.png">
+<meta property="article:published_time" content="2021-02-15T08:20:49.975Z">
+<meta property="article:modified_time" content="2021-02-15T10:17:11.386Z">
 <meta property="article:author" content="Tie Li">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://s3.ax1x.com/2021/02/09/ydkxl8.jpg">
+<meta name="twitter:image" content="https://s3.ax1x.com/2021/02/15/y61d2t.jpg">
 
-<link rel="canonical" href="http://example.com/2021/02/09/leetcode%201739/">
+<link rel="canonical" href="http://example.com/2021/02/15/reliable_data_transfer/">
 
 
 <script id="page-configurations">
@@ -47,7 +54,7 @@
   };
 </script>
 
-  <title>Leetcode 1739.放置盒子 | 铁犁的技术博客</title>
+  <title>Reliable Data Transfer | 铁犁的技术博客</title>
   
 
 
@@ -152,7 +159,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/02/09/leetcode%201739/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/02/15/reliable_data_transfer/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -165,7 +172,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Leetcode 1739.放置盒子
+          Reliable Data Transfer
         </h1>
 
         <div class="post-meta">
@@ -176,7 +183,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2021-02-09 17:05:39 / Modified: 17:16:30" itemprop="dateCreated datePublished" datetime="2021-02-09T17:05:39+08:00">2021-02-09</time>
+              <time title="Created: 2021-02-15 16:20:49 / Modified: 18:17:11" itemprop="dateCreated datePublished" datetime="2021-02-15T16:20:49+08:00">2021-02-15</time>
             </span>
 
           
@@ -190,11 +197,27 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p><a target="_blank" rel="noopener" href="https://imgchr.com/i/ydkxl8"><img src="https://s3.ax1x.com/2021/02/09/ydkxl8.jpg" alt="ydkxl8.jpg"></a><br><br></p>
-<h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p><br><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/building-boxes/">https://leetcode-cn.com/problems/building-boxes/</a></p>
-<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p><br>做这个题的方法<strong>还是应该先在脑子里模拟过程</strong>，然后再去实现。并且这里出现了通过两头夹的方式寻找floor，对于边界情况要好好把握。以及常用的数学通项公式。<br><br>连续自然数和：</p>
-<script type="math/tex; mode=display">\sum_{i=1}^ni = \frac{n(n+1)}{2}</script><p><br>连续平方数和：</p>
-<script type="math/tex; mode=display">\sum_{i=1}^ni^2 = \frac{n(n+1)(2n+1)}{6}</script><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line">    <span class="function"><span class="keyword">long</span> <span class="title">h1</span><span class="params">(<span class="keyword">long</span> x)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> x*(x+<span class="number">1</span>)*(x+<span class="number">2</span>)/<span class="number">6</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">long</span> <span class="title">h2</span><span class="params">(<span class="keyword">long</span> y)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> y*(y+<span class="number">1</span>)/<span class="number">2</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">minimumBoxes</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> <span class="built_in">floor</span> = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span>(h1(<span class="built_in">floor</span>) &lt;= n)&#123;</span><br><span class="line">            <span class="built_in">floor</span>++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">floor</span> -=<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">int</span> start = h1(<span class="built_in">floor</span>);</span><br><span class="line">        <span class="keyword">int</span> dis = n - start;</span><br><span class="line">        <span class="keyword">int</span> step = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span>(h2(step) &lt; dis)&#123;</span><br><span class="line">            step++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> ret = h2(<span class="built_in">floor</span>) + step;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> ret;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+        <p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y61d2t"><img src="https://s3.ax1x.com/2021/02/15/y61d2t.jpg" alt="y61d2t.jpg"></a></p>
+<h2 id="Building-a-Reliable-Data-Transfer-Protocol"><a href="#Building-a-Reliable-Data-Transfer-Protocol" class="headerlink" title="Building a Reliable Data Transfer Protocol"></a>Building a Reliable Data Transfer Protocol</h2><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y61YUH"><img src="https://s3.ax1x.com/2021/02/15/y61YUH.png" alt="y61YUH.png"></a></p>
+<p><br>上面的这个图讲了实际的可靠传输的结构，应用层依赖传输层提供的服务。需要说明的是<strong><em>rdt_send</em></strong>是上层（应用层）传来的指令，<strong><em>udt_send</em></strong> 是传输层对网络层下达的指令，换句话说就是调用网络层的接口，<strong><em>rdt_rcv</em></strong> 是传输层从网络层中获取数据，并且形成可靠数据，<strong><em>deliver_data</em></strong> 是传输层向网络层传输数据</p>
+<p><br>接下来我就照着书上的结构，依次去建立一个可靠传输的协议。这里的可靠传输协议是比较通用的设计思路，不局限于传输层。而这种思路甚至在我们以后设计应用层的程序时，也可以拿来作为借鉴</p>
+<h3 id="Rdt-over-a-Perfectly-Reliable-Channel-rdt1-0"><a href="#Rdt-over-a-Perfectly-Reliable-Channel-rdt1-0" class="headerlink" title="Rdt over a Perfectly Reliable Channel: rdt1.0"></a>Rdt over a Perfectly Reliable Channel: rdt1.0</h3><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y63bm8"><img src="https://s3.ax1x.com/2021/02/15/y63bm8.png" alt="y63bm8.png"></a></p>
+<p><br>这是最理想的状态，底层提供的是可靠传输，当前层只需要管收发就好了</p>
+<h3 id="Rdt-over-a-Channel-with-Bit-Errors-rdt2-0"><a href="#Rdt-over-a-Channel-with-Bit-Errors-rdt2-0" class="headerlink" title="Rdt over a Channel with Bit Errors: rdt2.0"></a>Rdt over a Channel with Bit Errors: rdt2.0</h3><p><br>这个情况下<strong>假设数据可能传输错误，但是仍然是有序的</strong>。数据传输错误在物理层面上有可能出现，数据包在传送、传输、缓冲区的过程都有可能被改变。在这里也可以看到，checksum和ACK是绑在一起出现的，有了ACK后，checksum才有意义</p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y6GDr6"><img src="https://s3.ax1x.com/2021/02/15/y6GDr6.png" alt="y6GDr6.png"></a></p>
+<p><br>原始的版本既有ACK也有NAK，这种重传机制叫做<strong><em>ARQ(Automatic Repeat reQuest)protocol</em></strong></p>
+<p><br>但是上面的方法有一个隐患，校验码只是在判断data部分有没有错，那如果ACK或者NAK被干扰了，如何去识别和修复？上面提出的方法里面没有对ACK/NAK做校验</p>
+<p><br>这里采取的方法是，当发送端发现收到的ACK/NAK被污染时，就重传刚才发送的数据包。这种方法给接收端带来了问题，接收端收到一个packet的时候，如何判断这个packet是新的数据包还是因为ACK/NAK污染导致发送端重传的数据包？</p>
+<p><br>在当前这个stop-and-wait protocol中，增加一位的sequence number就能够解决问题了，接收端通过这个sequence number来分辨收到的是重传还是新的packet。并且receiver回传ACK/NAK的时候也带了校验码，因此这时候sender可以判断收到的ACK/NAK有没有被污染。下面就是rdt2.1版本：</p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y6YH3j"><img src="https://s3.ax1x.com/2021/02/15/y6YH3j.png" alt="y6YH3j.png"></a></p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y6YzUU"><img src="https://s3.ax1x.com/2021/02/15/y6YzUU.png" alt="y6YzUU.png"></a></p>
+<p><br>需要留意的是，<strong>这种改良版本的目的是应对ACK/NAK被污染的情况</strong></p>
+<p><br>注意到ACK和NAK是二元关系，我们还可以进化，不要NAK，对于receiver，要么传ACK，要么不传。这里的底层环境还是处于没有丢包的前提下，下面就是只有ACK的进化版本，rdt2.2:</p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y6td2j"><img src="https://s3.ax1x.com/2021/02/15/y6td2j.png" alt="y6td2j.png"></a></p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y6t2iF"><img src="https://s3.ax1x.com/2021/02/15/y6t2iF.png" alt="y6t2iF.png"></a></p>
+<p><br>这里举一个例子，sender发送data0，receiver收到后回传ack0并等待data1，sender收到污染的ack于是重传data0，receiver此时在等data1却收到了data0，于是回传ack0仍然继续等待data1，当sender收到了没有被污染的ack0后，才进入新状态，准备发送data1</p>
+<h3 id="Rdt-over-a-Lossy-Channel-with-Bit-Errors-rdt3-0"><a href="#Rdt-over-a-Lossy-Channel-with-Bit-Errors-rdt3-0" class="headerlink" title="Rdt over a Lossy Channel with Bit Errors: rdt3.0"></a>Rdt over a Lossy Channel with Bit Errors: rdt3.0</h3><p><br>前面是考虑了数据的正确性，是假设处于不丢包的管道上的。接下来把丢包这种情况考虑进去。考虑数据完整性、考虑丢包，基本就是比较全面的RDT了</p>
+
     </div>
 
     
@@ -209,13 +232,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/02/09/virtual_fun%5Dction/" rel="prev" title="虚函数的作用">
-      <i class="fa fa-chevron-left"></i> 虚函数的作用
+    <a href="/2021/02/15/multiplex/" rel="prev" title="Multiplexing and Demultiplexing">
+      <i class="fa fa-chevron-left"></i> Multiplexing and Demultiplexing
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2021/02/10/leetcode%20567/" rel="next" title="Leetcode 567.字符串的排列">
-      Leetcode 567.字符串的排列 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -274,7 +294,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E6%8F%8F%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">题目描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF"><span class="nav-number">2.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81"><span class="nav-number">3.</span> <span class="nav-text">代码</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Building-a-Reliable-Data-Transfer-Protocol"><span class="nav-number">1.</span> <span class="nav-text">Building a Reliable Data Transfer Protocol</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Rdt-over-a-Perfectly-Reliable-Channel-rdt1-0"><span class="nav-number">1.1.</span> <span class="nav-text">Rdt over a Perfectly Reliable Channel: rdt1.0</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Rdt-over-a-Channel-with-Bit-Errors-rdt2-0"><span class="nav-number">1.2.</span> <span class="nav-text">Rdt over a Channel with Bit Errors: rdt2.0</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Rdt-over-a-Lossy-Channel-with-Bit-Errors-rdt3-0"><span class="nav-number">1.3.</span> <span class="nav-text">Rdt over a Lossy Channel with Bit Errors: rdt3.0</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
