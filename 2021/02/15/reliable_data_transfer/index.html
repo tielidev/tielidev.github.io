@@ -42,8 +42,10 @@
 <meta property="og:image" content="https://s3.ax1x.com/2021/02/16/yc9AZ8.png">
 <meta property="og:image" content="https://s3.ax1x.com/2021/02/16/yc9EdS.png">
 <meta property="og:image" content="https://s3.ax1x.com/2021/02/16/yc9lLV.png">
+<meta property="og:image" content="https://s3.ax1x.com/2021/02/16/ycCmTO.jpg">
+<meta property="og:image" content="https://s3.ax1x.com/2021/02/16/ycCh9J.png">
 <meta property="article:published_time" content="2021-02-15T13:21:17.662Z">
-<meta property="article:modified_time" content="2021-02-15T21:47:54.370Z">
+<meta property="article:modified_time" content="2021-02-15T23:45:53.172Z">
 <meta property="article:author" content="Tie Li">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://s3.ax1x.com/2021/02/15/y61d2t.jpg">
@@ -196,7 +198,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-02-16 05:47:54" itemprop="dateModified" datetime="2021-02-16T05:47:54+08:00">2021-02-16</time>
+                <time title="Modified: 2021-02-16 07:45:53" itemprop="dateModified" datetime="2021-02-16T07:45:53+08:00">2021-02-16</time>
               </span>
 
           
@@ -250,7 +252,14 @@
 <p><br>而接收端采取按照顺序接收和发送ack，如果乱序了的packet，就选择直接丢弃。因此这种方案就是cumulative acknowledgements。而且值得注意的是，在这里接收端只能选择丢弃乱序的packet，因为没有别的选择，因为在选择接收一个packet后，接收端就会立刻提供给上层了，并不会等在当前层拼好后再交给上层，由于重传机制的存在，所以在当前层缓存乱序的packet没有意义</p>
 <p><br>下面是一个窗口长度为4的GBN例子：</p>
 <p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yc9lLV"><img src="https://s3.ax1x.com/2021/02/16/yc9lLV.png" alt="yc9lLV.png"></a></p>
-<h2 id="Selective-Repeat-SR"><a href="#Selective-Repeat-SR" class="headerlink" title="Selective Repeat (SR)"></a>Selective Repeat (SR)</h2>
+<h2 id="Selective-Repeat-SR"><a href="#Selective-Repeat-SR" class="headerlink" title="Selective Repeat (SR)"></a>Selective Repeat (SR)</h2><p><br>可以看到，单纯的GBN策略是想尽可能多地往管道上放packet，这种方法大多数时候合理，而且也可以知道，如果要用GBN，那么固定的窗口值肯定是比较大的。<strong>但是GBN在应对链路阻塞的时候却是非常脆弱的，特别是由于完全重传的操作，会使链路的阻塞更加恶化。</strong> 当窗口很大而且延迟长的时候，许多重传是不必要的，因为这些packet并不是丢失了，而是暂时滞留在了链路中。<strong>问题就发生在链路中存在许多不必要的重传</strong></p>
+<p><br>SR的思路就是在GBN的基础上，在receiver端建立接收缓冲区，有一个序列号为rcv_base，当接收的包序列范围在[rcv+1,rcv+N-1]之间时，将packet放进缓冲区，并且回传ack，直到接收到序列号为rcv_base的packet后，rcv_base前进，并且将一系列连续的包数据上传给上层。</p>
+<p><br>而由于这种方案并不是accumulative acknowledgements，所以对于发送端来说，它发送的每一个packet都要收到对应的ack才会停止重传。而且ack也是receiver窗口前进的关键。理论上这种方式下的sender，应该是可以记录每个packet发出的时间，然后共用一个timer，当处于sent_base的收到ack后，timer也往前移，并结合之前记录的发出时间，调整倒计时</p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/ycCmTO"><img src="https://s3.ax1x.com/2021/02/16/ycCmTO.jpg" alt="ycCmTO.jpg"></a></p>
+<p><br>而在selective repeat的方案中，由于sequence number是做的模运算，双方信息又无法完全同步，所以在当窗口大小与sequence number space接近的时候，就可能出问题，使得receiver无法判断传来的sequence number是在rcv_base前面还是后面。而书中的建议是，窗口大小要小于等于sequence number space的一半才行</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/ycCh9J"><img src="https://s3.ax1x.com/2021/02/16/ycCh9J.png" alt="ycCh9J.png"></a></p>
+<p><br>方案讨论到了这里，还有一个假设我们没有去掉，那就是包的乱序。如果双端连接的只是物理上的导线，那么发出去的包会严格遵循先来先到的原则。但是如果双端接的是网络，那么有的包就可能在网络里停留很久才到。为了避免因为包停留导致序列号被重复用的情况，sender考虑一个packet lifetime，也就是sender假设在发出序列号为x的包一段时间以后，网络里不会再有这个包了。书上的设定是3分钟</p>
+
     </div>
 
     
@@ -327,7 +336,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Building-a-Reliable-Data-Transfer-Protocol"><span class="nav-number">1.</span> <span class="nav-text">Building a Reliable Data Transfer Protocol</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Rdt1-0-over-a-Perfectly-Reliable-Channel"><span class="nav-number">1.1.</span> <span class="nav-text">Rdt1.0: over a Perfectly Reliable Channel</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Rdt2-0-over-a-Channel-with-Bit-Errors"><span class="nav-number">1.2.</span> <span class="nav-text">Rdt2.0: over a Channel with Bit Errors</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Rdt3-0-over-a-Lossy-Channel-with-Bit-Errors"><span class="nav-number">1.3.</span> <span class="nav-text">Rdt3.0: over a Lossy Channel with Bit Errors</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pipelined-Reliable-Data-Transfer-Protocols"><span class="nav-number">2.</span> <span class="nav-text">Pipelined Reliable Data Transfer Protocols</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Go-Back-N-GBN"><span class="nav-number">3.</span> <span class="nav-text">Go-Back-N (GBN)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Selective-Repeat-SR"><span class="nav-number">4.</span> <span class="nav-text">Selective Repeat (SR)</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Building-a-Reliable-Data-Transfer-Protocol"><span class="nav-number">1.</span> <span class="nav-text">Building a Reliable Data Transfer Protocol</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Rdt1-0-over-a-Perfectly-Reliable-Channel"><span class="nav-number">1.1.</span> <span class="nav-text">Rdt1.0: over a Perfectly Reliable Channel</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Rdt2-0-over-a-Channel-with-Bit-Errors"><span class="nav-number">1.2.</span> <span class="nav-text">Rdt2.0: over a Channel with Bit Errors</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Rdt3-0-over-a-Lossy-Channel-with-Bit-Errors"><span class="nav-number">1.3.</span> <span class="nav-text">Rdt3.0: over a Lossy Channel with Bit Errors</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pipelined-Reliable-Data-Transfer-Protocols"><span class="nav-number">2.</span> <span class="nav-text">Pipelined Reliable Data Transfer Protocols</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Go-Back-N-GBN"><span class="nav-number">3.</span> <span class="nav-text">Go-Back-N (GBN)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Selective-Repeat-SR"><span class="nav-number">4.</span> <span class="nav-text">Selective Repeat (SR)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
