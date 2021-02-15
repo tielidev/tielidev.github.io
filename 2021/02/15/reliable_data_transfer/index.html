@@ -38,8 +38,12 @@
 <meta property="og:image" content="https://s3.ax1x.com/2021/02/15/y6gb2q.png">
 <meta property="og:image" content="https://s3.ax1x.com/2021/02/15/y6gxZF.png">
 <meta property="og:image" content="https://s3.ax1x.com/2021/02/16/ycphaF.png">
+<meta property="og:image" content="https://s3.ax1x.com/2021/02/16/yc9PMt.png">
+<meta property="og:image" content="https://s3.ax1x.com/2021/02/16/yc9AZ8.png">
+<meta property="og:image" content="https://s3.ax1x.com/2021/02/16/yc9EdS.png">
+<meta property="og:image" content="https://s3.ax1x.com/2021/02/16/yc9lLV.png">
 <meta property="article:published_time" content="2021-02-15T13:21:17.662Z">
-<meta property="article:modified_time" content="2021-02-15T20:22:58.000Z">
+<meta property="article:modified_time" content="2021-02-15T21:47:54.370Z">
 <meta property="article:author" content="Tie Li">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://s3.ax1x.com/2021/02/15/y61d2t.jpg">
@@ -192,7 +196,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-02-16 04:22:58" itemprop="dateModified" datetime="2021-02-16T04:22:58+08:00">2021-02-16</time>
+                <time title="Modified: 2021-02-16 05:47:54" itemprop="dateModified" datetime="2021-02-16T05:47:54+08:00">2021-02-16</time>
               </span>
 
           
@@ -235,8 +239,18 @@
 <p><br>这个数据好像也很常见，经常在某些没有专门做加速的下载的时候，跑出来的效果好像也确实就是100kb的数量级</p>
 <p><br>也就是说<strong>transmission time与propagation time可以轻松达到1比10000</strong>。这个基本的数量级可以有个感觉。换句话说，如果不使用流水线，一条路上快的部分就被慢的部分拖累了。1Gbps的传输速度大部分是被闲置的。另外也可以理解为什么transport和application协议只在两个终端上跑，而不在中间的路由上跑了，因为跑程序也需要时间，越高级的协议，需要的时间越多，而且这点时间如果让每个路由都去跑，耗的时间也是不少的。所以从效率的角度来讲，让链路尽量去做传输，少跑程序，让高级程序在终端去做。出差错属于小概率事件，所以即使有那种packet一开始就受到干扰，白白跑了一整段的情况也是小概率的。接下来，就是流水线的解决方案：</p>
 <p><a target="_blank" rel="noopener" href="https://imgchr.com/i/ycphaF"><img src="https://s3.ax1x.com/2021/02/16/ycphaF.png" alt="ycphaF.png"></a></p>
-<p><br>由于流水线的引入，之前的方案就会面对一些改进：sequence number会扩大，之前只需要0和1，缓冲区也需要扩大，应对error recovery也会有新的方案，说白了就是重传方案，下面就会讲两种，Go-Back-N和selective repeat</p>
-
+<p><br>由于流水线的引入，之前的方案就会面对一些改进：sequence number会扩大，之前只需要0和1，缓冲区也需要扩大，应对error recovery也会有新的方案，说白了就是重传方案，下面就会讲两种，Go-Back-N和selective repeat。需要注意的是GBN和selective repeat都是基于reliable data transport上做流水线所增加的，还没有涉及到流量控制和阻塞控制</p>
+<h2 id="Go-Back-N-GBN"><a href="#Go-Back-N-GBN" class="headerlink" title="Go-Back-N (GBN)"></a>Go-Back-N (GBN)</h2><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yc9PMt"><img src="https://s3.ax1x.com/2021/02/16/yc9PMt.png" alt="yc9PMt.png"></a></p>
+<p><br>本质上就是一个固定长度为N的滑动窗口</p>
+<p><br>在此方法下，sequence number会进行扩充了，TCP的sequence number是32位，而且它的sequence number的单位表示的不是packet，而是传输的byte数目，这也好理解，比如当前这个packet传了3个byte，那么下一个packet的sequence number就加3</p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yc9AZ8"><img src="https://s3.ax1x.com/2021/02/16/yc9AZ8.png" alt="yc9AZ8.png"></a></p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yc9EdS"><img src="https://s3.ax1x.com/2021/02/16/yc9EdS.png" alt="yc9EdS.png"></a></p>
+<p><br>当上层传来 rdt_send()而当前层发现窗口已经满了的时候，窗口会拒绝传送。这种情况下，上层要么将数据放回缓冲区，等会再调用rdt_send()，要么采用阻塞唤醒机制，等窗口空了之后，由当前层通知上层</p>
+<p><br>如果发生了超时，GBN会将没有被ack的所有数据重传一遍，相当于GBN这个方案只用了一个timer。如果收到了一个ack但还有数据包没有收到ack，那么timer会更新。如果收完了ack，那么timer自然会停止</p>
+<p><br>而接收端采取按照顺序接收和发送ack，如果乱序了的packet，就选择直接丢弃。因此这种方案就是cumulative acknowledgements。而且值得注意的是，在这里接收端只能选择丢弃乱序的packet，因为没有别的选择，因为在选择接收一个packet后，接收端就会立刻提供给上层了，并不会等在当前层拼好后再交给上层，由于重传机制的存在，所以在当前层缓存乱序的packet没有意义</p>
+<p><br>下面是一个窗口长度为4的GBN例子：</p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yc9lLV"><img src="https://s3.ax1x.com/2021/02/16/yc9lLV.png" alt="yc9lLV.png"></a></p>
+<h2 id="Selective-Repeat-SR"><a href="#Selective-Repeat-SR" class="headerlink" title="Selective Repeat (SR)"></a>Selective Repeat (SR)</h2>
     </div>
 
     
@@ -313,7 +327,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Building-a-Reliable-Data-Transfer-Protocol"><span class="nav-number">1.</span> <span class="nav-text">Building a Reliable Data Transfer Protocol</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Rdt1-0-over-a-Perfectly-Reliable-Channel"><span class="nav-number">1.1.</span> <span class="nav-text">Rdt1.0: over a Perfectly Reliable Channel</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Rdt2-0-over-a-Channel-with-Bit-Errors"><span class="nav-number">1.2.</span> <span class="nav-text">Rdt2.0: over a Channel with Bit Errors</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Rdt3-0-over-a-Lossy-Channel-with-Bit-Errors"><span class="nav-number">1.3.</span> <span class="nav-text">Rdt3.0: over a Lossy Channel with Bit Errors</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pipelined-Reliable-Data-Transfer-Protocols"><span class="nav-number">2.</span> <span class="nav-text">Pipelined Reliable Data Transfer Protocols</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Building-a-Reliable-Data-Transfer-Protocol"><span class="nav-number">1.</span> <span class="nav-text">Building a Reliable Data Transfer Protocol</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Rdt1-0-over-a-Perfectly-Reliable-Channel"><span class="nav-number">1.1.</span> <span class="nav-text">Rdt1.0: over a Perfectly Reliable Channel</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Rdt2-0-over-a-Channel-with-Bit-Errors"><span class="nav-number">1.2.</span> <span class="nav-text">Rdt2.0: over a Channel with Bit Errors</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Rdt3-0-over-a-Lossy-Channel-with-Bit-Errors"><span class="nav-number">1.3.</span> <span class="nav-text">Rdt3.0: over a Lossy Channel with Bit Errors</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pipelined-Reliable-Data-Transfer-Protocols"><span class="nav-number">2.</span> <span class="nav-text">Pipelined Reliable Data Transfer Protocols</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Go-Back-N-GBN"><span class="nav-number">3.</span> <span class="nav-text">Go-Back-N (GBN)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Selective-Repeat-SR"><span class="nav-number">4.</span> <span class="nav-text">Selective Repeat (SR)</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
