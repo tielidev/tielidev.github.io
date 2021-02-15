@@ -37,8 +37,9 @@
 <meta property="og:image" content="https://s3.ax1x.com/2021/02/15/y6t2iF.png">
 <meta property="og:image" content="https://s3.ax1x.com/2021/02/15/y6gb2q.png">
 <meta property="og:image" content="https://s3.ax1x.com/2021/02/15/y6gxZF.png">
+<meta property="og:image" content="https://s3.ax1x.com/2021/02/16/ycphaF.png">
 <meta property="article:published_time" content="2021-02-15T13:21:17.662Z">
-<meta property="article:modified_time" content="2021-02-15T13:23:53.562Z">
+<meta property="article:modified_time" content="2021-02-15T20:22:58.000Z">
 <meta property="article:author" content="Tie Li">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://s3.ax1x.com/2021/02/15/y61d2t.jpg">
@@ -183,10 +184,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2021-02-15 21:21:17 / Modified: 21:23:53" itemprop="dateCreated datePublished" datetime="2021-02-15T21:21:17+08:00">2021-02-15</time>
+              <time title="Created: 2021-02-15 21:21:17" itemprop="dateCreated datePublished" datetime="2021-02-15T21:21:17+08:00">2021-02-15</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-02-16 04:22:58" itemprop="dateModified" datetime="2021-02-16T04:22:58+08:00">2021-02-16</time>
+              </span>
 
           
 
@@ -203,9 +210,9 @@
 <h2 id="Building-a-Reliable-Data-Transfer-Protocol"><a href="#Building-a-Reliable-Data-Transfer-Protocol" class="headerlink" title="Building a Reliable Data Transfer Protocol"></a>Building a Reliable Data Transfer Protocol</h2><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y61YUH"><img src="https://s3.ax1x.com/2021/02/15/y61YUH.png" alt="y61YUH.png"></a></p>
 <p><br>上面的这个图讲了实际的可靠传输的结构，应用层依赖传输层提供的服务。需要说明的是<strong><em>rdt_send</em></strong>是上层（应用层）传来的指令，<strong><em>udt_send</em></strong> 是传输层对网络层下达的指令，换句话说就是调用网络层的接口，<strong><em>rdt_rcv</em></strong> 是传输层从网络层中获取数据，并且形成可靠数据，<strong><em>deliver_data</em></strong> 是传输层向网络层传输数据</p>
 <p><br>接下来我就照着书上的结构，依次去建立一个可靠传输的协议。这里的可靠传输协议是比较通用的设计思路，不局限于传输层。而这种思路甚至在我们以后设计应用层的程序时，也可以拿来作为借鉴</p>
-<h3 id="Rdt-over-a-Perfectly-Reliable-Channel-rdt1-0"><a href="#Rdt-over-a-Perfectly-Reliable-Channel-rdt1-0" class="headerlink" title="Rdt over a Perfectly Reliable Channel: rdt1.0"></a>Rdt over a Perfectly Reliable Channel: rdt1.0</h3><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y63bm8"><img src="https://s3.ax1x.com/2021/02/15/y63bm8.png" alt="y63bm8.png"></a></p>
+<h3 id="Rdt1-0-over-a-Perfectly-Reliable-Channel"><a href="#Rdt1-0-over-a-Perfectly-Reliable-Channel" class="headerlink" title="Rdt1.0: over a Perfectly Reliable Channel"></a>Rdt1.0: over a Perfectly Reliable Channel</h3><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y63bm8"><img src="https://s3.ax1x.com/2021/02/15/y63bm8.png" alt="y63bm8.png"></a></p>
 <p><br>这是最理想的状态，底层提供的是可靠传输，当前层只需要管收发就好了</p>
-<h3 id="Rdt-over-a-Channel-with-Bit-Errors-rdt2-0"><a href="#Rdt-over-a-Channel-with-Bit-Errors-rdt2-0" class="headerlink" title="Rdt over a Channel with Bit Errors: rdt2.0"></a>Rdt over a Channel with Bit Errors: rdt2.0</h3><p><br>这个情况下<strong>假设数据可能传输错误，但是仍然是有序的</strong>。数据传输错误在物理层面上有可能出现，数据包在传送、传输、缓冲区的过程都有可能被改变。在这里也可以看到，checksum和ACK是绑在一起出现的，有了ACK后，checksum才有意义</p>
+<h3 id="Rdt2-0-over-a-Channel-with-Bit-Errors"><a href="#Rdt2-0-over-a-Channel-with-Bit-Errors" class="headerlink" title="Rdt2.0: over a Channel with Bit Errors"></a>Rdt2.0: over a Channel with Bit Errors</h3><p><br>这个情况下<strong>假设数据可能传输错误，但是仍然是有序的</strong>。数据传输错误在物理层面上有可能出现，数据包在传送、传输、缓冲区的过程都有可能被改变。在这里也可以看到，checksum和ACK是绑在一起出现的，有了ACK后，checksum才有意义</p>
 <p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y6GDr6"><img src="https://s3.ax1x.com/2021/02/15/y6GDr6.png" alt="y6GDr6.png"></a></p>
 <p><br>原始的版本既有ACK也有NAK，这种重传机制叫做<strong><em>ARQ(Automatic Repeat reQuest)protocol</em></strong></p>
 <p><br>但是上面的方法有一个隐患，校验码只是在判断data部分有没有错，那如果ACK或者NAK被干扰了，如何去识别和修复？上面提出的方法里面没有对ACK/NAK做校验</p>
@@ -218,12 +225,17 @@
 <p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y6td2j"><img src="https://s3.ax1x.com/2021/02/15/y6td2j.png" alt="y6td2j.png"></a></p>
 <p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y6t2iF"><img src="https://s3.ax1x.com/2021/02/15/y6t2iF.png" alt="y6t2iF.png"></a></p>
 <p><br>这里举一个例子，sender发送data0，receiver收到后回传ack0并等待data1，sender收到污染的ack于是重传data0，receiver此时在等data1却收到了data0，于是回传ack0仍然继续等待data1，当sender收到了没有被污染的ack0后，才进入新状态，准备发送data1</p>
-<h3 id="Rdt-over-a-Lossy-Channel-with-Bit-Errors-rdt3-0"><a href="#Rdt-over-a-Lossy-Channel-with-Bit-Errors-rdt3-0" class="headerlink" title="Rdt over a Lossy Channel with Bit Errors: rdt3.0"></a>Rdt over a Lossy Channel with Bit Errors: rdt3.0</h3><p><br>前面是考虑了数据的正确性，是假设处于不丢包的管道上的。接下来把丢包这种情况考虑进去。考虑数据完整性、考虑丢包，基本就是比较全面的RDT了</p>
+<h3 id="Rdt3-0-over-a-Lossy-Channel-with-Bit-Errors"><a href="#Rdt3-0-over-a-Lossy-Channel-with-Bit-Errors" class="headerlink" title="Rdt3.0: over a Lossy Channel with Bit Errors"></a>Rdt3.0: over a Lossy Channel with Bit Errors</h3><p><br>前面是考虑了数据的正确性，是假设处于不丢包的管道上的。接下来把丢包这种情况考虑进去。考虑数据完整性、考虑丢包，基本就是比较全面的RDT了</p>
 <p><br>首先要面对的问题是如何判断发生了丢包。这里将判断的任务交给sender，采用计时的方式，如果发出的packet丢失了，或者receiver的ACK丢失了，sender都不会收到ACK，这样sender就可以判断发生了丢包，然后重传</p>
 <p><br>而具体选择多少时间才算超时，由于设计的初衷是尽量发现了丢包就立刻重传，所以选择让sender自己选择一个时间窗口，只要超过了窗口期没有收到ACK，就开始重传。即使有可能packet只是阻塞了，但仍然选择重传</p>
 <p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y6gb2q"><img src="https://s3.ax1x.com/2021/02/15/y6gb2q.png" alt="y6gb2q.png"></a></p>
 <p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y6gxZF"><img src="https://s3.ax1x.com/2021/02/15/y6gxZF.png" alt="y6gxZF.png"></a></p>
 <p><br>需要注意的是，这里的protocol依然是stop-and-wait类型的，直到开始上流水线之后，才会改变。到这里，基本的元素都有了：<strong><em>checksum、sequence number、timer、ACK</em></strong></p>
+<h2 id="Pipelined-Reliable-Data-Transfer-Protocols"><a href="#Pipelined-Reliable-Data-Transfer-Protocols" class="headerlink" title="Pipelined Reliable Data Transfer Protocols"></a>Pipelined Reliable Data Transfer Protocols</h2><p><br>现在基本的可靠传输协议建立了，接下来就是考虑对性能做优化的时候了。第一个优化的点，就是流水线。其实这里能够给人很大的启发，流水线不单单应用于这个地方，只要有明显差速的情景，都有可能可以用上流水线的技术。回到网络传输这个环境，我们知道，将一个packet完全送到网络链路上，其实是很快的，一方面因为局域网速度很快，一方面因为这时候packet还刚上路，还不需要跑起来。因此，消耗的时间的大头就放在了链路传输上，也就是<strong><em>propagation</em></strong>。在这里书上举了一个例子，<strong><em>假设在链路上跑的速度是光速，从美国东海岸到西海岸的RTT就是30毫秒</em></strong>，可以稍微记一下这个时间。而如果链路的transmission rate为1Gbps($10^9$bits/second)，<strong><em>将一个1000bytes的packet放到链路上，需要8微秒</em></strong>。如果保留简单的stop-and-wait模式，尽管链路允许1秒内把1G的内容传到链路上，但由于<strong><em>TCP packet的大小一次只能有1kB左右</em></strong>，以及传输距离动辄半个地球，所以实际拿到的效果只有200kbps左右</p>
+<p><br>这个数据好像也很常见，经常在某些没有专门做加速的下载的时候，跑出来的效果好像也确实就是100kb的数量级</p>
+<p><br>也就是说<strong>transmission time与propagation time可以轻松达到1比10000</strong>。这个基本的数量级可以有个感觉。换句话说，如果不使用流水线，一条路上快的部分就被慢的部分拖累了。1Gbps的传输速度大部分是被闲置的。另外也可以理解为什么transport和application协议只在两个终端上跑，而不在中间的路由上跑了，因为跑程序也需要时间，越高级的协议，需要的时间越多，而且这点时间如果让每个路由都去跑，耗的时间也是不少的。所以从效率的角度来讲，让链路尽量去做传输，少跑程序，让高级程序在终端去做。出差错属于小概率事件，所以即使有那种packet一开始就受到干扰，白白跑了一整段的情况也是小概率的。接下来，就是流水线的解决方案：</p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/ycphaF"><img src="https://s3.ax1x.com/2021/02/16/ycphaF.png" alt="ycphaF.png"></a></p>
+<p><br>由于流水线的引入，之前的方案就会面对一些改进：sequence number会扩大，之前只需要0和1，缓冲区也需要扩大，应对error recovery也会有新的方案，说白了就是重传方案，下面就会讲两种，Go-Back-N和selective repeat</p>
 
     </div>
 
@@ -301,7 +313,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Building-a-Reliable-Data-Transfer-Protocol"><span class="nav-number">1.</span> <span class="nav-text">Building a Reliable Data Transfer Protocol</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Rdt-over-a-Perfectly-Reliable-Channel-rdt1-0"><span class="nav-number">1.1.</span> <span class="nav-text">Rdt over a Perfectly Reliable Channel: rdt1.0</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Rdt-over-a-Channel-with-Bit-Errors-rdt2-0"><span class="nav-number">1.2.</span> <span class="nav-text">Rdt over a Channel with Bit Errors: rdt2.0</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Rdt-over-a-Lossy-Channel-with-Bit-Errors-rdt3-0"><span class="nav-number">1.3.</span> <span class="nav-text">Rdt over a Lossy Channel with Bit Errors: rdt3.0</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Building-a-Reliable-Data-Transfer-Protocol"><span class="nav-number">1.</span> <span class="nav-text">Building a Reliable Data Transfer Protocol</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Rdt1-0-over-a-Perfectly-Reliable-Channel"><span class="nav-number">1.1.</span> <span class="nav-text">Rdt1.0: over a Perfectly Reliable Channel</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Rdt2-0-over-a-Channel-with-Bit-Errors"><span class="nav-number">1.2.</span> <span class="nav-text">Rdt2.0: over a Channel with Bit Errors</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Rdt3-0-over-a-Lossy-Channel-with-Bit-Errors"><span class="nav-number">1.3.</span> <span class="nav-text">Rdt3.0: over a Lossy Channel with Bit Errors</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pipelined-Reliable-Data-Transfer-Protocols"><span class="nav-number">2.</span> <span class="nav-text">Pipelined Reliable Data Transfer Protocols</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
