@@ -145,7 +145,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/02/10/leetcode%20567/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/02/12/http/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -159,7 +159,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/02/10/leetcode%20567/" class="post-title-link" itemprop="url">Leetcode 567.字符串的排列</a>
+            <a href="/2021/02/12/http/" class="post-title-link" itemprop="url">HTTP</a>
         </h2>
 
         <div class="post-meta">
@@ -168,10 +168,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2021-02-10 15:14:11 / Modified: 15:21:22" itemprop="dateCreated datePublished" datetime="2021-02-10T15:14:11+08:00">2021-02-10</time>
+              <time title="Created: 2021-02-12 12:08:01" itemprop="dateCreated datePublished" datetime="2021-02-12T12:08:01+08:00">2021-02-12</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-02-13 17:35:13" itemprop="dateModified" datetime="2021-02-13T17:35:13+08:00">2021-02-13</time>
+              </span>
 
           
 
@@ -184,11 +190,43 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p><a target="_blank" rel="noopener" href="https://imgchr.com/i/ywTkkj"><img src="https://s3.ax1x.com/2021/02/10/ywTkkj.jpg" alt="ywTkkj.jpg"></a></p>
-<p><br></p>
-<h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p><br><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/permutation-in-string/">https://leetcode-cn.com/problems/permutation-in-string/</a></p>
-<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p><br>思路就是使用滑动窗口，可以继承的信息就是字符出现的信息。这里将字符分成了合法和不合法两类，根本不在s1里出现的字符直接判断为不和法，以及重复的次数过多了也是判断为不合法。这个题也是考察的代码细节，首先整体框架要清晰，实现的时候局部突破</p>
-<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">checkInclusion</span><span class="params">(<span class="built_in">string</span> s1, <span class="built_in">string</span> s2)</span> </span>&#123;</span><br><span class="line">        <span class="built_in">unordered_map</span>&lt;<span class="keyword">char</span>,<span class="keyword">int</span>&gt; count;</span><br><span class="line">        <span class="built_in">set</span>&lt;<span class="keyword">char</span>&gt; appear;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">char</span> c : s1)&#123;</span><br><span class="line">            count[c] += <span class="number">1</span>;</span><br><span class="line">            appear.insert(c);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(s2.size() &lt; s1.size())&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> strane_count = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;s1.size();++i)&#123;</span><br><span class="line">            <span class="keyword">char</span> tem_char = s2[i];</span><br><span class="line">            <span class="keyword">if</span>(appear.find(tem_char) == appear.end())&#123;</span><br><span class="line">                strane_count++;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                count[tem_char] --;</span><br><span class="line">                <span class="keyword">if</span>(count[tem_char] &lt; <span class="number">0</span>)&#123;</span><br><span class="line">                    strane_count++;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(strane_count == <span class="number">0</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> left = <span class="number">0</span>, right = left+s1.size()<span class="number">-1</span>;</span><br><span class="line">        <span class="keyword">while</span>(right &lt; s2.size()<span class="number">-1</span>)&#123;</span><br><span class="line">            <span class="keyword">if</span>(appear.find(s2[left]) == appear.end())&#123;</span><br><span class="line">                strane_count --;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">if</span>(count[s2[left]] &lt; <span class="number">0</span>)&#123;</span><br><span class="line">                    strane_count --;</span><br><span class="line">                    count[s2[left]]++;</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    count[s2[left]]++;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">char</span> tem_char = s2[right+<span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span>(appear.find(tem_char) == appear.end())&#123;</span><br><span class="line">                    strane_count++;</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    count[tem_char]--;</span><br><span class="line">                    <span class="keyword">if</span>(count[tem_char] &lt; <span class="number">0</span>)&#123;</span><br><span class="line">                    strane_count++;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span>(strane_count == <span class="number">0</span>)&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            left++;</span><br><span class="line">            right++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+          <p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yDt8v6"><img src="https://s3.ax1x.com/2021/02/12/yDt8v6.jpg" alt="yDt8v6.jpg"></a></p>
+<p><br>这篇博文打算讲讲HTTP，关于HTTPS的内容以后再单开一篇博文来讲</p>
+<h2 id="HTTP概述"><a href="#HTTP概述" class="headerlink" title="HTTP概述"></a>HTTP概述</h2><p><br>网络出现后，它吸引人的地方在于用户可以根据需求获取信息。在理解HTTP之前，我们先了解一些基本的Web术语</p>
+<h3 id="Web-page"><a href="#Web-page" class="headerlink" title="Web page"></a>Web page</h3><p><br>一个网页由多个对象组成。比如1个网页含有1个HTML文本和5个JPEG图片，那么这个网页就含有6个对象。HTML文本通过URL实现对其余对象的引用</p>
+<h3 id="HTTP"><a href="#HTTP" class="headerlink" title="HTTP"></a>HTTP</h3><p><br>在网页交互里，HTTP就定义了客户端如何发出请求信息，以及服务端如何发送信息。而且明确地说了HTTP使用TCP作为其传输层的协议。这里也需要注意socket是介于TCP与HTTP之间的，也就是介于应用层与传输层之间的</p>
+<p><br>另一个要注意的是，HTTP是一个<strong>stateless protocol</strong>，服务端不会去注意客户端的信息，比如当客户端请求发两个相同的文件时，服务端就会直接发两份。这是因为它把传输的任务交给了传输层去了，也就是TCP</p>
+<h2 id="Non-Persistent-and-Persistent-Connections"><a href="#Non-Persistent-and-Persistent-Connections" class="headerlink" title="Non-Persistent and Persistent Connections"></a>Non-Persistent and Persistent Connections</h2><p><br>应用层（也就是HTTP）可以选择在执行应用传输多个文件的时候，是使用同一个长期的TCP连接，还是使用不同的TCP连接（也就是一个文件使用单独的TCP连接，传完就关闭）。HTTP两种都支持，而默认是使用persistent connections</p>
+<p><br>需要注意一个细节，就是当HTTP请求或发送一个文件时，只会产生一个HTTP报文。这是因为HTTP不会去管文件的切割，它只需要声明要GET哪个完整的文件就好了，切割的事情，交给TCP去做。因此有可能是一个HTTP流程使用一个TCP连接，在这一个TCP连接里跑许多个TCP数据包，最后合并起来，只会看到一个HTTP报文。而如果采用non-persistent connections的方式打开一个网页，就可能是产生多个TCP连接。在HTTP的层面，是细化到每一个object的，但不会更细化了</p>
+<p><br>目前的浏览器是可以支持并行地产生多个TCP连接的，因此如果打开一个多元素的网页，在获取HTML之后，浏览器可以同时开多个TCP去获取多个URL连接的文件。如果设置使得浏览器一次只能开一个TCP，那么开这个网页就只能顺序获取文件</p>
+<h3 id="RTT"><a href="#RTT" class="headerlink" title="RTT"></a>RTT</h3><p><br>round-trip time指的是一个很小的数据包从客户端发出到从客户端接收的时间间隔。需要注意的是，HTTP一次要求传的对象完全可以很大，因此将一个单独文件从开始传到把整个文件推到网络的时间是不可忽略的。</p>
+<p><br>RTT包括了这个小的数据包在物理链路上跑的时间，在各个路由器上排队、处理的时间</p>
+<h3 id="HTTP-with-Persistent-Connections"><a href="#HTTP-with-Persistent-Connections" class="headerlink" title="HTTP with Persistent Connections"></a>HTTP with Persistent Connections</h3><p><br>其实可以从TCP的一些原理知道，每次建立TCP的时候，在开始阶段会有一个慢启动的过程，所以如果HTTP使用non-persistent的方法的话，每个元素的加载都会慢。并且因为TCP的建立有三次握手的过程，所以每次建立新的TCP都会浪费前期一个RTT的时间。而使用persistent connections的方法，就可以使用同一个TCP来加载一个网页里面的多个元素，当然前提是这些元素在同一个服务器上。而且如果多个网页也在同一个服务器上的话，也可以用同一个TCP来传多个网页。这都是加速的技巧。使用persistent connections的话，同一个网页里面的元素也就可以用流水线的方式进行传输了</p>
+<h2 id="HTTP-Message-Format"><a href="#HTTP-Message-Format" class="headerlink" title="HTTP Message Format"></a>HTTP Message Format</h2><h3 id="Request-Message"><a href="#Request-Message" class="headerlink" title="Request Message"></a>Request Message</h3><p><br></p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yrYQMV"><img src="https://s3.ax1x.com/2021/02/13/yrYQMV.png" alt="yrYQMV.png"></a></p>
+<p><br>这里就直接看实际的图片，看报文内容其实不少，但我就挑关键字来讲</p>
+<p><br><a target="_blank" rel="noopener" href="https://imgchr.com/i/yr8wM8"><img src="https://s3.ax1x.com/2021/02/13/yr8wM8.png" alt="yr8wM8.png"></a></p>
+<h4 id="Request-line"><a href="#Request-line" class="headerlink" title="Request line"></a>Request line</h4><p><br>作为第一行，有3个关键信息：<strong>method</strong>、<strong>URL</strong>、<strong>Version</strong>。URL和Version都好理解，需要注意的就是这里的URL是服务端内部路径，下面重点说几个method的作用，总共也就几个：</p>
+<p><br> <strong>GET</strong>：最常规的，表示要获取某个对象<br><br> <strong>HEAD</strong>：用于debug，让客户端不返回具体要求的对象，只返回HTTP报文<br><br> <strong>POST</strong>：用户可以提供一些定制化信息，比如填表<br><br> <strong>PUT</strong>：用于上传对象<br><br> <strong>DELET</strong>：给用户权限删除服务端内容</p>
+<p><br>需要注意的是在用户搜索的时候，不一定使用POST，而是使用GET，将需求包装到URL里面，让服务端通过URL解析</p>
+<h4 id="Header-lines"><a href="#Header-lines" class="headerlink" title="Header lines"></a>Header lines</h4><p><br>这里也讲最常见的几个field：</p>
+<p><br><strong>Host</strong>：接域名，或者IP地址，这里相当于直接定位到服务器了<br><br><strong>Connection</strong>：接close、keep-alive等，可以从这里推断下一层的TCP状态，可能是持续还是非持续的<br><br><strong>User-agent</strong>：浏览器类型，版本</p>
+<h4 id="Entity-body"><a href="#Entity-body" class="headerlink" title="Entity body"></a>Entity body</h4><p><br>通常不放东西，但是当POST和PUT的时候，数据放在entity body</p>
+<h3 id="Response-Message"><a href="#Response-Message" class="headerlink" title="Response Message"></a>Response Message</h3><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yrTBCQ"><img src="https://s3.ax1x.com/2021/02/13/yrTBCQ.png" alt="yrTBCQ.png"></a><br><br>同样也是可以看实际的数据报</p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yrTnHK"><img src="https://s3.ax1x.com/2021/02/13/yrTnHK.png" alt="yrTnHK.png"></a></p>
+<h4 id="Status-line"><a href="#Status-line" class="headerlink" title="Status line"></a>Status line</h4><p><br><strong>Version</strong>就是服务器使用的HTTP版本，<strong>status code</strong>和<strong>phrase</strong>是服务器用来表示的状态和状态标识，这也是返回的报文包含的关键信息，下面也逐个进行介绍：</p>
+<p><br><strong>200 OK</strong>：正常返回<br><br><strong>400 Bad Request</strong>：服务器不能理解请求<br><br><strong>404 Not Found</strong>：索取的文件根本不存在<br><br><strong>301 Moved Permantely</strong>：索取的文件存在，但路径变更了<br><br><strong>304 Not Modified</strong>：索取的文件在给定的时间节点之后没有被修改<br><br><strong>505 HTTP Version Not Supported</strong>：HTTP版本不支持</p>
+<h4 id="Header-lines-1"><a href="#Header-lines-1" class="headerlink" title="Header lines"></a>Header lines</h4><p><br>同样讲几个常见的fields：</p>
+<p><br><strong>Date</strong>：指这个报文发出的时间<br><br><strong>Last-Modified</strong>：指索取的对象最后修改的时间，这个时间可以指导缓存的更新<br><br><strong>Content-Length</strong>：对象的长度，一般字节作为单位<br><br><strong>Content-Type</strong>：这里指明传递的object的类型，比如text/html<br><br><strong>Connection</strong>：涉及到下面的TCP连接类型</p>
+<h4 id="Entity-body-1"><a href="#Entity-body-1" class="headerlink" title="Entity body"></a>Entity body</h4><p><br>这里一般都要放东西了，比如html文件、jpeg文件之类的</p>
+<p><br>需要注意的是，在整个HTTP过程里面，我们没有考虑端口号这个问题，端口是由下一级考虑的</p>
+<h2 id="Cookies"><a href="#Cookies" class="headerlink" title="Cookies"></a>Cookies</h2><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yrjQ1S"><img src="https://s3.ax1x.com/2021/02/13/yrjQ1S.png" alt="yrjQ1S.png"></a></p>
+<p><br>虽然HTTP是不管状态的，但服务端可以采用cookies的方式来追踪客户信息。简单类比，就是给客户分配一个会员账号，只要用户进来，提供会员账号，服务端就能有记录并提供定制化的服务。需要注意的一点是，<strong>Cookies是存在于HTTP报文段的</strong>，客户端和服务端都保留Cookies，作为往后识别的一个号码</p>
+<h2 id="Web-Caching"><a href="#Web-Caching" class="headerlink" title="Web Caching"></a>Web Caching</h2><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yrzsBQ"><img src="https://s3.ax1x.com/2021/02/13/yrzsBQ.png" alt="yrzsBQ.png"></a></p>
+<p><br>也叫做proxy server。需要注意的是它是实体意义上的服务器，一般是由ISP去建设的，比如大学或机构自己买服务器来做web cache。它与客户端之间的速度很快，基本就是局域网的网速。而且能够显著地减少外部网络的traffic intensity。命中率不需要很高，能有0.4就会显著减少响应的时间，也是能够明显节省带宽花费的方式。将15Mbps的外部链路升级到100Mbps，花费会远高于使用缓存的花费</p>
+<h2 id="The-Conditional-GET"><a href="#The-Conditional-GET" class="headerlink" title="The Conditional GET"></a>The Conditional GET</h2><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/ysSYKU"><img src="https://s3.ax1x.com/2021/02/13/ysSYKU.png" alt="ysSYKU.png"></a></p>
+<p><br>这是在cache基础上的补充功能，当cache想看看自己存的文件是不是有所改变的时候，就向服务端发一个GET报文，并且带上If-modified-since:的报头数据。如果没有改，服务端就仅仅返回一个确认信息，状态码为304，这种方法也是很直观的</p>
+
       
     </div>
 
@@ -206,7 +244,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -272,7 +310,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-count">17</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

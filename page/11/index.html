@@ -145,7 +145,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/02/07/const_uses/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/02/09/leetcode%20992/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -159,7 +159,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/02/07/const_uses/" class="post-title-link" itemprop="url">Const的使用方法</a>
+            <a href="/2021/02/09/leetcode%20992/" class="post-title-link" itemprop="url">Leetcode 992.K个不同整数的子数组</a>
         </h2>
 
         <div class="post-meta">
@@ -170,7 +170,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2021-02-07 22:05:11 / Modified: 22:31:38" itemprop="dateCreated datePublished" datetime="2021-02-07T22:05:11+08:00">2021-02-07</time>
+              <time title="Created: 2021-02-09 06:22:15 / Modified: 06:39:25" itemprop="dateCreated datePublished" datetime="2021-02-09T06:22:15+08:00">2021-02-09</time>
             </span>
 
           
@@ -184,10 +184,12 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yNcbVS"><img src="https://s3.ax1x.com/2021/02/07/yNcbVS.jpg" alt="yNcbVS.jpg"></a></p>
-<h2 id="与指针结合"><a href="#与指针结合" class="headerlink" title="与指针结合"></a>与指针结合</h2><p><br>这是很常见的用法，而且与指针结合有两种情况</p>
-<h3 id="指针指向的元素为const类型"><a href="#指针指向的元素为const类型" class="headerlink" title="指针指向的元素为const类型"></a>指针指向的元素为const类型</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="keyword">char</span>* p = <span class="keyword">new</span> <span class="keyword">char</span>(<span class="string">&#x27;a&#x27;</span>);</span><br><span class="line"><span class="keyword">char</span> <span class="keyword">const</span> *q = <span class="keyword">new</span> <span class="keyword">char</span>(<span class="string">&#x27;b&#x27;</span>);</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">这两种方式的效果都是一样的，指针指向的那个值为常值，言下之意就是不能通过指针去改变对应内存位置</span></span><br><span class="line"><span class="comment">的值。但是指针自己的值是可以改变的</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">*p = <span class="number">5</span>;<span class="comment">//这是不合法的，会报错</span></span><br><span class="line">p = q;<span class="comment">//这是合法的</span></span><br></pre></td></tr></table></figure>
-<h3 id="指针自己为const，只能指向固定的一块空间"><a href="#指针自己为const，只能指向固定的一块空间" class="headerlink" title="指针自己为const，只能指向固定的一块空间"></a>指针自己为const，只能指向固定的一块空间</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">char</span>* <span class="keyword">const</span> p = <span class="keyword">new</span> <span class="keyword">char</span>(<span class="string">&#x27;a&#x27;</span>);</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">这时候这个指针不能指向别的空间了，但是可以通过指针修改它指向空间的元素</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">*p = <span class="string">&#x27;b&#x27;</span>;<span class="comment">//合法的</span></span><br><span class="line">p = <span class="keyword">new</span> <span class="keyword">char</span>(<span class="string">&#x27;b&#x27;</span>);<span class="comment">//不合法的，会报错</span></span><br></pre></td></tr></table></figure>
+          <p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yaJNh8"><img src="https://s3.ax1x.com/2021/02/09/yaJNh8.jpg" alt="yaJNh8.jpg"></a></p>
+<p><br></p>
+<h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/subarrays-with-k-different-integers/">https://leetcode-cn.com/problems/subarrays-with-k-different-integers/</a></p>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p><br>虽然这个题的描述是困难题，但是想法很直接。思路就是使用滑动窗口的思想。后来的不需要继承所有的信息，只需要知道满足条件的最近的边界就好了。最远的边界再在此基础上进行扩展。而且最坏的情况复杂度就是接近 $O(N^2)$ 。这个题主要考的是对边界的处理，以及写判断的时候别写混乱了。我就是因为写题的时候迷迷糊糊的，导致写出来思路对的也没报错，这种是很难进行debug的。所以这也算是提醒自己，写代码的时候要保持清醒。如果脑袋不清醒，可以先做点别的，比如写博客，看视频，<strong>等头清醒了再开设动手写！</strong></p>
+<p><br>另一方面，现在所谓的困难题，对我来说也没那么难了，因为基本的套路我都算见识过了</p>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">subarraysWithKDistinct</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; A, <span class="keyword">int</span> K)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> ret = <span class="number">0</span>;</span><br><span class="line">        <span class="built_in">unordered_map</span>&lt;<span class="keyword">int</span>,<span class="keyword">int</span>&gt; count;</span><br><span class="line">        <span class="keyword">int</span> left = <span class="number">0</span>, right = <span class="number">0</span>;</span><br><span class="line">        count[A[<span class="number">0</span>]]++;</span><br><span class="line">        <span class="keyword">int</span> times = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">int</span> sz = A.size();</span><br><span class="line">        <span class="keyword">while</span>(left &lt; sz)&#123;</span><br><span class="line">            <span class="keyword">while</span>(times &lt; K &amp;&amp; right+<span class="number">1</span> &lt; sz)&#123;</span><br><span class="line">                right++;</span><br><span class="line">                <span class="keyword">if</span>(count[A[right]]==<span class="number">0</span>)&#123;</span><br><span class="line">                    times++;</span><br><span class="line">                &#125;</span><br><span class="line">                count[A[right]]++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(times == K)&#123;</span><br><span class="line">                ret ++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">int</span> ptr = right+<span class="number">1</span>;</span><br><span class="line">            <span class="keyword">while</span>(ptr &lt; sz)&#123;</span><br><span class="line">                <span class="keyword">if</span>(count[A[ptr]]!=<span class="number">0</span>)&#123;</span><br><span class="line">                    ret++;</span><br><span class="line">                    ptr++;</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            count[A[left]]--;</span><br><span class="line">            <span class="keyword">if</span>(count[A[left]]==<span class="number">0</span>)&#123;</span><br><span class="line">                times--;</span><br><span class="line">            &#125;</span><br><span class="line">            left++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ret;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
       
     </div>
 
@@ -205,7 +207,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/10/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/12/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/page/10/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/12/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -271,7 +273,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-count">17</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
