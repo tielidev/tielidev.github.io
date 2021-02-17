@@ -168,10 +168,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2021-02-16 15:20:22 / Modified: 21:10:32" itemprop="dateCreated datePublished" datetime="2021-02-16T15:20:22+08:00">2021-02-16</time>
+              <time title="Created: 2021-02-16 15:20:22" itemprop="dateCreated datePublished" datetime="2021-02-16T15:20:22+08:00">2021-02-16</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-02-17 08:45:49" itemprop="dateModified" datetime="2021-02-17T08:45:49+08:00">2021-02-17</time>
+              </span>
 
           
 
@@ -211,7 +217,20 @@
 <p><a target="_blank" rel="noopener" href="https://imgchr.com/i/ygSjzR"><img src="https://s3.ax1x.com/2021/02/16/ygSjzR.png" alt="ygSjzR.png"></a></p>
 <p><br>注意到这里的重传机制是<strong>只重传一个segment</strong>。接下来再展现一个，由于采用cumulative acknowledgments，所以在超时时间内，即使前面的ACK丢失了也不会额外重传：</p>
 <p><a target="_blank" rel="noopener" href="https://imgchr.com/i/ygpKw8"><img src="https://s3.ax1x.com/2021/02/16/ygpKw8.jpg" alt="ygpKw8.jpg"></a></p>
-<h3 id="Doubling-the-Timeout-Interval"><a href="#Doubling-the-Timeout-Interval" class="headerlink" title="Doubling the Timeout Interval"></a>Doubling the Timeout Interval</h3>
+<h3 id="Doubling-the-Timeout-Interval"><a href="#Doubling-the-Timeout-Interval" class="headerlink" title="Doubling the Timeout Interval"></a>Doubling the Timeout Interval</h3><p><br>接下来介绍一系列TCP做的改进。首先是超时重传，当出现超时重传后，timer的设定值会翻倍。而当上级传来data或者收到ACK后，timer重置，仍然是按照EstimatedRTT和DevRTT来设定。这样使interval翻倍的操作，在一定程度上可以起到阻塞控制的效果</p>
+<h3 id="Fast-Retransmit"><a href="#Fast-Retransmit" class="headerlink" title="Fast Retransmit"></a>Fast Retransmit</h3><p><br>这其实是流水线带来的效果。receiver可以通过expected sequence number 和来到的 sequence number判断是否出现了gap，进而有可能发出duplicate ACK，注意，这里发出的只是一个ACK，而sender是要收到3个重复的ACK，总共4个相同的ACK后才会选择快速重传。另一个细节是快速重传不会改变timer，所以如果快速重传后还是没有收到正确的ACK，超时后还会进入超时重传</p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/ygafQe"><img src="https://s3.ax1x.com/2021/02/17/ygafQe.jpg" alt="ygafQe.jpg"></a></p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/ygaTot"><img src="https://s3.ax1x.com/2021/02/17/ygaTot.png" alt="ygaTot.png"></a></p>
+<h3 id="Go-Back-N-or-Selective-Repeat"><a href="#Go-Back-N-or-Selective-Repeat" class="headerlink" title="Go-Back-N or Selective Repeat"></a>Go-Back-N or Selective Repeat</h3><p><br>这本质上也是流水线带来的问题，要考虑固定长的窗口还是怎么样。<strong>TCP出现超时时只会重传引起超时的那一个segment</strong> ，甚至如果后续的ack在发生超时之前到了，sender不会重传。另一方面，reveiver会缓存比expected number大的segment。这样TCP一方面采用cumulative acknowledgment，一方面在receiver缓存segment。属于GBN和SR结合的操作</p>
+<h2 id="Flow-Control"><a href="#Flow-Control" class="headerlink" title="Flow Control"></a>Flow Control</h2><p><br>接下来考虑的就是缓冲区问题。receiver的缓冲区是连接上层的application process的，如果application process长期在应付其他的事，receiver的缓冲区是很容易填满的。这时候就需要流量控制来处理缓冲区的问题。需要注意的是，尽管流量控制和阻塞控制的结果都是控制了sender向网络发送segment的速度，但是它们所应对的问题是有本质区别的。因此，TCP相当于是要兼顾流量控制和阻塞控制</p>
+<p><br>sender就保持一个参数：receiver window，用于sender来感知receiver端的 <strong><em>spare buffer space</em></strong></p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/ygdakt"><img src="https://s3.ax1x.com/2021/02/17/ygdakt.png" alt="ygdakt.png"></a></p>
+<p><br>在receiver端，我们有：</p>
+<script type="math/tex; mode=display">LastByteRcvd-LastByteRead \leq RcvBuffer</script><p><br>而对于rwnd定义，我们有：</p>
+<script type="math/tex; mode=display">rwnd=RcvBuffer-(LastByteRcvd-LastByteRead)</script><p><br>因为支持全双工，每当receiver接收一个segment，receiver都会向sender反馈当前支持的rwnd。这里也可以倒回去看，TCP的segment format是留有receive window的空间的。而对于sender来说，会保留两个参数，LastByteSent和LastByteAcked，只要保证：</p>
+<script type="math/tex; mode=display">LastByteSent-LastByteAcked \leq rwnd</script><p>即可</p>
+<p><br>其中有一个细节，考虑下面这种情况：当receiver的buffer满了，这时候回传一个$rwnd=0$，receiver因为没有向sender传数据的需求，所以即使receiver上层的application process在逐渐清空buffer，receiver也不会去通知sender。为了解决这个问题，TCP要求当$rwnd=0$时，sender持续向sender发送1个byte的segment，就是为了探测rwnd。这也是一种尽量利用buffer space的方法。既不会使buffer溢出，也不会使buffer闲置。而在UDP里面，不考虑这个问题，UDP分配一个有限大小的buffer，如果buffer溢出了，直接把老的segment丢弃。UDP的这个操作在网络层有类似的。但是注意TCP因为是只在两个终端执行，所以还是很珍惜收到的segment，所以会使用flow control来保护buffer space</p>
+<h2 id="TCP-Connection-Management"><a href="#TCP-Connection-Management" class="headerlink" title="TCP Connection Management"></a>TCP Connection Management</h2>
       
     </div>
 
