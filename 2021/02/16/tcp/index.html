@@ -22,7 +22,7 @@
 
   <meta name="description" content="TCP ConnectionTCP支持全双工的服务。建立连接的过程就是经典的三次握手的过程。TCP的关闭支持半打开状态，但是TCP的建立不支持半打开的状态  这里需要理解MTU和MSS的概念 MTU maximum transmission unit。指整个链路上允许跑的最大的 link-layer frame。这个值明显与终端有关系，也与链路上的带宽有关系，也与中间的硬件有关。path MTU">
 <meta property="og:type" content="article">
-<meta property="og:title" content="TCP">
+<meta property="og:title" content="Connection-Oriented Transport:TCP">
 <meta property="og:url" content="http://example.com/2021/02/16/tcp/index.html">
 <meta property="og:site_name" content="铁犁的技术博客">
 <meta property="og:description" content="TCP ConnectionTCP支持全双工的服务。建立连接的过程就是经典的三次握手的过程。TCP的关闭支持半打开状态，但是TCP的建立不支持半打开的状态  这里需要理解MTU和MSS的概念 MTU maximum transmission unit。指整个链路上允许跑的最大的 link-layer frame。这个值明显与终端有关系，也与链路上的带宽有关系，也与中间的硬件有关。path MTU">
@@ -38,8 +38,12 @@
 <meta property="og:image" content="https://s3.ax1x.com/2021/02/17/ygafQe.jpg">
 <meta property="og:image" content="https://s3.ax1x.com/2021/02/17/ygaTot.png">
 <meta property="og:image" content="https://s3.ax1x.com/2021/02/17/ygdakt.png">
+<meta property="og:image" content="https://s3.ax1x.com/2021/02/16/ycrnht.png">
+<meta property="og:image" content="https://s3.ax1x.com/2021/02/17/yg0iMF.png">
+<meta property="og:image" content="https://s3.ax1x.com/2021/02/17/yg0GdA.png">
+<meta property="og:image" content="https://s3.ax1x.com/2021/02/17/ygD34I.png">
 <meta property="article:published_time" content="2021-02-16T07:20:22.890Z">
-<meta property="article:modified_time" content="2021-02-17T00:45:49.864Z">
+<meta property="article:modified_time" content="2021-02-17T02:32:42.755Z">
 <meta property="article:author" content="Tie Li">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://s3.ax1x.com/2021/02/16/ycdCUP.jpg">
@@ -57,7 +61,7 @@
   };
 </script>
 
-  <title>TCP | 铁犁的技术博客</title>
+  <title>Connection-Oriented Transport:TCP | 铁犁的技术博客</title>
   
 
 
@@ -175,7 +179,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          TCP
+          Connection-Oriented Transport:TCP
         </h1>
 
         <div class="post-meta">
@@ -192,7 +196,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-02-17 08:45:49" itemprop="dateModified" datetime="2021-02-17T08:45:49+08:00">2021-02-17</time>
+                <time title="Modified: 2021-02-17 10:32:42" itemprop="dateModified" datetime="2021-02-17T10:32:42+08:00">2021-02-17</time>
               </span>
 
           
@@ -246,7 +250,24 @@
 <script type="math/tex; mode=display">rwnd=RcvBuffer-(LastByteRcvd-LastByteRead)</script><p><br>因为支持全双工，每当receiver接收一个segment，receiver都会向sender反馈当前支持的rwnd。这里也可以倒回去看，TCP的segment format是留有receive window的空间的。而对于sender来说，会保留两个参数，LastByteSent和LastByteAcked，只要保证：</p>
 <script type="math/tex; mode=display">LastByteSent-LastByteAcked \leq rwnd</script><p>即可</p>
 <p><br>其中有一个细节，考虑下面这种情况：当receiver的buffer满了，这时候回传一个$rwnd=0$，receiver因为没有向sender传数据的需求，所以即使receiver上层的application process在逐渐清空buffer，receiver也不会去通知sender。为了解决这个问题，TCP要求当$rwnd=0$时，sender持续向sender发送1个byte的segment，就是为了探测rwnd。这也是一种尽量利用buffer space的方法。既不会使buffer溢出，也不会使buffer闲置。而在UDP里面，不考虑这个问题，UDP分配一个有限大小的buffer，如果buffer溢出了，直接把老的segment丢弃。UDP的这个操作在网络层有类似的。但是注意TCP因为是只在两个终端执行，所以还是很珍惜收到的segment，所以会使用flow control来保护buffer space</p>
-<h2 id="TCP-Connection-Management"><a href="#TCP-Connection-Management" class="headerlink" title="TCP Connection Management"></a>TCP Connection Management</h2>
+<h2 id="TCP-Connection-Management"><a href="#TCP-Connection-Management" class="headerlink" title="TCP Connection Management"></a>TCP Connection Management</h2><p><br>在TCP建立阶段产生的延迟是可以比较明显地感知到的。在讲之前，先把TCP fromat再拿出来看一遍：</p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/ycrnht"><img src="https://s3.ax1x.com/2021/02/16/ycrnht.png" alt="ycrnht.png"></a></p>
+<h3 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h3><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yg0iMF"><img src="https://s3.ax1x.com/2021/02/17/yg0iMF.png" alt="yg0iMF.png"></a></p>
+<p><br><strong><em>Step 1.</em></strong> 可以简单地理解为sender端先发送一个<strong>使节</strong>。第一个segment不带application data，但是<strong>SYN位设为1</strong>，同时<strong>sender随机选取一个数来作为squence number</strong>，原因之前也有过讨论。这样一个不带data的segment<strong>被封装成一个IP datagram</strong>，传给receiver。初始的sequence number也叫做<strong><em>client_isn</em></strong>，初始的segment 也叫做 <strong><em>SYN segment</em></strong></p>
+<p><br><strong><em>Step 2.</em></strong> 当receiver接收到了SYN segment后，receiver为这个连接分配一些variables和buffer space。并且回传一个segment。这个segment也不带data。回传的acknowledgment field为clent_isn+1（可以看到这是TCP占位的原因），同时自己选一个数作为sender方的sequence number，并且<strong>SYN也是设置为1</strong>。回传的这个segment叫做 <strong><em>SYNACK segment</em></strong></p>
+<p><br><strong><em>Step 3.</em></strong> 当sender接收到了SYNACK segment后，才开始分配buffer和variables。然后就可以开始<strong>带着data回传segment</strong>，以后的以及这个segment的<strong>SYN就设为0了</strong>，并且这个segment的sequence number和acknowledgment number field也都对应着SYNACK segment。需要注意这里的一个隐含思想，那就是既然sender要提出建立连接，那么一定是有传输的需求的，所以第三个segment就可以直接带着data走了</p>
+<h3 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h3><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yg0GdA"><img src="https://s3.ax1x.com/2021/02/17/yg0GdA.png" alt="yg0GdA.png"></a></p>
+<p><br>目前我对tcp连接的建立和关闭有了新的认识。无论是建立还是关闭，其实都是两端的两个process在相互协商。比如建立连接的时候，sender的process是发出了请求，只要receiver表示receiver准备好了接收，那么sender就可以带着数据发。而关闭的时候，假设某一方（就记为client）的process提出了关闭的请求，那么仍然是一个协商的状态，client表示自己的进程打算关闭了，自己的进程不会再传data了，而server端的process不完全听client，它完全可以选择继续向client传输data，等server的process自己决定关闭后，再向client传输一个FIN</p>
+<p><br>在这里面，当server接收到来自client的FIN以后，server就可以关掉与application process连接的buffer了，但是像receive window之类的流量控制的参数还是要保留的。此时就是进入了半打开状态，server可以继续向client传data，client可以回传ack，但是client不能再向server传data，server也不再负责接收来自client的data。而client的process是最后关闭的</p>
+<p><br>四次挥手的本质在于，双端的进程有自主性，<strong>关还是不关，是靠商量的出的</strong></p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/ygD34I"><img src="https://s3.ax1x.com/2021/02/17/ygD34I.png" alt="ygD34I.png"></a></p>
+<p><br>另外存在一些特别情况，比如当server socket收到某个自己不处理的port时，会回传一个segment 其中RST标为1</p>
+<h3 id="DDoS攻击"><a href="#DDoS攻击" class="headerlink" title="DDoS攻击"></a>DDoS攻击</h3><p><br>本质就是对于原始的TCP，攻击者可以向server发送多个SYN segment，这样server会回传FINACK并且开始分配buffer space和variables，也叫做 <strong><em>SYN flood attack</em></strong></p>
+<p><br>解决方案是利用哈希函数和IP地址，方法叫做 <strong><em>SYN cookies</em></strong></p>
+<p><br>方法就是当server收到SYN后，根据双端的IP地址，以及双端的port值，以及server准备的哈希函数，形成一个哈希值，将这个哈希值作为SYNACK的sequence number，回传回去，并且这时候不分配buffer等资源。只有当client传来了第三次握手的segment，server利用哈希函数来检查acknowledgment number的有效性，有效之后才分配资源</p>
+<p><br>但是这种方案似乎有一个前提，那就是对于server，对于一个IP地址的client提出的port请求，只能建立一个tcp连接。但现实里面，好像一个client和server可以对于同一个des port建立多个tcp连接，只要source port选取不同就好了。这样的话，如果允许双端对于同一个des port分配不同的source port建立多个连接，server就无法分辨它是恶意的IP地址还是非恶意的IP地址了。SYN cookies本质上是对IP地址进行合法性检查，对于一个IP地址的一种服务，只分配一次资源</p>
+<p><br>但是话说回来，如果server对于同一个IP地址的同一种服务，有上限就OK了，比如对于port 80至多同时开10个TCP连接，这也是合理的。而且再联想到HTTP默认是采用persistent-connection，也更加合理了</p>
+
     </div>
 
     
@@ -323,7 +344,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP-Connection"><span class="nav-number">1.</span> <span class="nav-text">TCP Connection</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP-Segment-Structure"><span class="nav-number">2.</span> <span class="nav-text">TCP Segment Structure</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Sequence-and-Acknowledgment-Numbers"><span class="nav-number">2.1.</span> <span class="nav-text">Sequence and Acknowledgment Numbers</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Round-Trip-Time-Estimation-and-Timeout"><span class="nav-number">3.</span> <span class="nav-text">Round-Trip Time Estimation and Timeout</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Estimating-the-Round-Trip-Time"><span class="nav-number">3.1.</span> <span class="nav-text">Estimating the Round-Trip Time</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Setting-and-Managing-the-Retransmission-Timeout-Interval"><span class="nav-number">3.2.</span> <span class="nav-text">Setting and Managing the Retransmission Timeout Interval</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reliable-Data-Transfer"><span class="nav-number">4.</span> <span class="nav-text">Reliable Data Transfer</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#A-Few-Interesting-Scenarios"><span class="nav-number">4.1.</span> <span class="nav-text">A Few Interesting Scenarios</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Doubling-the-Timeout-Interval"><span class="nav-number">4.2.</span> <span class="nav-text">Doubling the Timeout Interval</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Fast-Retransmit"><span class="nav-number">4.3.</span> <span class="nav-text">Fast Retransmit</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Go-Back-N-or-Selective-Repeat"><span class="nav-number">4.4.</span> <span class="nav-text">Go-Back-N or Selective Repeat</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Flow-Control"><span class="nav-number">5.</span> <span class="nav-text">Flow Control</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP-Connection-Management"><span class="nav-number">6.</span> <span class="nav-text">TCP Connection Management</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP-Connection"><span class="nav-number">1.</span> <span class="nav-text">TCP Connection</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP-Segment-Structure"><span class="nav-number">2.</span> <span class="nav-text">TCP Segment Structure</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Sequence-and-Acknowledgment-Numbers"><span class="nav-number">2.1.</span> <span class="nav-text">Sequence and Acknowledgment Numbers</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Round-Trip-Time-Estimation-and-Timeout"><span class="nav-number">3.</span> <span class="nav-text">Round-Trip Time Estimation and Timeout</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Estimating-the-Round-Trip-Time"><span class="nav-number">3.1.</span> <span class="nav-text">Estimating the Round-Trip Time</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Setting-and-Managing-the-Retransmission-Timeout-Interval"><span class="nav-number">3.2.</span> <span class="nav-text">Setting and Managing the Retransmission Timeout Interval</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reliable-Data-Transfer"><span class="nav-number">4.</span> <span class="nav-text">Reliable Data Transfer</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#A-Few-Interesting-Scenarios"><span class="nav-number">4.1.</span> <span class="nav-text">A Few Interesting Scenarios</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Doubling-the-Timeout-Interval"><span class="nav-number">4.2.</span> <span class="nav-text">Doubling the Timeout Interval</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Fast-Retransmit"><span class="nav-number">4.3.</span> <span class="nav-text">Fast Retransmit</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Go-Back-N-or-Selective-Repeat"><span class="nav-number">4.4.</span> <span class="nav-text">Go-Back-N or Selective Repeat</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Flow-Control"><span class="nav-number">5.</span> <span class="nav-text">Flow Control</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP-Connection-Management"><span class="nav-number">6.</span> <span class="nav-text">TCP Connection Management</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B"><span class="nav-number">6.1.</span> <span class="nav-text">三次握手</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B"><span class="nav-number">6.2.</span> <span class="nav-text">四次挥手</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DDoS%E6%94%BB%E5%87%BB"><span class="nav-number">6.3.</span> <span class="nav-text">DDoS攻击</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
