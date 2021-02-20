@@ -145,7 +145,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/02/17/congestion%20control/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/02/17/tcp_congestion_control/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -159,7 +159,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/02/17/congestion%20control/" class="post-title-link" itemprop="url">Principle of Congestion Control</a>
+            <a href="/2021/02/17/tcp_congestion_control/" class="post-title-link" itemprop="url">TCP Congestion Control</a>
         </h2>
 
         <div class="post-meta">
@@ -168,10 +168,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
-              
 
-              <time title="Created: 2021-02-17 11:37:07 / Modified: 18:10:36" itemprop="dateCreated datePublished" datetime="2021-02-17T11:37:07+08:00">2021-02-17</time>
+              <time title="Created: 2021-02-17 18:56:49" itemprop="dateCreated datePublished" datetime="2021-02-17T18:56:49+08:00">2021-02-17</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-02-18 23:27:32" itemprop="dateModified" datetime="2021-02-18T23:27:32+08:00">2021-02-18</time>
+              </span>
 
           
 
@@ -184,18 +190,30 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p><a target="_blank" rel="noopener" href="https://imgchr.com/i/ygoczF"><img src="https://s3.ax1x.com/2021/02/17/ygoczF.jpg" alt="ygoczF.jpg"></a></p>
-<p><br>这里书上提出了两个名词 available bit-rate(ABR) 与 asynchronous transfer mode(ATM)</p>
-<h2 id="The-Causes-and-the-Costs-of-Congestion"><a href="#The-Causes-and-the-Costs-of-Congestion" class="headerlink" title="The Causes and the Costs of Congestion"></a>The Causes and the Costs of Congestion</h2><p><br>接下来介绍一系列导致阻塞的场景。先解释一个词 hop，指的是数据包经过路由器或其他节点转移到其他网络的过程</p>
-<h3 id="Two-Senders-a-Router-with-Infinite-Buffers"><a href="#Two-Senders-a-Router-with-Infinite-Buffers" class="headerlink" title="Two Senders,a Router with Infinite Buffers"></a>Two Senders,a Router with Infinite Buffers</h3><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/ygLVPI"><img src="https://s3.ax1x.com/2021/02/17/ygLVPI.gif" alt="ygLVPI.gif"></a></p>
-<p><br>在最简单的方法里，即使让吞吐总量接近链路能承担的吞吐量，延迟也会变得非常大。这背后的原因在于，路由总会花一些时间处理包，当进来的包多到一定程度，就会产生排队，这个点与链路吞吐量是无关的。链路的吞吐量能保证从路由出来的包能尽快送走</p>
-<h3 id="Two-Senders-and-a-Router-with-Finite-Buffers"><a href="#Two-Senders-and-a-Router-with-Finite-Buffers" class="headerlink" title="Two Senders and a Router with Finite Buffers"></a>Two Senders and a Router with Finite Buffers</h3><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y2nskd"><img src="https://s3.ax1x.com/2021/02/17/y2nskd.jpg" alt="y2nskd.jpg"></a></p>
-<p><br>这里描述了两个现象，因为阻塞导致丢包，sender为了补偿丢包，只能消耗一些带宽来做重传。因为路由缓冲满了，导致高延迟，高延迟导致没有丢包却超时，导致不必要的重传</p>
-<h3 id="Four-Senders-Routers-with-Finite-Buffers-and-Multihop-Paths"><a href="#Four-Senders-Routers-with-Finite-Buffers-and-Multihop-Paths" class="headerlink" title="Four Senders, Routers with Finite Buffers, and Multihop Paths"></a>Four Senders, Routers with Finite Buffers, and Multihop Paths</h3><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y2nOXT"><img src="https://s3.ax1x.com/2021/02/17/y2nOXT.gif" alt="y2nOXT.gif"></a></p>
-<p><br>这里描述了一个新的现象，如果多个网络共用一个hop，有的网络经历了路由过滤，有的直接到达hop，那么前者的数据会被后者挤兑，再经过一个接近满队列的路由过滤之后，前者的out就接近于0了</p>
-<h2 id="Approaches-to-Congestion-Control"><a href="#Approaches-to-Congestion-Control" class="headerlink" title="Approaches to Congestion Control"></a>Approaches to Congestion Control</h2><p><br>书上按照是否有network layer参与提供帮助，将阻塞控制分成了两类</p>
-<p><br><strong><em>End-to-end congestion control</em></strong> TCP就是需要这种，因为网络层不向上提供状态信息。TCP就依靠丢包来认为发生了阻塞。而丢包则依靠超时或者重复的ACK来判断，当TCP认为网络中发生了阻塞后，选择减少窗口大小，以及增加delay时长</p>
-<p><br><strong><em>Network-assisted congestion control</em></strong> 这在之前提到的ATM ABR congestion control里使用，直白地说就是中间的路由会提供网络信息，从network到sender</p>
+          <p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y2UrWT"><img src="https://s3.ax1x.com/2021/02/17/y2UrWT.jpg" alt="y2UrWT.jpg"></a></p>
+<p><br>在TCP的sender端新保留一个参数 <strong><em>congestion window</em></strong> ，满足</p>
+<script type="math/tex; mode=display">LastByteSent-LastByteAcked \leq min \{cwnd,rwnd\}</script><p><br>这也可以理解，rwnd是为了照顾接收端的缓冲队列，cwnd是为了照顾网络中的缓冲队列。congestion window就表示sender认为的链路可以装的量。通过ACK回来的快慢，TCP用来调节congestion window增加的快慢，这也叫 <strong><em>self-clocking</em></strong></p>
+<p><br>TCP判断链路阻塞始终是用的间接判断：超时或者4ACKs，这种方法是异步判断，各自依据本地信息来判断，网络里面的各个sender不需要同步</p>
+<p><br>TCP的congestion control基本上把下面的状态机理清楚了就到位了</p>
+<h2 id="TCP-Congestion-control-Algorithm"><a href="#TCP-Congestion-control-Algorithm" class="headerlink" title="TCP Congestion-control Algorithm"></a>TCP Congestion-control Algorithm</h2><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yW5G5t"><img src="https://s3.ax1x.com/2021/02/18/yW5G5t.jpg" alt="yW5G5t.jpg"></a></p>
+<p><br>在这之前，先要区分一下timeout和3ACKs的区别。先看timeout，因为是在流水线传包，当某个包的ACK迟迟没到时，不仅意味着这个segment遇到了阻塞，而且也表示后面接着的segment也发生了阻塞，所以<strong>当务之急是解决阻塞和开始重传</strong> 。而对于3ACKs，表示了有频繁的ACK传回来，所以网络的畅通程度还是可以的，而能够明确判断的是确实有包丢了，但也确实能收到ACK，所以这个情况下阻塞可能就不是那么严重，先做重传快速修复</p>
+<p><br>包括3个部分：(1)slow start (2)congestion avoidance (3)fast recovery。注意下面谈的是传输的速率，而不是之前谈的传输的量了，之前是MSS MTU可以理解为网路的宽度，但是以多大的速率去传，是与宽度不同的另一个问题。MSS可以用来确定TCP封装的包的大小，一个segment就可以认为有一个MSS大，但是接下来讨论的是1秒放多少个segment到链路中去</p>
+<p><br>这里再补充回顾一下MTU和MSS的概念。<strong>MTU</strong>是链路上允许跑的最大的 <strong>link-layer frame</strong> 注意这里说的是frame，也就是一帧能放的比特数。可以类比成高速公路上一辆车最长允许有多长。 因此 <strong>MSS</strong>是 <strong>maximum segment size</strong>，也就是一个segment允许放的比特数。而至于sender一秒推多少个segment到网络中，要由下面来确定</p>
+<p><br>可以将3ACKS和timeout都理解为阻塞的标志，但是3ACKs阻塞的程度稍微轻一些。也可以从congestion avoidance转到fast recovery看到，cwnd依然是有做减半处理的。当TCP趋于稳定后，大部分时候是在congestion avoidance和fast recovery之间摇摆，因为在cwnd增长的过程中，duplicate ACKs 会比 timeout 来的早许多</p>
+<h3 id="Slow-Start"><a href="#Slow-Start" class="headerlink" title="Slow Start"></a>Slow Start</h3><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y2WBkT"><img src="https://s3.ax1x.com/2021/02/17/y2WBkT.png" alt="y2WBkT.png"></a></p>
+<p><br>简单来说就是2的幂次增长，初始为一个RTT的时间里放一个MSS，也就是放一个segment，然后每当一个ack回来，就多放一个segment，本质是<strong><em>cwnd在增加</em></strong>。宏观来看，每过一个RTT就翻倍。等<strong>第一次发生了超时后</strong>，设置一个新的参数，叫<strong><em>ssthresh</em></strong>，意思是slow start threshold，使得  <strong>$ssthresh=\frac{cwnd}{2}$</strong>，cwnd设为1 MSS，再次进行slow start</p>
+<p>接下来有三种分支：1）如果cwnd幂次增长到了ssthresh，进入congestion avoidance状态 2）如果收到3个duplicate ACKs，进入fast recovery 3)如果出现了超时，ssthresh 再次更新为当前 cwnd的一半，cwnd = 1，重新开始slow start</p>
+<h3 id="Congestion-Avoidance"><a href="#Congestion-Avoidance" class="headerlink" title="Congestion Avoidance"></a>Congestion Avoidance</h3><p><br>由前一段讨论，知道刚进入congestion avoidance的时候，cwnd = ssthresh，也就是上一次发生超时的cwnd的一半。这时候cwnd开始缓慢增长，每过1个RTT增加一个MSS，也就是每过1个RTT多传1个segment</p>
+<p><br>同样也会进入状态转移：1）出现超时，$ssthresh=\frac{cwnd}{2}$，$cwnd=1MSS$，进入slow start状态 2）出现3 duplicate ACKs ， $ssthresh=\frac{cwnd}{2}$ ，$cwnd=ssthresh+3$， 进入fast recovery</p>
+<h3 id="Fast-Recovery"><a href="#Fast-Recovery" class="headerlink" title="Fast Recovery"></a>Fast Recovery</h3><p><br>需要注意的是，在这个fast recovery的状态，网络状态是认为畅通的，所以可以适当加快回传的速度，为的是快速修复丢掉的包。因为出现duplicate ACKs后，就不指望丢掉的那个包自动回到receiver了，自动认为这个包在网络里消失了，所以快速重传修复是应该的</p>
+<p><br>在这个阶段里面，在收到新的ACK之前，每收到一个重复的ACK，$cwnd=cwnd+MSS$</p>
+<p><br>状态转移：1）当收到了新的ACK，表示丢包已经被修复了，$cwnd=ssthresh$，进入congestion avoidance 2）当出现超时，$ssthresh=\frac{cwnd}{2}$，$cwnd=1MSS$，进入slow start</p>
+<h3 id="Macroscopic-Description-of-TCP-Throughput"><a href="#Macroscopic-Description-of-TCP-Throughput" class="headerlink" title="Macroscopic Description of TCP Throughput"></a>Macroscopic Description of TCP Throughput</h3><p><br>做一个笼统的假设，传输的速率是由cwnd和RTT决定的，传输速率为 $\frac{cwnd}{RTT}$ 假设在稳定期间，状态在fast recovery和congestion avoidance之间摇摆，当出现duplicate ACKs时，假设$cwnd=W$，进入fast recovery后，$cwnd=\frac{cwnd}{2}$，然后每过一个RTT，$cwnd=cwnd+MSS$，因此可以得到</p>
+<script type="math/tex; mode=display">average \ throughput \ of \ a \ connection= \frac{0.75W}{RTT}</script><h2 id="Fairness"><a href="#Fairness" class="headerlink" title="Fairness"></a>Fairness</h2><p><br>书上讲了一个很精彩的演绎，说明了TCP这种分布式的阻塞控制方法是如何实现总体的平衡的</p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yWL7vt"><img src="https://s3.ax1x.com/2021/02/18/yWL7vt.png" alt="yWL7vt.png"></a></p>
+<p><br>书上还描述了另一件事，但没有解释。有更短RTT的连接能够更快地获取带宽资源，这样也能更快地完成任务。这个现象与打水问题的结果是一样的，也在宏观上是有效的。RTT越远的TCP被分配越少的带宽，完成整个TCP任务花的时间也越长</p>
+<h3 id="Fairness-and-UDP"><a href="#Fairness-and-UDP" class="headerlink" title="Fairness and UDP"></a>Fairness and UDP</h3><p><br>UDP是不做阻塞控制的，传输的速度在一开始就定好了，也不会去改变。所以如果这个速度确实很大，会在实际上占用很大的带宽的，如果这时有并行的TCP，并行的TCP就只有降速。换句话说，很高速的UDP会让其他TCP应用处于长期的停滞中</p>
+<h3 id="Fairness-and-Parallel-TCP-Congestions"><a href="#Fairness-and-Parallel-TCP-Congestions" class="headerlink" title="Fairness and Parallel TCP Congestions"></a>Fairness and Parallel TCP Congestions</h3><p><br>之前也提到过，并行TCP的存在，在现代应用中是很常见的。比如浏览器为了获取一个网页里的多个内容，选择对一个host建立多个并行的TCP。这种方式是能够实在地增加对带宽的占用的，我觉得这种方法算是一种好事，因为建立多个并行TCP的选择权在于server，所以也不是无限并行的</p>
 
       
     </div>
@@ -214,7 +232,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
   </nav>
 
 
@@ -280,7 +298,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-count">20</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>

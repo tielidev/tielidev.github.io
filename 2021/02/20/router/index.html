@@ -20,28 +20,40 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="铁犁的技术博客">
-<meta property="og:url" content="http://example.com/page/10/index.html">
+  <meta name="description" content="这部分就主要讲路由器的结构了  路由器主要由4个部分组成：input ports、switching fabric、output ports、routing processor： Input ports：会执行查询功能，给packet确定方向，使得packet进入switch fabric后被分配到对应的port上。control packet也是像普通的packet一样通过input port">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Router">
+<meta property="og:url" content="http://example.com/2021/02/20/router/index.html">
 <meta property="og:site_name" content="铁犁的技术博客">
+<meta property="og:description" content="这部分就主要讲路由器的结构了  路由器主要由4个部分组成：input ports、switching fabric、output ports、routing processor： Input ports：会执行查询功能，给packet确定方向，使得packet进入switch fabric后被分配到对应的port上。control packet也是像普通的packet一样通过input port">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s3.ax1x.com/2021/02/20/y4Wssg.jpg">
+<meta property="og:image" content="https://s3.ax1x.com/2021/02/20/y4WOF1.png">
+<meta property="og:image" content="https://s3.ax1x.com/2021/02/20/y44uIs.png">
+<meta property="og:image" content="https://s3.ax1x.com/2021/02/20/y5OJzQ.png">
+<meta property="og:image" content="https://s3.ax1x.com/2021/02/20/y5OdZq.png">
+<meta property="og:image" content="https://s3.ax1x.com/2021/02/20/y5ODiT.png">
+<meta property="og:image" content="https://s3.ax1x.com/2021/02/20/y5OSM9.png">
+<meta property="article:published_time" content="2021-02-20T00:58:59.981Z">
+<meta property="article:modified_time" content="2021-02-20T09:26:43.766Z">
 <meta property="article:author" content="Tie Li">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s3.ax1x.com/2021/02/20/y4Wssg.jpg">
 
-<link rel="canonical" href="http://example.com/page/10/">
+<link rel="canonical" href="http://example.com/2021/02/20/router/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'en'
   };
 </script>
 
-  <title>铁犁的技术博客</title>
+  <title>Router | 铁犁的技术博客</title>
   
 
 
@@ -139,13 +151,14 @@
         <div class="content-wrap">
           
 
-          <div class="content index posts-expand">
+          <div class="content post posts-expand">
             
-      
+
+    
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/02/11/leetcode%20703/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/02/20/router/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -157,10 +170,9 @@
       <meta itemprop="name" content="铁犁的技术博客">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/02/11/leetcode%20703/" class="post-title-link" itemprop="url">Leetcode 703.数据流中的第K大元素</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          Router
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -170,7 +182,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2021-02-11 15:05:47 / Modified: 15:20:35" itemprop="dateCreated datePublished" datetime="2021-02-11T15:05:47+08:00">2021-02-11</time>
+              <time title="Created: 2021-02-20 08:58:59 / Modified: 17:26:43" itemprop="dateCreated datePublished" datetime="2021-02-20T08:58:59+08:00">2021-02-20</time>
             </span>
 
           
@@ -184,30 +196,57 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yBUzLT"><img src="https://s3.ax1x.com/2021/02/11/yBUzLT.jpg" alt="yBUzLT.jpg"></a><br><br></p>
-<h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p><br><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/kth-largest-element-in-a-stream/">https://leetcode-cn.com/problems/kth-largest-element-in-a-stream/</a></p>
-<p><br><strong>今天是除夕了！算起来也正经做题一年了</strong></p>
-<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p><br>仍然是有在考察边界情况，用好stl就行了，这里注意优先队列的写法<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">priority_queue</span>&lt;<span class="keyword">int</span>,<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;,greater&lt;<span class="keyword">int</span>&gt;&gt; q;</span><br><span class="line"><span class="comment">//理论是也是和sort一样是可以传函数指针的</span></span><br></pre></td></tr></table></figure><br>这个要学会，至于常规排序可以不加，因为想倒序就下标倒序就好了，不过这里也补充一下，sort里面传的是函数指针<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">comp</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span></span>&#123;<span class="keyword">return</span> x &lt; y&#125;</span><br><span class="line"><span class="comment">//需要自己写好</span></span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; v = &#123;<span class="number">23</span>,<span class="number">54</span>,<span class="number">12</span>,<span class="number">23</span>,<span class="number">67</span>,<span class="number">2</span>,<span class="number">3</span>&#125;;</span><br><span class="line"></span><br><span class="line">sort(v.begin(),v.end(),comp);</span><br><span class="line"><span class="comment">//传的是函数指针</span></span><br></pre></td></tr></table></figure></p>
-<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">KthLargest</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    KthLargest(<span class="keyword">int</span> k, <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; nums) &#123;</span><br><span class="line"></span><br><span class="line">        sort(nums.begin(),nums.end());</span><br><span class="line">        <span class="keyword">if</span>(nums.size() &gt;= k)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;k;++i)&#123;</span><br><span class="line">                p.push(nums[nums.size()<span class="number">-1</span>-i]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;nums.size();++i)&#123;</span><br><span class="line">                p.push(nums[i]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        K = k;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> val)</span> </span>&#123;</span><br><span class="line">        p.push(val);</span><br><span class="line">        <span class="keyword">if</span>(p.size()&gt;K)&#123;</span><br><span class="line">            p.pop();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> p.top();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="built_in">priority_queue</span>&lt;<span class="keyword">int</span>,<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;,greater&lt;<span class="keyword">int</span>&gt;&gt; p;</span><br><span class="line">    <span class="keyword">int</span> K;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Your KthLargest object will be instantiated and called as such:</span></span><br><span class="line"><span class="comment"> * KthLargest* obj = new KthLargest(k, nums);</span></span><br><span class="line"><span class="comment"> * int param_1 = obj-&gt;add(val);</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-      
+        <p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y4Wssg"><img src="https://s3.ax1x.com/2021/02/20/y4Wssg.jpg" alt="y4Wssg.jpg"></a></p>
+<p><br>这部分就主要讲路由器的结构了</p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y4WOF1"><img src="https://s3.ax1x.com/2021/02/20/y4WOF1.png" alt="y4WOF1.png"></a></p>
+<p><br>路由器主要由4个部分组成：input ports、switching fabric、output ports、routing processor：</p>
+<p><br><strong><em>Input ports</em></strong>：会执行查询功能，给packet确定方向，使得packet进入switch fabric后被分配到对应的port上。control packet也是像普通的packet一样通过input ports进入到routing processor的</p>
+<p><br><strong><em>Switching fabric</em></strong>：执行直接的转换功能</p>
+<p><br><strong><em>Output ports</em></strong>：缓存与发送packet</p>
+<p><br><strong><em>Routing processor</em></strong>：维护forwarding table</p>
+<h2 id="Input-Ports"><a href="#Input-Ports" class="headerlink" title="Input Ports"></a>Input Ports</h2><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y44uIs"><img src="https://s3.ax1x.com/2021/02/20/y44uIs.png" alt="y44uIs.png"></a></p>
+<p><br>line termination和data link processing都是作用于链路层和物理层的。原始的forwarding table由processor算出来，但是每一个input port都保留一份forwarding table的浅拷贝。这也是一种去中心化的思想，把功能做了切割</p>
+<p><br>在这里，会需要高速的进行查找操作，可以有一个概念，一般的假设下，<strong>1个input port1秒钟会进行百万次查找</strong> 在这里，也是搜索算法大放异彩的地方，采用树形搜索远比线性搜索更加的高效。而且在这里，<strong>二进制的比特设置也与二叉树天然地契合了</strong>。因此在硬件层面上去实现也是会很高效的。这也给我启发，设计的时候尽量往二进制方面去设计，这样对应的硬件会简单易实现一些</p>
+<p><br>除了树形结构以外，其余的各种加速方式也有参与。可以有专门的硬件负责32位IP地址的快速查询，也可以根据局部性原理做缓存</p>
+<h2 id="Switching-Fabric"><a href="#Switching-Fabric" class="headerlink" title="Switching Fabric"></a>Switching Fabric</h2><p><br>书上讲了几种switching fabric的方案，我暂时没找到图，就先直接分类描述了。其实到了这里，就理解了计算机的思想了，现代社会的大部分电子产品，其实本质都是计算机，都是由CPU和内存组成的，这种结构也被叫做微处理器</p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y5OJzQ"><img src="https://s3.ax1x.com/2021/02/20/y5OJzQ.png" alt="y5OJzQ.png"></a></p>
+<p><br><strong><em>Switching via memory</em></strong> 本质就和电脑一样了，input ports和output ports可以看做传统IO设备，从inport来的packet通过interrupt中断CPU，随后被复制到内存里，CPU从内存里提取地址，查询到对应的out port号，然后复制到out port的缓冲区。现代的路由器也有使用CPU的，但是方案是在input line cards的处理器完成地址的查询和缓存工作，而整个大的内存相当于<strong>共享的内存</strong>，控制内存的CPU做的是调度的工作，不做查询的工作</p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y5OdZq"><img src="https://s3.ax1x.com/2021/02/20/y5OdZq.png" alt="y5OdZq.png"></a></p>
+<p><br><strong><em>Switching via a bus</em></strong> 有一些像共享内存，但是总线是无意识的，<strong>也就是一次总线上只能存在一个packet</strong> 现代技术的总线速度可以达到1Gbps。而这种交换速度已经足够快了，在局域网里面很常用，比如做一家学校或者公司的router</p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y5ODiT"><img src="https://s3.ax1x.com/2021/02/20/y5ODiT.png" alt="y5ODiT.png"></a></p>
+<p><br><strong><em>Switching via an interconnection network</em></strong> 这个作为了解，因为书上对这种内联总线的方式说的还不是很清楚，就算是知道有这种方式好了</p>
+<h2 id="Output-ports"><a href="#Output-ports" class="headerlink" title="Output ports"></a>Output ports</h2><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y5OSM9"><img src="https://s3.ax1x.com/2021/02/20/y5OSM9.png" alt="y5OSM9.png"></a></p>
+<p><br>需要注意在input ports有decapsulation而在output ports有encapsulation，所以在路由这里是发生了packet的解包和封装过程的，这也是network layer协议发生作用的地方</p>
+<h2 id="Where-Does-Queuing-Occur"><a href="#Where-Does-Queuing-Occur" class="headerlink" title="Where Does Queuing Occur?"></a>Where Does Queuing Occur?</h2><p><br>这里提供了一个思路，当我们在思考速度带来的阻塞的时候，我们可以考虑一个单位时间里面发生的事情，当具体到一个单位时间以后，问题就转换成了各个接口两边的吞吐能否平衡的问题</p>
+<p><br>而关于缓冲定多大，书上也给出了一个标准，记缓冲大小为B，C为link capacity的话</p>
+<script type="math/tex; mode=display">B=RTT\cdot C</script><p><br>因此假设链路10Gbps，而RTT为250毫秒，$B=RTT\cdot C=2.5Gb$<br><br>有时候甚至在缓冲将要发生阻塞的时候就丢弃掉某些packet，这样间接告诉sender端链路正在发生阻塞</p>
+<p><br>书上讲了几种缓冲的情况，但是对解决方案讲的并不是很详细。常见的就是缓冲区不够大，以及switch fabric转换的速度不够快。我需要把握的就是在每个port与memory的交接处，都存在缓存，在这个交界处都可能出现排队的情况</p>
+
     </div>
 
     
     
     
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/02/17/tcp_congestion_control/" rel="prev" title="TCP Congestion Control">
+      <i class="fa fa-chevron-left"></i> TCP Congestion Control
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
       </footer>
+    
   </article>
   
   
   
-
-
-  
-  <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/9/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="extend next" rel="next" href="/page/11/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
-  </nav>
 
 
 
@@ -259,6 +298,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Input-Ports"><span class="nav-number">1.</span> <span class="nav-text">Input Ports</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Switching-Fabric"><span class="nav-number">2.</span> <span class="nav-text">Switching Fabric</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Output-ports"><span class="nav-number">3.</span> <span class="nav-text">Output ports</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Where-Does-Queuing-Occur"><span class="nav-number">4.</span> <span class="nav-text">Where Does Queuing Occur?</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
