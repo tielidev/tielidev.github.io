@@ -115,11 +115,6 @@
     <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
-        <li class="menu-item menu-item-about">
-
-    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
-
-  </li>
         <li class="menu-item menu-item-tags">
 
     <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
@@ -133,11 +128,6 @@
         <li class="menu-item menu-item-archives">
 
     <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
-
-  </li>
-        <li class="menu-item menu-item-schedule">
-
-    <a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>日程表</a>
 
   </li>
   </ul>
@@ -167,7 +157,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://tielidev.github.io/2021/02/15/reliable_data_transfer/">
+    <link itemprop="mainEntityOfPage" href="https://tielidev.github.io/2021/02/16/essay01/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/timg.jpeg">
@@ -181,7 +171,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/02/15/reliable_data_transfer/" class="post-title-link" itemprop="url">Reliable Data Transfer</a>
+            <a href="/2021/02/16/essay01/" class="post-title-link" itemprop="url">随笔</a>
         </h2>
 
         <div class="post-meta">
@@ -190,16 +180,10 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2021-02-15 21:21:17" itemprop="dateCreated datePublished" datetime="2021-02-15T21:21:17+08:00">2021-02-15</time>
+              <time title="创建时间：2021-02-16 09:30:32 / 修改时间：09:47:05" itemprop="dateCreated datePublished" datetime="2021-02-16T09:30:32+08:00">2021-02-16</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-02-16 07:45:53" itemprop="dateModified" datetime="2021-02-16T07:45:53+08:00">2021-02-16</time>
-              </span>
 
           
 
@@ -212,53 +196,11 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y61d2t"><img src="https://s3.ax1x.com/2021/02/15/y61d2t.jpg" alt="y61d2t.jpg"></a></p>
-<h2 id="Building-a-Reliable-Data-Transfer-Protocol"><a href="#Building-a-Reliable-Data-Transfer-Protocol" class="headerlink" title="Building a Reliable Data Transfer Protocol"></a>Building a Reliable Data Transfer Protocol</h2><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y61YUH"><img src="https://s3.ax1x.com/2021/02/15/y61YUH.png" alt="y61YUH.png"></a></p>
-<p><br>上面的这个图讲了实际的可靠传输的结构，应用层依赖传输层提供的服务。需要说明的是<strong><em>rdt_send</em></strong>是上层（应用层）传来的指令，<strong><em>udt_send</em></strong> 是传输层对网络层下达的指令，换句话说就是调用网络层的接口，<strong><em>rdt_rcv</em></strong> 是传输层从网络层中获取数据，并且形成可靠数据，<strong><em>deliver_data</em></strong> 是传输层向网络层传输数据</p>
-<p><br>接下来我就照着书上的结构，依次去建立一个可靠传输的协议。这里的可靠传输协议是比较通用的设计思路，不局限于传输层。而这种思路甚至在我们以后设计应用层的程序时，也可以拿来作为借鉴</p>
-<h3 id="Rdt1-0-over-a-Perfectly-Reliable-Channel"><a href="#Rdt1-0-over-a-Perfectly-Reliable-Channel" class="headerlink" title="Rdt1.0: over a Perfectly Reliable Channel"></a>Rdt1.0: over a Perfectly Reliable Channel</h3><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y63bm8"><img src="https://s3.ax1x.com/2021/02/15/y63bm8.png" alt="y63bm8.png"></a></p>
-<p><br>这是最理想的状态，底层提供的是可靠传输，当前层只需要管收发就好了</p>
-<h3 id="Rdt2-0-over-a-Channel-with-Bit-Errors"><a href="#Rdt2-0-over-a-Channel-with-Bit-Errors" class="headerlink" title="Rdt2.0: over a Channel with Bit Errors"></a>Rdt2.0: over a Channel with Bit Errors</h3><p><br>这个情况下<strong>假设数据可能传输错误，但是仍然是有序的</strong>。数据传输错误在物理层面上有可能出现，数据包在传送、传输、缓冲区的过程都有可能被改变。在这里也可以看到，checksum和ACK是绑在一起出现的，有了ACK后，checksum才有意义</p>
-<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y6GDr6"><img src="https://s3.ax1x.com/2021/02/15/y6GDr6.png" alt="y6GDr6.png"></a></p>
-<p><br>原始的版本既有ACK也有NAK，这种重传机制叫做<strong><em>ARQ(Automatic Repeat reQuest)protocol</em></strong></p>
-<p><br>但是上面的方法有一个隐患，校验码只是在判断data部分有没有错，那如果ACK或者NAK被干扰了，如何去识别和修复？上面提出的方法里面没有对ACK/NAK做校验</p>
-<p><br>这里采取的方法是，当发送端发现收到的ACK/NAK被污染时，就重传刚才发送的数据包。这种方法给接收端带来了问题，接收端收到一个packet的时候，如何判断这个packet是新的数据包还是因为ACK/NAK污染导致发送端重传的数据包？</p>
-<p><br>在当前这个stop-and-wait protocol中，增加一位的sequence number就能够解决问题了，接收端通过这个sequence number来分辨收到的是重传还是新的packet。并且receiver回传ACK/NAK的时候也带了校验码，因此这时候sender可以判断收到的ACK/NAK有没有被污染。下面就是rdt2.1版本：</p>
-<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y6YH3j"><img src="https://s3.ax1x.com/2021/02/15/y6YH3j.png" alt="y6YH3j.png"></a></p>
-<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y6YzUU"><img src="https://s3.ax1x.com/2021/02/15/y6YzUU.png" alt="y6YzUU.png"></a></p>
-<p><br>需要留意的是，<strong>这种改良版本的目的是应对ACK/NAK被污染的情况</strong></p>
-<p><br>注意到ACK和NAK是二元关系，我们还可以进化，不要NAK，对于receiver，要么传ACK，要么不传。这里的底层环境还是处于没有丢包的前提下，下面就是只有ACK的进化版本，rdt2.2:</p>
-<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y6td2j"><img src="https://s3.ax1x.com/2021/02/15/y6td2j.png" alt="y6td2j.png"></a></p>
-<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y6t2iF"><img src="https://s3.ax1x.com/2021/02/15/y6t2iF.png" alt="y6t2iF.png"></a></p>
-<p><br>这里举一个例子，sender发送data0，receiver收到后回传ack0并等待data1，sender收到污染的ack于是重传data0，receiver此时在等data1却收到了data0，于是回传ack0仍然继续等待data1，当sender收到了没有被污染的ack0后，才进入新状态，准备发送data1</p>
-<h3 id="Rdt3-0-over-a-Lossy-Channel-with-Bit-Errors"><a href="#Rdt3-0-over-a-Lossy-Channel-with-Bit-Errors" class="headerlink" title="Rdt3.0: over a Lossy Channel with Bit Errors"></a>Rdt3.0: over a Lossy Channel with Bit Errors</h3><p><br>前面是考虑了数据的正确性，是假设处于不丢包的管道上的。接下来把丢包这种情况考虑进去。考虑数据完整性、考虑丢包，基本就是比较全面的RDT了</p>
-<p><br>首先要面对的问题是如何判断发生了丢包。这里将判断的任务交给sender，采用计时的方式，如果发出的packet丢失了，或者receiver的ACK丢失了，sender都不会收到ACK，这样sender就可以判断发生了丢包，然后重传</p>
-<p><br>而具体选择多少时间才算超时，由于设计的初衷是尽量发现了丢包就立刻重传，所以选择让sender自己选择一个时间窗口，只要超过了窗口期没有收到ACK，就开始重传。即使有可能packet只是阻塞了，但仍然选择重传</p>
-<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y6gb2q"><img src="https://s3.ax1x.com/2021/02/15/y6gb2q.png" alt="y6gb2q.png"></a></p>
-<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y6gxZF"><img src="https://s3.ax1x.com/2021/02/15/y6gxZF.png" alt="y6gxZF.png"></a></p>
-<p><br>需要注意的是，这里的protocol依然是stop-and-wait类型的，直到开始上流水线之后，才会改变。到这里，基本的元素都有了：<strong><em>checksum、sequence number、timer、ACK</em></strong></p>
-<h2 id="Pipelined-Reliable-Data-Transfer-Protocols"><a href="#Pipelined-Reliable-Data-Transfer-Protocols" class="headerlink" title="Pipelined Reliable Data Transfer Protocols"></a>Pipelined Reliable Data Transfer Protocols</h2><p><br>现在基本的可靠传输协议建立了，接下来就是考虑对性能做优化的时候了。第一个优化的点，就是流水线。其实这里能够给人很大的启发，流水线不单单应用于这个地方，只要有明显差速的情景，都有可能可以用上流水线的技术。回到网络传输这个环境，我们知道，将一个packet完全送到网络链路上，其实是很快的，一方面因为局域网速度很快，一方面因为这时候packet还刚上路，还不需要跑起来。因此，消耗的时间的大头就放在了链路传输上，也就是<strong><em>propagation</em></strong>。在这里书上举了一个例子，<strong><em>假设在链路上跑的速度是光速，从美国东海岸到西海岸的RTT就是30毫秒</em></strong>，可以稍微记一下这个时间。而如果链路的transmission rate为1Gbps($10^9$bits/second)，<strong><em>将一个1000bytes的packet放到链路上，需要8微秒</em></strong>。如果保留简单的stop-and-wait模式，尽管链路允许1秒内把1G的内容传到链路上，但由于<strong><em>TCP packet的大小一次只能有1kB左右</em></strong>，以及传输距离动辄半个地球，所以实际拿到的效果只有200kbps左右</p>
-<p><br>这个数据好像也很常见，经常在某些没有专门做加速的下载的时候，跑出来的效果好像也确实就是100kb的数量级</p>
-<p><br>也就是说<strong>transmission time与propagation time可以轻松达到1比10000</strong>。这个基本的数量级可以有个感觉。换句话说，如果不使用流水线，一条路上快的部分就被慢的部分拖累了。1Gbps的传输速度大部分是被闲置的。另外也可以理解为什么transport和application协议只在两个终端上跑，而不在中间的路由上跑了，因为跑程序也需要时间，越高级的协议，需要的时间越多，而且这点时间如果让每个路由都去跑，耗的时间也是不少的。所以从效率的角度来讲，让链路尽量去做传输，少跑程序，让高级程序在终端去做。出差错属于小概率事件，所以即使有那种packet一开始就受到干扰，白白跑了一整段的情况也是小概率的。接下来，就是流水线的解决方案：</p>
-<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/ycphaF"><img src="https://s3.ax1x.com/2021/02/16/ycphaF.png" alt="ycphaF.png"></a></p>
-<p><br>由于流水线的引入，之前的方案就会面对一些改进：sequence number会扩大，之前只需要0和1，缓冲区也需要扩大，应对error recovery也会有新的方案，说白了就是重传方案，下面就会讲两种，Go-Back-N和selective repeat。需要注意的是GBN和selective repeat都是基于reliable data transport上做流水线所增加的，还没有涉及到流量控制和阻塞控制</p>
-<h2 id="Go-Back-N-GBN"><a href="#Go-Back-N-GBN" class="headerlink" title="Go-Back-N (GBN)"></a>Go-Back-N (GBN)</h2><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yc9PMt"><img src="https://s3.ax1x.com/2021/02/16/yc9PMt.png" alt="yc9PMt.png"></a></p>
-<p><br>本质上就是一个固定长度为N的滑动窗口</p>
-<p><br>在此方法下，sequence number会进行扩充了，TCP的sequence number是32位，而且它的sequence number的单位表示的不是packet，而是传输的byte数目，这也好理解，比如当前这个packet传了3个byte，那么下一个packet的sequence number就加3</p>
-<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yc9AZ8"><img src="https://s3.ax1x.com/2021/02/16/yc9AZ8.png" alt="yc9AZ8.png"></a></p>
-<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yc9EdS"><img src="https://s3.ax1x.com/2021/02/16/yc9EdS.png" alt="yc9EdS.png"></a></p>
-<p><br>当上层传来 rdt_send()而当前层发现窗口已经满了的时候，窗口会拒绝传送。这种情况下，上层要么将数据放回缓冲区，等会再调用rdt_send()，要么采用阻塞唤醒机制，等窗口空了之后，由当前层通知上层</p>
-<p><br>如果发生了超时，GBN会将没有被ack的所有数据重传一遍，相当于GBN这个方案只用了一个timer。如果收到了一个ack但还有数据包没有收到ack，那么timer会更新。如果收完了ack，那么timer自然会停止</p>
-<p><br>而接收端采取按照顺序接收和发送ack，如果乱序了的packet，就选择直接丢弃。因此这种方案就是cumulative acknowledgements。而且值得注意的是，在这里接收端只能选择丢弃乱序的packet，因为没有别的选择，因为在选择接收一个packet后，接收端就会立刻提供给上层了，并不会等在当前层拼好后再交给上层，由于重传机制的存在，所以在当前层缓存乱序的packet没有意义</p>
-<p><br>下面是一个窗口长度为4的GBN例子：</p>
-<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yc9lLV"><img src="https://s3.ax1x.com/2021/02/16/yc9lLV.png" alt="yc9lLV.png"></a></p>
-<h2 id="Selective-Repeat-SR"><a href="#Selective-Repeat-SR" class="headerlink" title="Selective Repeat (SR)"></a>Selective Repeat (SR)</h2><p><br>可以看到，单纯的GBN策略是想尽可能多地往管道上放packet，这种方法大多数时候合理，而且也可以知道，如果要用GBN，那么固定的窗口值肯定是比较大的。<strong>但是GBN在应对链路阻塞的时候却是非常脆弱的，特别是由于完全重传的操作，会使链路的阻塞更加恶化。</strong> 当窗口很大而且延迟长的时候，许多重传是不必要的，因为这些packet并不是丢失了，而是暂时滞留在了链路中。<strong>问题就发生在链路中存在许多不必要的重传</strong></p>
-<p><br>SR的思路就是在GBN的基础上，在receiver端建立接收缓冲区，有一个序列号为rcv_base，当接收的包序列范围在[rcv+1,rcv+N-1]之间时，将packet放进缓冲区，并且回传ack，直到接收到序列号为rcv_base的packet后，rcv_base前进，并且将一系列连续的包数据上传给上层。</p>
-<p><br>而由于这种方案并不是accumulative acknowledgements，所以对于发送端来说，它发送的每一个packet都要收到对应的ack才会停止重传。而且ack也是receiver窗口前进的关键。理论上这种方式下的sender，应该是可以记录每个packet发出的时间，然后共用一个timer，当处于sent_base的收到ack后，timer也往前移，并结合之前记录的发出时间，调整倒计时</p>
-<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/ycCmTO"><img src="https://s3.ax1x.com/2021/02/16/ycCmTO.jpg" alt="ycCmTO.jpg"></a></p>
-<p><br>而在selective repeat的方案中，由于sequence number是做的模运算，双方信息又无法完全同步，所以在当窗口大小与sequence number space接近的时候，就可能出问题，使得receiver无法判断传来的sequence number是在rcv_base前面还是后面。而书中的建议是，窗口大小要小于等于sequence number space的一半才行</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/ycCh9J"><img src="https://s3.ax1x.com/2021/02/16/ycCh9J.png" alt="ycCh9J.png"></a></p>
-<p><br>方案讨论到了这里，还有一个假设我们没有去掉，那就是包的乱序。如果双端连接的只是物理上的导线，那么发出去的包会严格遵循先来先到的原则。但是如果双端接的是网络，那么有的包就可能在网络里停留很久才到。为了避免因为包停留导致序列号被重复用的情况，sender考虑一个packet lifetime，也就是sender假设在发出序列号为x的包一段时间以后，网络里不会再有这个包了。书上的设定是3分钟</p>
+          <p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yckZgH"><img src="https://s3.ax1x.com/2021/02/16/yckZgH.jpg" alt="yckZgH.jpg"></a></p>
+<p><br>最近看了一个贴子，想写一点感想</p>
+<p><br>贴子链接：<a target="_blank" rel="noopener" href="https://tieba.baidu.com/p/7226002236">https://tieba.baidu.com/p/7226002236</a></p>
+<p><br><strong>人都不傻，只是处于不同时代，不同环境罢了</strong>。无论老人、小孩还是青年，都挺聪明的。只是小孩还没有成长起来，老人逐渐被时代忽略，时代的聚光灯永远都打在青年人和中年人身上。这并不意味着过去的人就比现在的人傻，只是时机不同而已，时代过去了，老一代也就逐渐离开了众人的关注</p>
+<p><br><strong>生活的本质是长跑</strong>。脚踏实地走过漫长岁月，是最强大的</p>
 
       
     </div>
@@ -349,9 +291,17 @@
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">1</span>
-        <span class="site-state-item-name">标签</span>
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
 </div>
