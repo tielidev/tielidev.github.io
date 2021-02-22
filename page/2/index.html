@@ -167,7 +167,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://tielidev.github.io/2021/02/17/tcp_congestion_control/">
+    <link itemprop="mainEntityOfPage" href="https://tielidev.github.io/2021/02/22/duplicate_number/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/timg.jpeg">
@@ -181,7 +181,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/02/17/tcp_congestion_control/" class="post-title-link" itemprop="url">TCP Congestion Control</a>
+            <a href="/2021/02/22/duplicate_number/" class="post-title-link" itemprop="url">数组中的重复数字</a>
         </h2>
 
         <div class="post-meta">
@@ -190,16 +190,10 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2021-02-17 18:56:49" itemprop="dateCreated datePublished" datetime="2021-02-17T18:56:49+08:00">2021-02-17</time>
+              <time title="创建时间：2021-02-22 14:59:16 / 修改时间：15:26:42" itemprop="dateCreated datePublished" datetime="2021-02-22T14:59:16+08:00">2021-02-22</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-02-18 23:27:32" itemprop="dateModified" datetime="2021-02-18T23:27:32+08:00">2021-02-18</time>
-              </span>
 
           
 
@@ -212,31 +206,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y2UrWT"><img src="https://s3.ax1x.com/2021/02/17/y2UrWT.jpg" alt="y2UrWT.jpg"></a></p>
-<p><br>在TCP的sender端新保留一个参数 <strong><em>congestion window</em></strong> ，满足</p>
-<script type="math/tex; mode=display">LastByteSent-LastByteAcked \leq min \{cwnd,rwnd\}</script><p><br>这也可以理解，rwnd是为了照顾接收端的缓冲队列，cwnd是为了照顾网络中的缓冲队列。congestion window就表示sender认为的链路可以装的量。通过ACK回来的快慢，TCP用来调节congestion window增加的快慢，这也叫 <strong><em>self-clocking</em></strong></p>
-<p><br>TCP判断链路阻塞始终是用的间接判断：超时或者4ACKs，这种方法是异步判断，各自依据本地信息来判断，网络里面的各个sender不需要同步</p>
-<p><br>TCP的congestion control基本上把下面的状态机理清楚了就到位了</p>
-<h2 id="TCP-Congestion-control-Algorithm"><a href="#TCP-Congestion-control-Algorithm" class="headerlink" title="TCP Congestion-control Algorithm"></a>TCP Congestion-control Algorithm</h2><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yW5G5t"><img src="https://s3.ax1x.com/2021/02/18/yW5G5t.jpg" alt="yW5G5t.jpg"></a></p>
-<p><br>在这之前，先要区分一下timeout和3ACKs的区别。先看timeout，因为是在流水线传包，当某个包的ACK迟迟没到时，不仅意味着这个segment遇到了阻塞，而且也表示后面接着的segment也发生了阻塞，所以<strong>当务之急是解决阻塞和开始重传</strong> 。而对于3ACKs，表示了有频繁的ACK传回来，所以网络的畅通程度还是可以的，而能够明确判断的是确实有包丢了，但也确实能收到ACK，所以这个情况下阻塞可能就不是那么严重，先做重传快速修复</p>
-<p><br>包括3个部分：(1)slow start (2)congestion avoidance (3)fast recovery。注意下面谈的是传输的速率，而不是之前谈的传输的量了，之前是MSS MTU可以理解为网路的宽度，但是以多大的速率去传，是与宽度不同的另一个问题。MSS可以用来确定TCP封装的包的大小，一个segment就可以认为有一个MSS大，但是接下来讨论的是1秒放多少个segment到链路中去</p>
-<p><br>这里再补充回顾一下MTU和MSS的概念。<strong>MTU</strong>是链路上允许跑的最大的 <strong>link-layer frame</strong> 注意这里说的是frame，也就是一帧能放的比特数。可以类比成高速公路上一辆车最长允许有多长。 因此 <strong>MSS</strong>是 <strong>maximum segment size</strong>，也就是一个segment允许放的比特数。而至于sender一秒推多少个segment到网络中，要由下面来确定</p>
-<p><br>可以将3ACKS和timeout都理解为阻塞的标志，但是3ACKs阻塞的程度稍微轻一些。也可以从congestion avoidance转到fast recovery看到，cwnd依然是有做减半处理的。当TCP趋于稳定后，大部分时候是在congestion avoidance和fast recovery之间摇摆，因为在cwnd增长的过程中，duplicate ACKs 会比 timeout 来的早许多</p>
-<h3 id="Slow-Start"><a href="#Slow-Start" class="headerlink" title="Slow Start"></a>Slow Start</h3><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y2WBkT"><img src="https://s3.ax1x.com/2021/02/17/y2WBkT.png" alt="y2WBkT.png"></a></p>
-<p><br>简单来说就是2的幂次增长，初始为一个RTT的时间里放一个MSS，也就是放一个segment，然后每当一个ack回来，就多放一个segment，本质是<strong><em>cwnd在增加</em></strong>。宏观来看，每过一个RTT就翻倍。等<strong>第一次发生了超时后</strong>，设置一个新的参数，叫<strong><em>ssthresh</em></strong>，意思是slow start threshold，使得  <strong>$ssthresh=\frac{cwnd}{2}$</strong>，cwnd设为1 MSS，再次进行slow start</p>
-<p>接下来有三种分支：1）如果cwnd幂次增长到了ssthresh，进入congestion avoidance状态 2）如果收到3个duplicate ACKs，进入fast recovery 3)如果出现了超时，ssthresh 再次更新为当前 cwnd的一半，cwnd = 1，重新开始slow start</p>
-<h3 id="Congestion-Avoidance"><a href="#Congestion-Avoidance" class="headerlink" title="Congestion Avoidance"></a>Congestion Avoidance</h3><p><br>由前一段讨论，知道刚进入congestion avoidance的时候，cwnd = ssthresh，也就是上一次发生超时的cwnd的一半。这时候cwnd开始缓慢增长，每过1个RTT增加一个MSS，也就是每过1个RTT多传1个segment</p>
-<p><br>同样也会进入状态转移：1）出现超时，$ssthresh=\frac{cwnd}{2}$，$cwnd=1MSS$，进入slow start状态 2）出现3 duplicate ACKs ， $ssthresh=\frac{cwnd}{2}$ ，$cwnd=ssthresh+3$， 进入fast recovery</p>
-<h3 id="Fast-Recovery"><a href="#Fast-Recovery" class="headerlink" title="Fast Recovery"></a>Fast Recovery</h3><p><br>需要注意的是，在这个fast recovery的状态，网络状态是认为畅通的，所以可以适当加快回传的速度，为的是快速修复丢掉的包。因为出现duplicate ACKs后，就不指望丢掉的那个包自动回到receiver了，自动认为这个包在网络里消失了，所以快速重传修复是应该的</p>
-<p><br>在这个阶段里面，在收到新的ACK之前，每收到一个重复的ACK，$cwnd=cwnd+MSS$</p>
-<p><br>状态转移：1）当收到了新的ACK，表示丢包已经被修复了，$cwnd=ssthresh$，进入congestion avoidance 2）当出现超时，$ssthresh=\frac{cwnd}{2}$，$cwnd=1MSS$，进入slow start</p>
-<h3 id="Macroscopic-Description-of-TCP-Throughput"><a href="#Macroscopic-Description-of-TCP-Throughput" class="headerlink" title="Macroscopic Description of TCP Throughput"></a>Macroscopic Description of TCP Throughput</h3><p><br>做一个笼统的假设，传输的速率是由cwnd和RTT决定的，传输速率为 $\frac{cwnd}{RTT}$ 假设在稳定期间，状态在fast recovery和congestion avoidance之间摇摆，当出现duplicate ACKs时，假设$cwnd=W$，进入fast recovery后，$cwnd=\frac{cwnd}{2}$，然后每过一个RTT，$cwnd=cwnd+MSS$，因此可以得到</p>
-<script type="math/tex; mode=display">average \ throughput \ of \ a \ connection= \frac{0.75W}{RTT}</script><h2 id="Fairness"><a href="#Fairness" class="headerlink" title="Fairness"></a>Fairness</h2><p><br>书上讲了一个很精彩的演绎，说明了TCP这种分布式的阻塞控制方法是如何实现总体的平衡的</p>
-<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yWL7vt"><img src="https://s3.ax1x.com/2021/02/18/yWL7vt.png" alt="yWL7vt.png"></a></p>
-<p><br>书上还描述了另一件事，但没有解释。有更短RTT的连接能够更快地获取带宽资源，这样也能更快地完成任务。这个现象与打水问题的结果是一样的，也在宏观上是有效的。RTT越远的TCP被分配越少的带宽，完成整个TCP任务花的时间也越长</p>
-<h3 id="Fairness-and-UDP"><a href="#Fairness-and-UDP" class="headerlink" title="Fairness and UDP"></a>Fairness and UDP</h3><p><br>UDP是不做阻塞控制的，传输的速度在一开始就定好了，也不会去改变。所以如果这个速度确实很大，会在实际上占用很大的带宽的，如果这时有并行的TCP，并行的TCP就只有降速。换句话说，很高速的UDP会让其他TCP应用处于长期的停滞中</p>
-<h3 id="Fairness-and-Parallel-TCP-Congestions"><a href="#Fairness-and-Parallel-TCP-Congestions" class="headerlink" title="Fairness and Parallel TCP Congestions"></a>Fairness and Parallel TCP Congestions</h3><p><br>之前也提到过，并行TCP的存在，在现代应用中是很常见的。比如浏览器为了获取一个网页里的多个内容，选择对一个host建立多个并行的TCP。这种方式是能够实在地增加对带宽的占用的，我觉得这种方法算是一种好事，因为建立多个并行TCP的选择权在于server，所以也不是无限并行的</p>
-
+          <p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y7zqJA"><img src="https://s3.ax1x.com/2021/02/22/y7zqJA.jpg" alt="y7zqJA.jpg"></a></p>
+<h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p><br>在一个长度为n的数组里，所有数字在 $0\sim n-1$ 的范围内。数组中某些数字是重复的，请找出数组中任意一个重复的数字。例如，如果输入长度为7的数组{2,3,1,0,2,5,3}，那么对应的输出是重复的数字2或者3</p>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p><br>这个题给我的启发是<strong>有时候空间复杂度可以提到$O(1)$ 的，那就是在给的数组上操作</strong><br><br>另一个要考虑的是<strong>输入内容的合法性检验</strong>，尽管描述里是有对输入内容的限定，但是，我们不能假设用户就是按着规矩来的，所以一定要考虑不按照限定的输入，换句话说就是要考虑异常情况。异常处理不涉及核心代码，但是它是一个健壮的程序所必备的。如果代码里不提前考虑好，那就可能出错</p>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">duplicate</span><span class="params">(<span class="keyword">int</span> numbers[],<span class="keyword">int</span> length,<span class="keyword">int</span>* duplication)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(numbers == <span class="literal">nullptr</span> || length &lt;= <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i =<span class="number">0</span>;i &lt; length;++i)&#123;</span><br><span class="line">        <span class="keyword">if</span>(numbers[i]&lt;<span class="number">0</span> || numbers[i] &gt; length<span class="number">-1</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;length;++i)&#123;</span><br><span class="line">        <span class="keyword">while</span> (numbers[i]!=i)&#123;</span><br><span class="line">            <span class="keyword">if</span>(numbers[i] == numbers[numbers[i]])&#123;</span><br><span class="line">                *duplication = numbers[i];</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">int</span> temp = numbers[i];</span><br><span class="line">            numbers[i] = numbers[temp];</span><br><span class="line">            numbers[temp] = temp;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> dup;</span><br><span class="line">    <span class="keyword">int</span> data1[]=&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">2</span>,<span class="number">4</span>,<span class="number">4</span>&#125;;</span><br><span class="line">    <span class="keyword">if</span>(duplicate(data1,<span class="number">5</span>,&amp;dup))&#123;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; dup &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
       
     </div>
 
@@ -254,7 +227,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/22/">22</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -322,7 +295,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-count">22</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

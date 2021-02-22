@@ -167,7 +167,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://tielidev.github.io/2021/02/11/leetcode%20703/">
+    <link itemprop="mainEntityOfPage" href="https://tielidev.github.io/2021/02/14/protocal_layers/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/timg.jpeg">
@@ -181,7 +181,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/02/11/leetcode%20703/" class="post-title-link" itemprop="url">Leetcode 703.数据流中的第K大元素</a>
+            <a href="/2021/02/14/protocal_layers/" class="post-title-link" itemprop="url">网络协议</a>
         </h2>
 
         <div class="post-meta">
@@ -190,10 +190,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-02-11 15:05:47 / 修改时间：15:20:35" itemprop="dateCreated datePublished" datetime="2021-02-11T15:05:47+08:00">2021-02-11</time>
+              <time title="创建时间：2021-02-14 02:44:32" itemprop="dateCreated datePublished" datetime="2021-02-14T02:44:32+08:00">2021-02-14</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-02-15 00:47:02" itemprop="dateModified" datetime="2021-02-15T00:47:02+08:00">2021-02-15</time>
+              </span>
 
           
 
@@ -206,11 +212,15 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yBUzLT"><img src="https://s3.ax1x.com/2021/02/11/yBUzLT.jpg" alt="yBUzLT.jpg"></a><br><br></p>
-<h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p><br><a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/kth-largest-element-in-a-stream/">https://leetcode-cn.com/problems/kth-largest-element-in-a-stream/</a></p>
-<p><br><strong>今天是除夕了！算起来也正经做题一年了</strong></p>
-<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p><br>仍然是有在考察边界情况，用好stl就行了，这里注意优先队列的写法<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">priority_queue</span>&lt;<span class="keyword">int</span>,<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;,greater&lt;<span class="keyword">int</span>&gt;&gt; q;</span><br><span class="line"><span class="comment">//理论是也是和sort一样是可以传函数指针的</span></span><br></pre></td></tr></table></figure><br>这个要学会，至于常规排序可以不加，因为想倒序就下标倒序就好了，不过这里也补充一下，sort里面传的是函数指针<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">comp</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span></span>&#123;<span class="keyword">return</span> x &lt; y&#125;</span><br><span class="line"><span class="comment">//需要自己写好</span></span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; v = &#123;<span class="number">23</span>,<span class="number">54</span>,<span class="number">12</span>,<span class="number">23</span>,<span class="number">67</span>,<span class="number">2</span>,<span class="number">3</span>&#125;;</span><br><span class="line"></span><br><span class="line">sort(v.begin(),v.end(),comp);</span><br><span class="line"><span class="comment">//传的是函数指针</span></span><br></pre></td></tr></table></figure></p>
-<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">KthLargest</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    KthLargest(<span class="keyword">int</span> k, <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; nums) &#123;</span><br><span class="line"></span><br><span class="line">        sort(nums.begin(),nums.end());</span><br><span class="line">        <span class="keyword">if</span>(nums.size() &gt;= k)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;k;++i)&#123;</span><br><span class="line">                p.push(nums[nums.size()<span class="number">-1</span>-i]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;nums.size();++i)&#123;</span><br><span class="line">                p.push(nums[i]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        K = k;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> val)</span> </span>&#123;</span><br><span class="line">        p.push(val);</span><br><span class="line">        <span class="keyword">if</span>(p.size()&gt;K)&#123;</span><br><span class="line">            p.pop();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> p.top();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="built_in">priority_queue</span>&lt;<span class="keyword">int</span>,<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;,greater&lt;<span class="keyword">int</span>&gt;&gt; p;</span><br><span class="line">    <span class="keyword">int</span> K;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Your KthLargest object will be instantiated and called as such:</span></span><br><span class="line"><span class="comment"> * KthLargest* obj = new KthLargest(k, nums);</span></span><br><span class="line"><span class="comment"> * int param_1 = obj-&gt;add(val);</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+          <p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yy5YHf"><img src="https://s3.ax1x.com/2021/02/14/yy5YHf.jpg" alt="yy5YHf.jpg"></a></p>
+<p><br>主要就是两种，一种是传统的5层模型，叫做 <strong><em>internet protocol stack</em></strong>，另一种是添加了两层的7层模型，叫 <strong><em>OSI model</em></strong></p>
+<h2 id="Internet-Protocol-Stack"><a href="#Internet-Protocol-Stack" class="headerlink" title="Internet Protocol Stack"></a>Internet Protocol Stack</h2><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/ysBEWD"><img src="https://s3.ax1x.com/2021/02/14/ysBEWD.jpg" alt="ysBEWD.jpg"></a></p>
+<p><br>这里需要留意一下各个数据包的叫法，整体都叫做 <strong><em>packet</em></strong>，从应用层到链路层分别叫：</p>
+<p><br><strong><em>message:</em></strong> 负责某一种具体服务的协议<br><br><strong><em>segment:</em></strong> 负责线程与线程之间的连接<br><br><strong><em>datagrams:</em></strong> 负责host与host之间的连接<br><br><strong><em>frames:</em></strong> 负责两个实体中介之间的连接，比如路由器与路由器</p>
+<h2 id="Seven-layer-OSI-Model"><a href="#Seven-layer-OSI-Model" class="headerlink" title="Seven-layer OSI Model"></a>Seven-layer OSI Model</h2><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/ysBCe1"><img src="https://s3.ax1x.com/2021/02/14/ysBCe1.png" alt="ysBCe1.png"></a></p>
+<p><br>主要就是在应用层下面加了两层内容</p>
+<p><br><strong><em>Presentation:</em></strong> 负责加密压缩等任务<br><br><strong><em>Session:</em></strong> 负责双端同步的问题</p>
+
       
     </div>
 
@@ -228,7 +238,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/9/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><a class="extend next" rel="next" href="/page/11/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/9/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><span class="space">&hellip;</span><a class="page-number" href="/page/22/">22</a><a class="extend next" rel="next" href="/page/11/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -296,7 +306,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-count">22</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
