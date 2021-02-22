@@ -23,27 +23,27 @@
   <meta name="description" content="勤练带来力量">
 <meta property="og:type" content="website">
 <meta property="og:title" content="铁犁的技术博客">
-<meta property="og:url" content="https://tielidev.github.io/page/6/index.html">
+<meta property="og:url" content="https://tielidev.github.io/categories/%E7%BD%91%E7%BB%9C/index.html">
 <meta property="og:site_name" content="铁犁的技术博客">
 <meta property="og:description" content="勤练带来力量">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:author" content="廖铁犁">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://tielidev.github.io/page/6/">
+<link rel="canonical" href="https://tielidev.github.io/categories/%E7%BD%91%E7%BB%9C/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
+    isHome : false,
     isPost : false,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>铁犁的技术博客</title>
+  <title>分类: 网络 | 铁犁的技术博客</title>
   
 
 
@@ -151,98 +151,192 @@
         <div class="content-wrap">
           
 
-          <div class="content index posts-expand">
+          <div class="content category">
             
-      
+
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://tielidev.github.io/2021/02/17/congestion%20control/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/timg.jpeg">
-      <meta itemprop="name" content="廖铁犁">
-      <meta itemprop="description" content="勤练带来力量">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="铁犁的技术博客">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/02/17/congestion%20control/" class="post-title-link" itemprop="url">Principle of Congestion Control</a>
+  
+  <div class="post-block">
+    <div class="posts-collapse">
+      <div class="collection-title">
+        <h2 class="collection-header">网络
+          <small>分类</small>
         </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-02-17 11:37:07" itemprop="dateCreated datePublished" datetime="2021-02-17T11:37:07+08:00">2021-02-17</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-02-22 21:43:59" itemprop="dateModified" datetime="2021-02-22T21:43:59+08:00">2021-02-22</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">网络</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
+      </div>
 
       
-          <p><a target="_blank" rel="noopener" href="https://imgchr.com/i/ygoczF"><img src="https://s3.ax1x.com/2021/02/17/ygoczF.jpg" alt="ygoczF.jpg"></a></p>
-<p><br>这里书上提出了两个名词 available bit-rate(ABR) 与 asynchronous transfer mode(ATM)</p>
-<h2 id="The-Causes-and-the-Costs-of-Congestion"><a href="#The-Causes-and-the-Costs-of-Congestion" class="headerlink" title="The Causes and the Costs of Congestion"></a>The Causes and the Costs of Congestion</h2><p><br>接下来介绍一系列导致阻塞的场景。先解释一个词 hop，指的是数据包经过路由器或其他节点转移到其他网络的过程</p>
-<h3 id="Two-Senders-a-Router-with-Infinite-Buffers"><a href="#Two-Senders-a-Router-with-Infinite-Buffers" class="headerlink" title="Two Senders,a Router with Infinite Buffers"></a>Two Senders,a Router with Infinite Buffers</h3><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/ygLVPI"><img src="https://s3.ax1x.com/2021/02/17/ygLVPI.gif" alt="ygLVPI.gif"></a></p>
-<p><br>在最简单的方法里，即使让吞吐总量接近链路能承担的吞吐量，延迟也会变得非常大。这背后的原因在于，路由总会花一些时间处理包，当进来的包多到一定程度，就会产生排队，这个点与链路吞吐量是无关的。链路的吞吐量能保证从路由出来的包能尽快送走</p>
-<h3 id="Two-Senders-and-a-Router-with-Finite-Buffers"><a href="#Two-Senders-and-a-Router-with-Finite-Buffers" class="headerlink" title="Two Senders and a Router with Finite Buffers"></a>Two Senders and a Router with Finite Buffers</h3><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y2nskd"><img src="https://s3.ax1x.com/2021/02/17/y2nskd.jpg" alt="y2nskd.jpg"></a></p>
-<p><br>这里描述了两个现象，因为阻塞导致丢包，sender为了补偿丢包，只能消耗一些带宽来做重传。因为路由缓冲满了，导致高延迟，高延迟导致没有丢包却超时，导致不必要的重传</p>
-<h3 id="Four-Senders-Routers-with-Finite-Buffers-and-Multihop-Paths"><a href="#Four-Senders-Routers-with-Finite-Buffers-and-Multihop-Paths" class="headerlink" title="Four Senders, Routers with Finite Buffers, and Multihop Paths"></a>Four Senders, Routers with Finite Buffers, and Multihop Paths</h3><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y2nOXT"><img src="https://s3.ax1x.com/2021/02/17/y2nOXT.gif" alt="y2nOXT.gif"></a></p>
-<p><br>这里描述了一个新的现象，如果多个网络共用一个hop，有的网络经历了路由过滤，有的直接到达hop，那么前者的数据会被后者挤兑，再经过一个接近满队列的路由过滤之后，前者的out就接近于0了</p>
-<h2 id="Approaches-to-Congestion-Control"><a href="#Approaches-to-Congestion-Control" class="headerlink" title="Approaches to Congestion Control"></a>Approaches to Congestion Control</h2><p><br>书上按照是否有network layer参与提供帮助，将阻塞控制分成了两类</p>
-<p><br><strong><em>End-to-end congestion control</em></strong> TCP就是需要这种，因为网络层不向上提供状态信息。TCP就依靠丢包来认为发生了阻塞。而丢包则依靠超时或者重复的ACK来判断，当TCP认为网络中发生了阻塞后，选择减少窗口大小，以及增加delay时长</p>
-<p><br><strong><em>Network-assisted congestion control</em></strong> 这在之前提到的ATM ABR congestion control里使用，直白地说就是中间的路由会提供网络信息，从network到sender</p>
-
-      
+    <div class="collection-year">
+      <span class="collection-header">2021</span>
     </div>
 
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <div class="post-meta">
+        <time itemprop="dateCreated"
+              datetime="2021-02-20T08:58:59+08:00"
+              content="2021-02-20">
+          02-20
+        </time>
+      </div>
+
+      <div class="post-title">
+          <a class="post-title-link" href="/2021/02/20/router/" itemprop="url">
+            <span itemprop="name">Router</span>
+          </a>
+      </div>
+
+    </header>
   </article>
+
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <div class="post-meta">
+        <time itemprop="dateCreated"
+              datetime="2021-02-17T18:56:49+08:00"
+              content="2021-02-17">
+          02-17
+        </time>
+      </div>
+
+      <div class="post-title">
+          <a class="post-title-link" href="/2021/02/17/tcp_congestion_control/" itemprop="url">
+            <span itemprop="name">TCP Congestion Control</span>
+          </a>
+      </div>
+
+    </header>
+  </article>
+
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <div class="post-meta">
+        <time itemprop="dateCreated"
+              datetime="2021-02-17T11:37:07+08:00"
+              content="2021-02-17">
+          02-17
+        </time>
+      </div>
+
+      <div class="post-title">
+          <a class="post-title-link" href="/2021/02/17/congestion%20control/" itemprop="url">
+            <span itemprop="name">Principle of Congestion Control</span>
+          </a>
+      </div>
+
+    </header>
+  </article>
+
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <div class="post-meta">
+        <time itemprop="dateCreated"
+              datetime="2021-02-16T15:20:22+08:00"
+              content="2021-02-16">
+          02-16
+        </time>
+      </div>
+
+      <div class="post-title">
+          <a class="post-title-link" href="/2021/02/16/tcp/" itemprop="url">
+            <span itemprop="name">Connection-Oriented Transport:TCP</span>
+          </a>
+      </div>
+
+    </header>
+  </article>
+
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <div class="post-meta">
+        <time itemprop="dateCreated"
+              datetime="2021-02-15T21:21:17+08:00"
+              content="2021-02-15">
+          02-15
+        </time>
+      </div>
+
+      <div class="post-title">
+          <a class="post-title-link" href="/2021/02/15/reliable_data_transfer/" itemprop="url">
+            <span itemprop="name">Reliable Data Transfer</span>
+          </a>
+      </div>
+
+    </header>
+  </article>
+
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <div class="post-meta">
+        <time itemprop="dateCreated"
+              datetime="2021-02-15T00:13:13+08:00"
+              content="2021-02-15">
+          02-15
+        </time>
+      </div>
+
+      <div class="post-title">
+          <a class="post-title-link" href="/2021/02/15/multiplex/" itemprop="url">
+            <span itemprop="name">Multiplexing and Demultiplexing</span>
+          </a>
+      </div>
+
+    </header>
+  </article>
+
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <div class="post-meta">
+        <time itemprop="dateCreated"
+              datetime="2021-02-14T02:44:32+08:00"
+              content="2021-02-14">
+          02-14
+        </time>
+      </div>
+
+      <div class="post-title">
+          <a class="post-title-link" href="/2021/02/14/protocal_layers/" itemprop="url">
+            <span itemprop="name">网络协议</span>
+          </a>
+      </div>
+
+    </header>
+  </article>
+
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <div class="post-meta">
+        <time itemprop="dateCreated"
+              datetime="2021-02-12T12:08:01+08:00"
+              content="2021-02-12">
+          02-12
+        </time>
+      </div>
+
+      <div class="post-title">
+          <a class="post-title-link" href="/2021/02/12/http/" itemprop="url">
+            <span itemprop="name">HTTP</span>
+          </a>
+      </div>
+
+    </header>
+  </article>
+
+    </div>
+  </div>
   
   
   
 
-
   
-  <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/22/">22</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
-  </nav>
 
 
 
@@ -410,59 +504,6 @@
   
 
   
-      
-
-<script>
-  if (typeof MathJax === 'undefined') {
-    window.MathJax = {
-      loader: {
-        source: {
-          '[tex]/amsCd': '[tex]/amscd',
-          '[tex]/AMScd': '[tex]/amscd'
-        }
-      },
-      tex: {
-        inlineMath: {'[+]': [['$', '$']]},
-        tags: 'ams'
-      },
-      options: {
-        renderActions: {
-          findScript: [10, doc => {
-            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
-              const display = !!node.type.match(/; *mode=display/);
-              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
-              const text = document.createTextNode('');
-              node.parentNode.replaceChild(text, node);
-              math.start = {node: text, delim: '', n: 0};
-              math.end = {node: text, delim: '', n: 0};
-              doc.math.push(math);
-            });
-          }, '', false],
-          insertedScript: [200, () => {
-            document.querySelectorAll('mjx-container').forEach(node => {
-              let target = node.parentNode;
-              if (target.nodeName.toLowerCase() === 'li') {
-                target.parentNode.classList.add('has-jax');
-              }
-            });
-          }, '', false]
-        }
-      }
-    };
-    (function () {
-      var script = document.createElement('script');
-      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
-      script.defer = true;
-      document.head.appendChild(script);
-    })();
-  } else {
-    MathJax.startup.document.state(0);
-    MathJax.texReset();
-    MathJax.typeset();
-  }
-</script>
-
-    
 
   
 
