@@ -20,22 +20,23 @@
     var CONFIG = {"hostname":"tielidev.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":true},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="题目描述长度为 $n+1$ 的数组里所有数字在 $1\sim n$ 的范围内，所以数组中至少有一个数字是重复的。请找出数组中任意一个重复的数字，但不能改变输入的数组。例如，如果输入长度为8的数组 {2,3,5,4,3,2,6,7}，那么对应输出的重复的数字是2或者3 思路这个题也展现了时间和空间兼顾的问题，对于时间来说，1秒进行百万次的计算是可以承受的，但是对于空间来说，额外建立一个百万级大小的">
+  <meta name="description" content="题目描述输入一个链表的头结点，从尾到头反过来打印每个节点的值 思路这个题本身没什么特别的。需要留意的就是链表的问题往往带着许多的指针操作，因此对于空指针这种异常判断就要提前想好 另外，也谈谈struct和class的区别。可以说它们从创作出来的时候就带着不同的用途，因为用途不同导致了属性不同。class是以封装为目的创建的，可以在class里面封装各种复杂的成员和函数，给外部提供接口，内部进行保">
 <meta property="og:type" content="article">
-<meta property="og:title" content="不修改数组找出重复的数字">
-<meta property="og:url" content="https://tielidev.github.io/2021/02/22/duplicate_number2/index.html">
+<meta property="og:title" content="从头到尾打印链表">
+<meta property="og:url" content="https://tielidev.github.io/2021/02/23/print_linklist_reversingly/index.html">
 <meta property="og:site_name" content="铁犁的技术博客">
-<meta property="og:description" content="题目描述长度为 $n+1$ 的数组里所有数字在 $1\sim n$ 的范围内，所以数组中至少有一个数字是重复的。请找出数组中任意一个重复的数字，但不能改变输入的数组。例如，如果输入长度为8的数组 {2,3,5,4,3,2,6,7}，那么对应输出的重复的数字是2或者3 思路这个题也展现了时间和空间兼顾的问题，对于时间来说，1秒进行百万次的计算是可以承受的，但是对于空间来说，额外建立一个百万级大小的">
+<meta property="og:description" content="题目描述输入一个链表的头结点，从尾到头反过来打印每个节点的值 思路这个题本身没什么特别的。需要留意的就是链表的问题往往带着许多的指针操作，因此对于空指针这种异常判断就要提前想好 另外，也谈谈struct和class的区别。可以说它们从创作出来的时候就带着不同的用途，因为用途不同导致了属性不同。class是以封装为目的创建的，可以在class里面封装各种复杂的成员和函数，给外部提供接口，内部进行保">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://s3.ax1x.com/2021/02/22/yHdSns.jpg">
-<meta property="article:published_time" content="2021-02-22T07:41:45.107Z">
-<meta property="article:modified_time" content="2021-02-22T10:30:14.807Z">
+<meta property="og:image" content="https://s3.ax1x.com/2021/02/23/yqNIv4.jpg">
+<meta property="article:published_time" content="2021-02-23T06:11:36.670Z">
+<meta property="article:modified_time" content="2021-02-23T06:25:35.171Z">
 <meta property="article:author" content="廖铁犁">
-<meta property="article:tag" content="二分搜索">
+<meta property="article:tag" content="链表">
+<meta property="article:tag" content="栈">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://s3.ax1x.com/2021/02/22/yHdSns.jpg">
+<meta name="twitter:image" content="https://s3.ax1x.com/2021/02/23/yqNIv4.jpg">
 
-<link rel="canonical" href="https://tielidev.github.io/2021/02/22/duplicate_number2/">
+<link rel="canonical" href="https://tielidev.github.io/2021/02/23/print_linklist_reversingly/">
 
 
 <script id="page-configurations">
@@ -48,7 +49,7 @@
   };
 </script>
 
-  <title>不修改数组找出重复的数字 | 铁犁的技术博客</title>
+  <title>从头到尾打印链表 | 铁犁的技术博客</title>
   
 
 
@@ -163,7 +164,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://tielidev.github.io/2021/02/22/duplicate_number2/">
+    <link itemprop="mainEntityOfPage" href="https://tielidev.github.io/2021/02/23/print_linklist_reversingly/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/timg.jpeg">
@@ -176,7 +177,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          不修改数组找出重复的数字
+          从头到尾打印链表
         </h1>
 
         <div class="post-meta">
@@ -187,7 +188,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2021-02-22 15:41:45 / 修改时间：18:30:14" itemprop="dateCreated datePublished" datetime="2021-02-22T15:41:45+08:00">2021-02-22</time>
+              <time title="创建时间：2021-02-23 14:11:36 / 修改时间：14:25:35" itemprop="dateCreated datePublished" datetime="2021-02-23T14:11:36+08:00">2021-02-23</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -210,14 +211,13 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yHdSns"><img src="https://s3.ax1x.com/2021/02/22/yHdSns.jpg" alt="yHdSns.jpg"></a></p>
-<h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p><br>长度为 $n+1$ 的数组里所有数字在 $1\sim n$ 的范围内，所以数组中至少有一个数字是重复的。请找出数组中任意一个重复的数字，但不能改变输入的数组。例如，如果输入长度为8的数组 {2,3,5,4,3,2,6,7}，那么对应输出的重复的数字是2或者3</p>
-<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p><br>这个题也展现了<strong>时间和空间兼顾</strong>的问题，对于时间来说，1秒进行百万次的计算是可以承受的，但是对于空间来说，额外建立一个百万级大小的数组是不容易的，所以实际中往往需要先考虑空间的节省，当然时间也不能消耗太多。这个题里面时间复杂度为 $O(nlog(n))$ 空间复杂度为 $O(1)$</p>
-<p><br>给我另一个启发是范围判断的时候，比如二分搜索这种，<strong>用闭区间判断会更好</strong>，也就是使用 $\leq or\geq$ 这种</p>
-<p><br>另外代码里也展示了如何以const方式传入一个数组，答案就是传入一个指针就好了，系统的多态能帮忙解决</p>
-<p><br>还有就是临时变量通常可以在定义的时候就直接初始化好</p>
-<p><br>二分搜索不仅可以用在下标，也可以用在范围上</p>
-<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">countRange</span><span class="params">(<span class="keyword">const</span> <span class="keyword">int</span>* numbers, <span class="keyword">int</span> length, <span class="keyword">int</span> start, <span class="keyword">int</span> end)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(numbers == <span class="literal">nullptr</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;length; ++i)&#123;</span><br><span class="line">        <span class="keyword">if</span>(numbers[i] &gt;= start &amp;&amp; numbers[i] &lt;= end)&#123;</span><br><span class="line">            count++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> count;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">getDuplicate</span><span class="params">(<span class="keyword">const</span> <span class="keyword">int</span>* numbers, <span class="keyword">int</span> length)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(numbers == <span class="literal">nullptr</span> || length &lt;= <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> start = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">int</span> end = length - <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span>(end &gt;= start)&#123;</span><br><span class="line">        <span class="keyword">int</span> middle = start + (end-start)/<span class="number">2</span>;</span><br><span class="line">        <span class="keyword">int</span> count = countRange(numbers,length,start,middle);</span><br><span class="line">        <span class="keyword">if</span>(end == start)&#123;</span><br><span class="line">            <span class="keyword">if</span>(count &gt; start)&#123;</span><br><span class="line">                <span class="keyword">return</span> start;</span><br><span class="line">            &#125; <span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(count &gt; (middle-start+<span class="number">1</span>))&#123;</span><br><span class="line">            end = middle;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            start = middle + <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+        <p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yqNIv4"><img src="https://s3.ax1x.com/2021/02/23/yqNIv4.jpg" alt="yqNIv4.jpg"></a></p>
+<h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p><br>输入一个链表的头结点，从尾到头反过来打印每个节点的值</p>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p><br>这个题本身没什么特别的。需要留意的就是链表的问题往往带着许多的指针操作，因此对于空指针这种异常判断就要提前想好</p>
+<p><br>另外，也谈谈struct和class的区别。可以说它们从创作出来的时候就带着不同的用途，因为用途不同导致了属性不同。<strong>class是以封装为目的创建的</strong>，可以在class里面封装各种复杂的成员和函数，给外部提供接口，内部进行保护。因此默认成员是private，体现的是封装的思想。<strong>而struct是更加轻量化的结构体</strong>，创造出来的目的就是给外部代码去操作使用的，使用者可以说只关心struct的数据结构，并且使用者可以完全定制对于strcut的操作，所以struct默认成员为public</p>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stack&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ListNode</span>&#123;</span></span><br><span class="line">    <span class="keyword">int</span> m_nKey;</span><br><span class="line">    ListNode* m_pNext;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//在这里也可以看到，如果不声明，struct里面的成员默认是public的</span></span><br><span class="line"><span class="comment">//而class就反过来，默认是private的。class的设计就是为了&quot;封装&quot;</span></span><br><span class="line"><span class="comment">//而struct更相当于轻量化的结构体，我们用的只是其结构特性，不关注封装与安全</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">PrintReversingly</span><span class="params">(ListNode* pHead)</span></span>&#123;</span><br><span class="line">    <span class="built_in">stack</span>&lt;ListNode*&gt; nodes;</span><br><span class="line"></span><br><span class="line">    ListNode* pNode = pHead;</span><br><span class="line">    <span class="keyword">while</span> (pNode!= <span class="literal">nullptr</span>)&#123;</span><br><span class="line">        nodes.push(pNode);</span><br><span class="line">        pNode = pNode-&gt;m_pNext;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (!nodes.empty())&#123;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; nodes.top()-&gt;m_nKey;</span><br><span class="line">        nodes.pop();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>[1]何海涛.剑指Offer[M].电子工业出版社:北京,2017:58-60</p>
+
     </div>
 
     
@@ -246,7 +246,8 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/%E4%BA%8C%E5%88%86%E6%90%9C%E7%B4%A2/" rel="tag"># 二分搜索</a>
+              <a href="/tags/%E9%93%BE%E8%A1%A8/" rel="tag"># 链表</a>
+              <a href="/tags/%E6%A0%88/" rel="tag"># 栈</a>
           </div>
 
         
@@ -255,13 +256,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/02/22/duplicate_number/" rel="prev" title="数组中的重复数字">
-      <i class="fa fa-chevron-left"></i> 数组中的重复数字
+    <a href="/2021/02/23/replace_space/" rel="prev" title="替换空格">
+      <i class="fa fa-chevron-left"></i> 替换空格
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2021/02/22/leetcode%20978/" rel="next" title="Leetcode 978.最长湍流子数组">
-      Leetcode 978.最长湍流子数组 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -320,7 +318,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E6%8F%8F%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">题目描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF"><span class="nav-number">2.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81"><span class="nav-number">3.</span> <span class="nav-text">代码</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%98%E7%9B%AE%E6%8F%8F%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">题目描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF"><span class="nav-number">2.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81"><span class="nav-number">3.</span> <span class="nav-text">代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%8C%AE"><span class="nav-number">4.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
