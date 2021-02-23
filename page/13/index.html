@@ -157,7 +157,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://tielidev.github.io/2021/02/15/multiplex/">
+    <link itemprop="mainEntityOfPage" href="https://tielidev.github.io/2021/02/15/reliable_data_transfer/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/timg.jpeg">
@@ -171,7 +171,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/02/15/multiplex/" class="post-title-link" itemprop="url">Multiplexing and Demultiplexing</a>
+            <a href="/2021/02/15/reliable_data_transfer/" class="post-title-link" itemprop="url">Reliable Data Transfer</a>
         </h2>
 
         <div class="post-meta">
@@ -181,14 +181,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2021-02-15 00:13:13" itemprop="dateCreated datePublished" datetime="2021-02-15T00:13:13+08:00">2021-02-15</time>
+              <time title="创建时间：2021-02-15 21:21:17" itemprop="dateCreated datePublished" datetime="2021-02-15T21:21:17+08:00">2021-02-15</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-02-22 21:48:53" itemprop="dateModified" datetime="2021-02-22T21:48:53+08:00">2021-02-22</time>
+                <time title="修改时间：2021-02-22 21:50:09" itemprop="dateModified" datetime="2021-02-22T21:50:09+08:00">2021-02-22</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -211,25 +211,53 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yyT2Uf"><img src="https://s3.ax1x.com/2021/02/15/yyT2Uf.jpg" alt="yyT2Uf.jpg"></a></p>
-<p><br>这篇博文做的是<strong>传输层的准备工作</strong></p>
-<p><br>我们需要知道的是网络层，跑的就是IP协议，网络层负责实现从host到host的传输，做的事情就是寻址、路由之类，它负责连通两个host，但是连通之后怎么管的事，由上一层传输层来处理。我们可以想象网络层的作用就是在两个host之间连上了一根大的光缆(实际上是不同的，但这里可以用等效的思想)，这根光缆里面有许多根互相独立的光纤，各种比特在里面跑。相当于在两个host之间架设好了一根大的数据管道</p>
-<p><br>而传输层的任务就是用好这根数据管道，将光缆资源一根根分开，落实到每一个进程上，建立相互独立的进程之间的网络连接，这就叫做 <strong><em>transport-layer multiplexing and demultiplexing</em></strong> 。<br>其实从后面的内容可以知道，建立process to process的连接，依靠IP地址和端口号就可以实现了。另一方面，我们也可以看到后面TCP的流量控制其实是基于线程之间的，换句话说，如果当前两个host之间大部分是UDP，那么TCP的那部分流量控制起到的效果是比较小的。再有，通过与实体光纤的联想，TCP支持全双工而HTTP支持半双工也就可以理解了。因为TCP实现全双工的本质就是两组数据在两根独立的光纤上面跑的</p>
-<h2 id="Multiplexing-and-Demultiplexing"><a href="#Multiplexing-and-Demultiplexing" class="headerlink" title="Multiplexing and Demultiplexing"></a>Multiplexing and Demultiplexing</h2><p><br>一个直接的任务就是当多个传输层的segments传来之后，各个进程要想办法去<strong>认领</strong>属于自家进程的segment</p>
-<p><br>实现的方法就是数据并不是直接传给process，而是每个process可以接多个<strong><em>sockets</em></strong> 每个socket都有属于自己的独立的标识号。而传输层就检查segment的报文段，将对应的segment移交给对应的socket。这个过程叫做<strong><em>demultiplexing</em></strong></p>
-<p><br>而在host端，给不同的sockets的数据打包装成segment，提供报文段，再把来自多个进程的segments一起交给网络层的过程，叫做<strong><em>multiplexing</em></strong></p>
-<h3 id="Port-Number-Field"><a href="#Port-Number-Field" class="headerlink" title="Port Number Field"></a>Port Number Field</h3><p><br>实现多路复用的关键在于使用一种机制，将每个segment引导到对应的socket。使用的方法就是 <strong><em>port number:</em></strong></p>
-<p><a target="_blank" rel="noopener" href="https://www.helloimg.com/image/B9WPmg"><img src="https://www.helloimg.com/images/2021/02/15/B9WPmg.png" alt="B9WPmg.png"></a></p>
-<p><br>由两块组成，<strong><em>source port number field</em></strong> 和 <strong><em>destination port number field</em></strong>，各自占2个字节，一共就是4个字节。由它们来组合判断对应的socket。每个field的端口号范围为0到65535，而且0到1023的端口号是<em>well-known port numbers</em>，意思就是说它们被常见的应用层协议所预定了，比如HTTP预定端口号为80，FTP预定端口号为21。这里就看的很明显了，<strong>端口号是由应用层去指定的，可手动指定也可以自动分配</strong></p>
-<p><a target="_blank" rel="noopener" href="https://www.helloimg.com/image/B9WF5X"><img src="https://www.helloimg.com/images/2021/02/15/B9WF5X.png" alt="B9WF5X.png"></a></p>
-<p><br>UDP和TCP使用端口的方式有些不同，下面先讲UDP</p>
-<h3 id="UDP-and-Multiplexing"><a href="#UDP-and-Multiplexing" class="headerlink" title="UDP and Multiplexing"></a>UDP and Multiplexing</h3><p><br>而具体的实现过程为：每个socket被分配1个端口号，host接收到segment后，检查segment报文里面的destination port number，然后将其引导到有相同端口号的socket上</p>
-<p><br>需要注意的是，在UDP multiplexing的过程中，没有涉及到IP地址的问题，涉及到的只是两个端口号，以及对应端口号的两个sockets</p>
-<p><br>在UDP里面，如果两个segment有不同的source IP addresses但是有相同的destination IP和destination port number，那么它们会被引导到<strong>同一个</strong>socket上去</p>
-<p><br>虽然在确定把segment引导到哪个socket只需要destination port number，但是resource port number相当于是<strong><em>return address</em></strong>，当然实际的回传需要source IP和source port number一起来进行定位。IP地址负责送到host，port number 负责送到socket</p>
-<p><br>本质就是<strong>UDP只看destination port number，号对了就引导给socket</strong></p>
-<h3 id="TCP-and-Multiplexing"><a href="#TCP-and-Multiplexing" class="headerlink" title="TCP and Multiplexing"></a>TCP and Multiplexing</h3><p><br><strong>需要同时看四个值</strong>，一个socket需要由4个值确定：双方的IP地址，和双方的端口号</p>
-<p><br>看到这里，就<strong>可以把port和socket分开了</strong>，以及socket的identifier只是host内部区分socket的编号，与port没有直接关系</p>
+          <p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y61d2t"><img src="https://s3.ax1x.com/2021/02/15/y61d2t.jpg" alt="y61d2t.jpg"></a></p>
+<h2 id="Building-a-Reliable-Data-Transfer-Protocol"><a href="#Building-a-Reliable-Data-Transfer-Protocol" class="headerlink" title="Building a Reliable Data Transfer Protocol"></a>Building a Reliable Data Transfer Protocol</h2><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y61YUH"><img src="https://s3.ax1x.com/2021/02/15/y61YUH.png" alt="y61YUH.png"></a></p>
+<p><br>上面的这个图讲了实际的可靠传输的结构，应用层依赖传输层提供的服务。需要说明的是<strong><em>rdt_send</em></strong>是上层（应用层）传来的指令，<strong><em>udt_send</em></strong> 是传输层对网络层下达的指令，换句话说就是调用网络层的接口，<strong><em>rdt_rcv</em></strong> 是传输层从网络层中获取数据，并且形成可靠数据，<strong><em>deliver_data</em></strong> 是传输层向网络层传输数据</p>
+<p><br>接下来我就照着书上的结构，依次去建立一个可靠传输的协议。这里的可靠传输协议是比较通用的设计思路，不局限于传输层。而这种思路甚至在我们以后设计应用层的程序时，也可以拿来作为借鉴</p>
+<h3 id="Rdt1-0-over-a-Perfectly-Reliable-Channel"><a href="#Rdt1-0-over-a-Perfectly-Reliable-Channel" class="headerlink" title="Rdt1.0: over a Perfectly Reliable Channel"></a>Rdt1.0: over a Perfectly Reliable Channel</h3><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y63bm8"><img src="https://s3.ax1x.com/2021/02/15/y63bm8.png" alt="y63bm8.png"></a></p>
+<p><br>这是最理想的状态，底层提供的是可靠传输，当前层只需要管收发就好了</p>
+<h3 id="Rdt2-0-over-a-Channel-with-Bit-Errors"><a href="#Rdt2-0-over-a-Channel-with-Bit-Errors" class="headerlink" title="Rdt2.0: over a Channel with Bit Errors"></a>Rdt2.0: over a Channel with Bit Errors</h3><p><br>这个情况下<strong>假设数据可能传输错误，但是仍然是有序的</strong>。数据传输错误在物理层面上有可能出现，数据包在传送、传输、缓冲区的过程都有可能被改变。在这里也可以看到，checksum和ACK是绑在一起出现的，有了ACK后，checksum才有意义</p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y6GDr6"><img src="https://s3.ax1x.com/2021/02/15/y6GDr6.png" alt="y6GDr6.png"></a></p>
+<p><br>原始的版本既有ACK也有NAK，这种重传机制叫做<strong><em>ARQ(Automatic Repeat reQuest)protocol</em></strong></p>
+<p><br>但是上面的方法有一个隐患，校验码只是在判断data部分有没有错，那如果ACK或者NAK被干扰了，如何去识别和修复？上面提出的方法里面没有对ACK/NAK做校验</p>
+<p><br>这里采取的方法是，当发送端发现收到的ACK/NAK被污染时，就重传刚才发送的数据包。这种方法给接收端带来了问题，接收端收到一个packet的时候，如何判断这个packet是新的数据包还是因为ACK/NAK污染导致发送端重传的数据包？</p>
+<p><br>在当前这个stop-and-wait protocol中，增加一位的sequence number就能够解决问题了，接收端通过这个sequence number来分辨收到的是重传还是新的packet。并且receiver回传ACK/NAK的时候也带了校验码，因此这时候sender可以判断收到的ACK/NAK有没有被污染。下面就是rdt2.1版本：</p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y6YH3j"><img src="https://s3.ax1x.com/2021/02/15/y6YH3j.png" alt="y6YH3j.png"></a></p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y6YzUU"><img src="https://s3.ax1x.com/2021/02/15/y6YzUU.png" alt="y6YzUU.png"></a></p>
+<p><br>需要留意的是，<strong>这种改良版本的目的是应对ACK/NAK被污染的情况</strong></p>
+<p><br>注意到ACK和NAK是二元关系，我们还可以进化，不要NAK，对于receiver，要么传ACK，要么不传。这里的底层环境还是处于没有丢包的前提下，下面就是只有ACK的进化版本，rdt2.2:</p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y6td2j"><img src="https://s3.ax1x.com/2021/02/15/y6td2j.png" alt="y6td2j.png"></a></p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y6t2iF"><img src="https://s3.ax1x.com/2021/02/15/y6t2iF.png" alt="y6t2iF.png"></a></p>
+<p><br>这里举一个例子，sender发送data0，receiver收到后回传ack0并等待data1，sender收到污染的ack于是重传data0，receiver此时在等data1却收到了data0，于是回传ack0仍然继续等待data1，当sender收到了没有被污染的ack0后，才进入新状态，准备发送data1</p>
+<h3 id="Rdt3-0-over-a-Lossy-Channel-with-Bit-Errors"><a href="#Rdt3-0-over-a-Lossy-Channel-with-Bit-Errors" class="headerlink" title="Rdt3.0: over a Lossy Channel with Bit Errors"></a>Rdt3.0: over a Lossy Channel with Bit Errors</h3><p><br>前面是考虑了数据的正确性，是假设处于不丢包的管道上的。接下来把丢包这种情况考虑进去。考虑数据完整性、考虑丢包，基本就是比较全面的RDT了</p>
+<p><br>首先要面对的问题是如何判断发生了丢包。这里将判断的任务交给sender，采用计时的方式，如果发出的packet丢失了，或者receiver的ACK丢失了，sender都不会收到ACK，这样sender就可以判断发生了丢包，然后重传</p>
+<p><br>而具体选择多少时间才算超时，由于设计的初衷是尽量发现了丢包就立刻重传，所以选择让sender自己选择一个时间窗口，只要超过了窗口期没有收到ACK，就开始重传。即使有可能packet只是阻塞了，但仍然选择重传</p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y6gb2q"><img src="https://s3.ax1x.com/2021/02/15/y6gb2q.png" alt="y6gb2q.png"></a></p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/y6gxZF"><img src="https://s3.ax1x.com/2021/02/15/y6gxZF.png" alt="y6gxZF.png"></a></p>
+<p><br>需要注意的是，这里的protocol依然是stop-and-wait类型的，直到开始上流水线之后，才会改变。到这里，基本的元素都有了：<strong><em>checksum、sequence number、timer、ACK</em></strong></p>
+<h2 id="Pipelined-Reliable-Data-Transfer-Protocols"><a href="#Pipelined-Reliable-Data-Transfer-Protocols" class="headerlink" title="Pipelined Reliable Data Transfer Protocols"></a>Pipelined Reliable Data Transfer Protocols</h2><p><br>现在基本的可靠传输协议建立了，接下来就是考虑对性能做优化的时候了。第一个优化的点，就是流水线。其实这里能够给人很大的启发，流水线不单单应用于这个地方，只要有明显差速的情景，都有可能可以用上流水线的技术。回到网络传输这个环境，我们知道，将一个packet完全送到网络链路上，其实是很快的，一方面因为局域网速度很快，一方面因为这时候packet还刚上路，还不需要跑起来。因此，消耗的时间的大头就放在了链路传输上，也就是<strong><em>propagation</em></strong>。在这里书上举了一个例子，<strong><em>假设在链路上跑的速度是光速，从美国东海岸到西海岸的RTT就是30毫秒</em></strong>，可以稍微记一下这个时间。而如果链路的transmission rate为1Gbps($10^9$bits/second)，<strong><em>将一个1000bytes的packet放到链路上，需要8微秒</em></strong>。如果保留简单的stop-and-wait模式，尽管链路允许1秒内把1G的内容传到链路上，但由于<strong><em>TCP packet的大小一次只能有1kB左右</em></strong>，以及传输距离动辄半个地球，所以实际拿到的效果只有200kbps左右</p>
+<p><br>这个数据好像也很常见，经常在某些没有专门做加速的下载的时候，跑出来的效果好像也确实就是100kb的数量级</p>
+<p><br>也就是说<strong>transmission time与propagation time可以轻松达到1比10000</strong>。这个基本的数量级可以有个感觉。换句话说，如果不使用流水线，一条路上快的部分就被慢的部分拖累了。1Gbps的传输速度大部分是被闲置的。另外也可以理解为什么transport和application协议只在两个终端上跑，而不在中间的路由上跑了，因为跑程序也需要时间，越高级的协议，需要的时间越多，而且这点时间如果让每个路由都去跑，耗的时间也是不少的。所以从效率的角度来讲，让链路尽量去做传输，少跑程序，让高级程序在终端去做。出差错属于小概率事件，所以即使有那种packet一开始就受到干扰，白白跑了一整段的情况也是小概率的。接下来，就是流水线的解决方案：</p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/ycphaF"><img src="https://s3.ax1x.com/2021/02/16/ycphaF.png" alt="ycphaF.png"></a></p>
+<p><br>由于流水线的引入，之前的方案就会面对一些改进：sequence number会扩大，之前只需要0和1，缓冲区也需要扩大，应对error recovery也会有新的方案，说白了就是重传方案，下面就会讲两种，Go-Back-N和selective repeat。需要注意的是GBN和selective repeat都是基于reliable data transport上做流水线所增加的，还没有涉及到流量控制和阻塞控制</p>
+<h2 id="Go-Back-N-GBN"><a href="#Go-Back-N-GBN" class="headerlink" title="Go-Back-N (GBN)"></a>Go-Back-N (GBN)</h2><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yc9PMt"><img src="https://s3.ax1x.com/2021/02/16/yc9PMt.png" alt="yc9PMt.png"></a></p>
+<p><br>本质上就是一个固定长度为N的滑动窗口</p>
+<p><br>在此方法下，sequence number会进行扩充了，TCP的sequence number是32位，而且它的sequence number的单位表示的不是packet，而是传输的byte数目，这也好理解，比如当前这个packet传了3个byte，那么下一个packet的sequence number就加3</p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yc9AZ8"><img src="https://s3.ax1x.com/2021/02/16/yc9AZ8.png" alt="yc9AZ8.png"></a></p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yc9EdS"><img src="https://s3.ax1x.com/2021/02/16/yc9EdS.png" alt="yc9EdS.png"></a></p>
+<p><br>当上层传来 rdt_send()而当前层发现窗口已经满了的时候，窗口会拒绝传送。这种情况下，上层要么将数据放回缓冲区，等会再调用rdt_send()，要么采用阻塞唤醒机制，等窗口空了之后，由当前层通知上层</p>
+<p><br>如果发生了超时，GBN会将没有被ack的所有数据重传一遍，相当于GBN这个方案只用了一个timer。如果收到了一个ack但还有数据包没有收到ack，那么timer会更新。如果收完了ack，那么timer自然会停止</p>
+<p><br>而接收端采取按照顺序接收和发送ack，如果乱序了的packet，就选择直接丢弃。因此这种方案就是cumulative acknowledgements。而且值得注意的是，在这里接收端只能选择丢弃乱序的packet，因为没有别的选择，因为在选择接收一个packet后，接收端就会立刻提供给上层了，并不会等在当前层拼好后再交给上层，由于重传机制的存在，所以在当前层缓存乱序的packet没有意义</p>
+<p><br>下面是一个窗口长度为4的GBN例子：</p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yc9lLV"><img src="https://s3.ax1x.com/2021/02/16/yc9lLV.png" alt="yc9lLV.png"></a></p>
+<h2 id="Selective-Repeat-SR"><a href="#Selective-Repeat-SR" class="headerlink" title="Selective Repeat (SR)"></a>Selective Repeat (SR)</h2><p><br>可以看到，单纯的GBN策略是想尽可能多地往管道上放packet，这种方法大多数时候合理，而且也可以知道，如果要用GBN，那么固定的窗口值肯定是比较大的。<strong>但是GBN在应对链路阻塞的时候却是非常脆弱的，特别是由于完全重传的操作，会使链路的阻塞更加恶化。</strong> 当窗口很大而且延迟长的时候，许多重传是不必要的，因为这些packet并不是丢失了，而是暂时滞留在了链路中。<strong>问题就发生在链路中存在许多不必要的重传</strong></p>
+<p><br>SR的思路就是在GBN的基础上，在receiver端建立接收缓冲区，有一个序列号为rcv_base，当接收的包序列范围在[rcv+1,rcv+N-1]之间时，将packet放进缓冲区，并且回传ack，直到接收到序列号为rcv_base的packet后，rcv_base前进，并且将一系列连续的包数据上传给上层。</p>
+<p><br>而由于这种方案并不是accumulative acknowledgements，所以对于发送端来说，它发送的每一个packet都要收到对应的ack才会停止重传。而且ack也是receiver窗口前进的关键。理论上这种方式下的sender，应该是可以记录每个packet发出的时间，然后共用一个timer，当处于sent_base的收到ack后，timer也往前移，并结合之前记录的发出时间，调整倒计时</p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/ycCmTO"><img src="https://s3.ax1x.com/2021/02/16/ycCmTO.jpg" alt="ycCmTO.jpg"></a></p>
+<p><br>而在selective repeat的方案中，由于sequence number是做的模运算，双方信息又无法完全同步，所以在当窗口大小与sequence number space接近的时候，就可能出问题，使得receiver无法判断传来的sequence number是在rcv_base前面还是后面。而书中的建议是，窗口大小要小于等于sequence number space的一半才行</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/ycCh9J"><img src="https://s3.ax1x.com/2021/02/16/ycCh9J.png" alt="ycCh9J.png"></a></p>
+<p><br>方案讨论到了这里，还有一个假设我们没有去掉，那就是包的乱序。如果双端连接的只是物理上的导线，那么发出去的包会严格遵循先来先到的原则。但是如果双端接的是网络，那么有的包就可能在网络里停留很久才到。为了避免因为包停留导致序列号被重复用的情况，sender考虑一个packet lifetime，也就是sender假设在发出序列号为x的包一段时间以后，网络里不会再有这个包了。书上的设定是3分钟</p>
 
       
     </div>
@@ -248,7 +276,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/12/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/page/14/">14</a><span class="space">&hellip;</span><a class="page-number" href="/page/25/">25</a><a class="extend next" rel="next" href="/page/14/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/12/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/page/14/">14</a><span class="space">&hellip;</span><a class="page-number" href="/page/26/">26</a><a class="extend next" rel="next" href="/page/14/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -316,7 +344,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-count">26</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -329,7 +357,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
