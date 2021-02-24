@@ -157,7 +157,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://tielidev.github.io/2021/02/16/essay01/">
+    <link itemprop="mainEntityOfPage" href="https://tielidev.github.io/2021/02/16/tcp/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/timg.jpeg">
@@ -171,7 +171,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/02/16/essay01/" class="post-title-link" itemprop="url">随笔</a>
+            <a href="/2021/02/16/tcp/" class="post-title-link" itemprop="url">Connection-Oriented Transport:TCP</a>
         </h2>
 
         <div class="post-meta">
@@ -181,14 +181,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2021-02-16 09:30:32" itemprop="dateCreated datePublished" datetime="2021-02-16T09:30:32+08:00">2021-02-16</time>
+              <time title="创建时间：2021-02-16 15:20:22" itemprop="dateCreated datePublished" datetime="2021-02-16T15:20:22+08:00">2021-02-16</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-02-22 21:45:50" itemprop="dateModified" datetime="2021-02-22T21:45:50+08:00">2021-02-22</time>
+                <time title="修改时间：2021-02-22 21:51:11" itemprop="dateModified" datetime="2021-02-22T21:51:11+08:00">2021-02-22</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -196,7 +196,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E9%9A%8F%E7%AC%94/" itemprop="url" rel="index"><span itemprop="name">随笔</span></a>
+                  <a href="/categories/%E7%BD%91%E7%BB%9C/" itemprop="url" rel="index"><span itemprop="name">网络</span></a>
                 </span>
             </span>
 
@@ -211,11 +211,63 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yckZgH"><img src="https://s3.ax1x.com/2021/02/16/yckZgH.jpg" alt="yckZgH.jpg"></a></p>
-<p><br>最近看了一个贴子，想写一点感想</p>
-<p><br>贴子链接：<a target="_blank" rel="noopener" href="https://tieba.baidu.com/p/7226002236">https://tieba.baidu.com/p/7226002236</a></p>
-<p><br><strong>人都不傻，只是处于不同时代，不同环境罢了</strong>。无论老人、小孩还是青年，都挺聪明的。只是小孩还没有成长起来，老人逐渐被时代忽略，时代的聚光灯永远都打在青年人和中年人身上。这并不意味着过去的人就比现在的人傻，只是时机不同而已，时代过去了，老一代也就逐渐离开了众人的关注</p>
-<p><br><strong>生活的本质是长跑</strong>。脚踏实地走过漫长岁月，是最强大的</p>
+          <p><a target="_blank" rel="noopener" href="https://imgchr.com/i/ycdCUP"><img src="https://s3.ax1x.com/2021/02/16/ycdCUP.jpg" alt="ycdCUP.jpg"></a></p>
+<h2 id="TCP-Connection"><a href="#TCP-Connection" class="headerlink" title="TCP Connection"></a>TCP Connection</h2><p><br>TCP支持全双工的服务。建立连接的过程就是经典的<strong>三次握手</strong>的过程。TCP的关闭支持半打开状态，但是TCP的建立不支持半打开的状态</p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yc0KpT"><img src="https://s3.ax1x.com/2021/02/16/yc0KpT.png" alt="yc0KpT.png"></a></p>
+<p><br>这里需要理解MTU和MSS的概念</p>
+<p><br><strong>MTU</strong> maximum transmission unit。指整个链路上允许跑的最大的 link-layer frame。这个值明显与终端有关系，也与链路上的带宽有关系，也与中间的硬件有关。path MTU为从host到host之间所有链路上，都能允许传输的最大链路帧。一般这个MTU为几百bytes到一千bytes左右</p>
+<p><br><strong>MSS</strong> maximum segment size。指在TCP封装segment的时候，能够封装application-layer data的最多的量，因此MSS不包括TCP的header数据。MSS会根据MTU定，也是在建立连接初期，双方需要确定的一个参数。可以知道MSS也是会在1kbytes左右</p>
+<h2 id="TCP-Segment-Structure"><a href="#TCP-Segment-Structure" class="headerlink" title="TCP Segment Structure"></a>TCP Segment Structure</h2><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/ycrnht"><img src="https://s3.ax1x.com/2021/02/16/ycrnht.png" alt="ycrnht.png"></a></p>
+<p><br>需要注意的是options长度是可变的，所以tcp的header是不定长的。另外header length只占4个bit，那么可能tcp的header最长也就32byte，在options前已经占了20bytes</p>
+<h3 id="Sequence-and-Acknowledgment-Numbers"><a href="#Sequence-and-Acknowledgment-Numbers" class="headerlink" title="Sequence and Acknowledgment Numbers"></a>Sequence and Acknowledgment Numbers</h3><p><br>TCP的number是以byte为单位的。在确定好了MSS后，sequence number 为发的那个segment里的data的起始byte位。acknowledgment number 为接收端接收后<strong>等待下一个接收的起始byte位</strong>。比如MSS定为1000，sender发第一个包，标记sequence number为1。receiver收到后发acknowledge number为1001</p>
+<p><br>TCP采用的仍然是cumulative acknowledgments</p>
+<p><br>TCP对于乱序的segment，TCP可以丢弃也可以缓存，常用的是缓存。但是使用缓存与采取cumulative acknowledgments没有冲突</p>
+<p><br>实际上初始的sequence number是随机取的。这是为了下面这种情况：两个host之前建立了一回连接，传了数据，采用了某一对port。在结束这个连接之后，却有segment游离在网络里。两个host之间再次建立新的连接，恰好使用了和之前相同的port，这时候上一次连接的segment抵达了receiver，使用随机的sequence number就可以<strong>尽量避免误接收</strong>上一次连接的segment。当然也可以感知到，这种方法还需要一个窗口来判断收到的segment是应该缓存还是抛弃掉</p>
+<p><br>下面这个例子是收发一个字符，具体描述可以看书。这个例子很好地解释了sequence 和 acknowledgment number 以及data之间的关系</p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/ycRMIe"><img src="https://s3.ax1x.com/2021/02/16/ycRMIe.png" alt="ycRMIe.png"></a></p>
+<p><br>TCP里面依然是存在空data占位的</p>
+<h2 id="Round-Trip-Time-Estimation-and-Timeout"><a href="#Round-Trip-Time-Estimation-and-Timeout" class="headerlink" title="Round-Trip Time Estimation and Timeout"></a>Round-Trip Time Estimation and Timeout</h2><h3 id="Estimating-the-Round-Trip-Time"><a href="#Estimating-the-Round-Trip-Time" class="headerlink" title="Estimating the Round-Trip Time"></a>Estimating the Round-Trip Time</h3><p><br>无论是在TCP的开始还是在TCP的过程中，RTT都是需要测量得到的。因此TCP就采用sample RTT的方案，就是在一段时间内，测量取一个segment的RTT作为sample RTT。而整体的RTT采用加权平均的方式，叫做EstimatedRTT。EstimatedRTT这个值既和之前的总值相关，也与当前的新值相关</p>
+<p><br>另外还增加一个参数来记录RTT的波动情况，叫做DevRTT，也是采用加权平均获得的</p>
+<h3 id="Setting-and-Managing-the-Retransmission-Timeout-Interval"><a href="#Setting-and-Managing-the-Retransmission-Timeout-Interval" class="headerlink" title="Setting and Managing the Retransmission Timeout Interval"></a>Setting and Managing the Retransmission Timeout Interval</h3><p><br>在有了EstimatedRTT 和 DevRTT后，就可以设置超时时间了，记为TimeoutInterval</p>
+<h2 id="Reliable-Data-Transfer"><a href="#Reliable-Data-Transfer" class="headerlink" title="Reliable Data Transfer"></a>Reliable Data Transfer</h2><p><br>尽管TCP采用流水线技术，但使用的只有一个回传计时器。不仅超时了会回传，收到之前重复的ACK也能触发回传。接下来讨论的仍然是流水线与回传的技术</p>
+<p><br>下面先展示了一个简单版本的TCP，有超时重传，但没有快速重传</p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yczp11"><img src="https://s3.ax1x.com/2021/02/16/yczp11.jpg" alt="yczp11.jpg"></a></p>
+<h3 id="A-Few-Interesting-Scenarios"><a href="#A-Few-Interesting-Scenarios" class="headerlink" title="A Few Interesting Scenarios"></a>A Few Interesting Scenarios</h3><p><br>接下来通过分析一些情况来逐渐深入。下面展现了两种常见的超时的情景：</p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/ygSAK0"><img src="https://s3.ax1x.com/2021/02/16/ygSAK0.jpg" alt="ygSAK0.jpg"></a></p>
+<p><br>尽管目前已有的TCP版本已经起效了，但是我们注意现实的TCP是流水线传输的，接下来就展现流水线传输的版本：</p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/ygSjzR"><img src="https://s3.ax1x.com/2021/02/16/ygSjzR.png" alt="ygSjzR.png"></a></p>
+<p><br>注意到这里的重传机制是<strong>只重传一个segment</strong>。接下来再展现一个，由于采用cumulative acknowledgments，所以在超时时间内，即使前面的ACK丢失了也不会额外重传：</p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/ygpKw8"><img src="https://s3.ax1x.com/2021/02/16/ygpKw8.jpg" alt="ygpKw8.jpg"></a></p>
+<h3 id="Doubling-the-Timeout-Interval"><a href="#Doubling-the-Timeout-Interval" class="headerlink" title="Doubling the Timeout Interval"></a>Doubling the Timeout Interval</h3><p><br>接下来介绍一系列TCP做的改进。首先是超时重传，当出现超时重传后，timer的设定值会翻倍。而当上级传来data或者收到ACK后，timer重置，仍然是按照EstimatedRTT和DevRTT来设定。这样使interval翻倍的操作，在一定程度上可以起到阻塞控制的效果</p>
+<h3 id="Fast-Retransmit"><a href="#Fast-Retransmit" class="headerlink" title="Fast Retransmit"></a>Fast Retransmit</h3><p><br>这其实是流水线带来的效果。receiver可以通过expected sequence number 和来到的 sequence number判断是否出现了gap，进而有可能发出duplicate ACK，注意，这里发出的只是一个ACK，而sender是要收到3个重复的ACK，总共4个相同的ACK后才会选择快速重传。另一个细节是快速重传不会改变timer，所以如果快速重传后还是没有收到正确的ACK，超时后还会进入超时重传</p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/ygafQe"><img src="https://s3.ax1x.com/2021/02/17/ygafQe.jpg" alt="ygafQe.jpg"></a></p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/ygaTot"><img src="https://s3.ax1x.com/2021/02/17/ygaTot.png" alt="ygaTot.png"></a></p>
+<h3 id="Go-Back-N-or-Selective-Repeat"><a href="#Go-Back-N-or-Selective-Repeat" class="headerlink" title="Go-Back-N or Selective Repeat"></a>Go-Back-N or Selective Repeat</h3><p><br>这本质上也是流水线带来的问题，要考虑固定长的窗口还是怎么样。<strong>TCP出现超时时只会重传引起超时的那一个segment</strong> ，甚至如果后续的ack在发生超时之前到了，sender不会重传。另一方面，reveiver会缓存比expected number大的segment。这样TCP一方面采用cumulative acknowledgment，一方面在receiver缓存segment。属于GBN和SR结合的操作</p>
+<h2 id="Flow-Control"><a href="#Flow-Control" class="headerlink" title="Flow Control"></a>Flow Control</h2><p><br>接下来考虑的就是缓冲区问题。receiver的缓冲区是连接上层的application process的，如果application process长期在应付其他的事，receiver的缓冲区是很容易填满的。这时候就需要流量控制来处理缓冲区的问题。需要注意的是，尽管流量控制和阻塞控制的结果都是控制了sender向网络发送segment的速度，但是它们所应对的问题是有本质区别的。因此，TCP相当于是要兼顾流量控制和阻塞控制</p>
+<p><br>sender就保持一个参数：receiver window，用于sender来感知receiver端的 <strong><em>spare buffer space</em></strong></p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/ygdakt"><img src="https://s3.ax1x.com/2021/02/17/ygdakt.png" alt="ygdakt.png"></a></p>
+<p><br>在receiver端，我们有：</p>
+<script type="math/tex; mode=display">LastByteRcvd-LastByteRead \leq RcvBuffer</script><p><br>而对于rwnd定义，我们有：</p>
+<script type="math/tex; mode=display">rwnd=RcvBuffer-(LastByteRcvd-LastByteRead)</script><p><br>因为支持全双工，每当receiver接收一个segment，receiver都会向sender反馈当前支持的rwnd。这里也可以倒回去看，TCP的segment format是留有receive window的空间的。而对于sender来说，会保留两个参数，LastByteSent和LastByteAcked，只要保证：</p>
+<script type="math/tex; mode=display">LastByteSent-LastByteAcked \leq rwnd</script><p>即可</p>
+<p><br>其中有一个细节，考虑下面这种情况：当receiver的buffer满了，这时候回传一个$rwnd=0$，receiver因为没有向sender传数据的需求，所以即使receiver上层的application process在逐渐清空buffer，receiver也不会去通知sender。为了解决这个问题，TCP要求当$rwnd=0$时，sender持续向sender发送1个byte的segment，就是为了探测rwnd。这也是一种尽量利用buffer space的方法。既不会使buffer溢出，也不会使buffer闲置。而在UDP里面，不考虑这个问题，UDP分配一个有限大小的buffer，如果buffer溢出了，直接把老的segment丢弃。UDP的这个操作在网络层有类似的。但是注意TCP因为是只在两个终端执行，所以还是很珍惜收到的segment，所以会使用flow control来保护buffer space</p>
+<h2 id="TCP-Connection-Management"><a href="#TCP-Connection-Management" class="headerlink" title="TCP Connection Management"></a>TCP Connection Management</h2><p><br>在TCP建立阶段产生的延迟是可以比较明显地感知到的。在讲之前，先把TCP fromat再拿出来看一遍：</p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/ycrnht"><img src="https://s3.ax1x.com/2021/02/16/ycrnht.png" alt="ycrnht.png"></a></p>
+<h3 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h3><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yg0iMF"><img src="https://s3.ax1x.com/2021/02/17/yg0iMF.png" alt="yg0iMF.png"></a></p>
+<p><br><strong><em>Step 1.</em></strong> 可以简单地理解为sender端先发送一个<strong>使节</strong>。第一个segment不带application data，但是<strong>SYN位设为1</strong>，同时<strong>sender随机选取一个数来作为squence number</strong>，原因之前也有过讨论。这样一个不带data的segment<strong>被封装成一个IP datagram</strong>，传给receiver。初始的sequence number也叫做<strong><em>client_isn</em></strong>，初始的segment 也叫做 <strong><em>SYN segment</em></strong></p>
+<p><br><strong><em>Step 2.</em></strong> 当receiver接收到了SYN segment后，receiver为这个连接分配一些variables和buffer space。并且回传一个segment。这个segment也不带data。回传的acknowledgment field为clent_isn+1（可以看到这是TCP占位的原因），同时自己选一个数作为sender方的sequence number，并且<strong>SYN也是设置为1</strong>。回传的这个segment叫做 <strong><em>SYNACK segment</em></strong></p>
+<p><br><strong><em>Step 3.</em></strong> 当sender接收到了SYNACK segment后，才开始分配buffer和variables。然后就可以开始<strong>带着data回传segment</strong>，以后的以及这个segment的<strong>SYN就设为0了</strong>，并且这个segment的sequence number和acknowledgment number field也都对应着SYNACK segment。需要注意这里的一个隐含思想，那就是既然sender要提出建立连接，那么一定是有传输的需求的，所以第三个segment就可以直接带着data走了</p>
+<h3 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h3><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/yg0GdA"><img src="https://s3.ax1x.com/2021/02/17/yg0GdA.png" alt="yg0GdA.png"></a></p>
+<p><br>目前我对tcp连接的建立和关闭有了新的认识。无论是建立还是关闭，其实都是两端的两个process在相互协商。比如建立连接的时候，sender的process是发出了请求，只要receiver表示receiver准备好了接收，那么sender就可以带着数据发。而关闭的时候，假设某一方（就记为client）的process提出了关闭的请求，那么仍然是一个协商的状态，client表示自己的进程打算关闭了，自己的进程不会再传data了，而server端的process不完全听client，它完全可以选择继续向client传输data，等server的process自己决定关闭后，再向client传输一个FIN</p>
+<p><br>在这里面，当server接收到来自client的FIN以后，server就可以关掉与application process连接的buffer了，但是像receive window之类的流量控制的参数还是要保留的。此时就是进入了半打开状态，server可以继续向client传data，client可以回传ack，但是client不能再向server传data，server也不再负责接收来自client的data。而client的process是最后关闭的</p>
+<p><br>四次挥手的本质在于，双端的进程有自主性，<strong>关还是不关，是靠商量的出的</strong></p>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/ygD34I"><img src="https://s3.ax1x.com/2021/02/17/ygD34I.png" alt="ygD34I.png"></a></p>
+<p><br>另外存在一些特别情况，比如当server socket收到某个自己不处理的port时，会回传一个segment 其中RST标为1</p>
+<h3 id="DDoS攻击"><a href="#DDoS攻击" class="headerlink" title="DDoS攻击"></a>DDoS攻击</h3><p><br>本质就是对于原始的TCP，攻击者可以向server发送多个SYN segment，这样server会回传FINACK并且开始分配buffer space和variables，也叫做 <strong><em>SYN flood attack</em></strong></p>
+<p><br>解决方案是利用哈希函数和IP地址，方法叫做 <strong><em>SYN cookies</em></strong></p>
+<p><br>方法就是当server收到SYN后，根据双端的IP地址，以及双端的port值，以及server准备的哈希函数，形成一个哈希值，将这个哈希值作为SYNACK的sequence number，回传回去，并且这时候不分配buffer等资源。只有当client传来了第三次握手的segment，server利用哈希函数来检查acknowledgment number的有效性，有效之后才分配资源</p>
+<p><br>但是这种方案似乎有一个前提，那就是对于server，对于一个IP地址的client提出的port请求，只能建立一个tcp连接。但现实里面，好像一个client和server可以对于同一个des port建立多个tcp连接，只要source port选取不同就好了。这样的话，如果允许双端对于同一个des port分配不同的source port建立多个连接，server就无法分辨它是恶意的IP地址还是非恶意的IP地址了。SYN cookies本质上是对IP地址进行合法性检查，对于一个IP地址的一种服务，只分配一次资源</p>
+<p><br>但是话说回来，如果server对于同一个IP地址的同一种服务，有上限就OK了，比如对于port 80至多同时开10个TCP连接，这也是合理的。而且再联想到HTTP默认是采用persistent-connection，也更加合理了</p>
 
       
     </div>
@@ -234,7 +286,7 @@
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/12/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/page/14/">14</a><span class="space">&hellip;</span><a class="page-number" href="/page/27/">27</a><a class="extend next" rel="next" href="/page/14/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/page/12/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/page/14/">14</a><span class="space">&hellip;</span><a class="page-number" href="/page/28/">28</a><a class="extend next" rel="next" href="/page/14/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -302,7 +354,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-count">28</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -315,7 +367,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-count">12</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
